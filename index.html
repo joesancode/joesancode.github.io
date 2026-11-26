@@ -37,6 +37,7 @@
     --ok:#1f9d55;
     --invert-bg:#1b1b22; --invert-ink:#ffffff;
     --pop-shadow:0 16px 40px rgba(20,20,50,.18),0 2px 6px rgba(20,20,50,.08);
+    --inset:inset 0 2px 5px rgba(30,30,70,.10),inset 0 1px 1px rgba(30,30,70,.06);
     --il-a:#5050f8; --il-a2:#6c6cfb; --il-b:#3eb3ff; --il-c:#c9c9fd;
     --il-soft:#eeeefe; --il-paper:#ffffff; --il-line:#e3e3f0; --il-ink:#2a2a40; --il-track:#e0e0fd;
     --accent:#5050f8;
@@ -88,8 +89,8 @@
   .main{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--surface)}
   .topbar{height:88px;flex:none;display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid var(--line)}
   .topbar h1{font-size:21px;font-weight:600;letter-spacing:-.01em;margin-right:auto}
-  .search{display:flex;align-items:center;gap:10px;width:240px;height:38px;border:0;background:var(--bg);border-radius:10px;padding:0 12px;color:var(--muted)}
-  .search:focus-within{box-shadow:0 0 0 2px var(--accent-soft)}
+  .search{display:flex;align-items:center;gap:10px;width:240px;height:38px;border:0;background:var(--bg);border-radius:10px;padding:0 12px;color:var(--muted);box-shadow:var(--inset)}
+  .search:focus-within{box-shadow:var(--inset),0 0 0 2px var(--accent-soft)}
   .search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--ink)}
   .search input::-webkit-search-cancel-button{display:none}
   .search-wrap{position:relative}
@@ -103,7 +104,7 @@
   .q-opt[aria-selected="true"]{background:var(--bg)}
   .q-opt b{display:block;font-size:14px;font-weight:600;color:var(--ink)}
   .q-opt span{display:block;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .q-opt mark,.q-empty mark{background:var(--accent-soft);color:var(--ink);border-radius:3px;padding:0 1px}
+  .q-opt mark,.q-empty mark{background:var(--accent-soft);color:var(--ink);border-radius:5px;padding:0 3px;margin:0 -1px}
   .q-empty{padding:14px 10px;font-size:13.5px;color:var(--ink-2)}
   .q-empty p+p{margin-top:6px}
   .q-chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 10px 10px}
@@ -111,6 +112,7 @@
   .q-chips button:hover{color:var(--ink)}
   .q-count{font-size:12px;color:var(--muted);padding:6px 10px 2px}
   .flash{animation:flash 1.6s ease}
+  .flash:not(.card){border-radius:10px}
   @keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 3px transparent}}
   .mail[hidden]{display:none}
   .mail-none{padding:24px 16px;font-size:13.5px;color:var(--muted);text-align:center}
@@ -173,6 +175,7 @@
   .contacts a[data-copy]{position:relative}
   .contacts a[data-copy] .cp{margin-left:auto;width:15px;height:15px;color:var(--muted);opacity:0;transition:opacity .15s}
   .contacts a[data-copy]:hover .cp,.contacts a[data-copy]:focus-visible .cp{opacity:1}
+  .panel-notes{max-width:900px;margin:0 auto}
   .notes textarea{display:block;width:100%;min-height:120px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;padding:10px 12px;outline:0}
   .notes textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .notes textarea::placeholder{color:var(--muted)}
@@ -528,6 +531,7 @@
     --invert-bg:#3a3a4c; --invert-ink:#ececf3;
     --shadow:0 6px 24px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
     --pop-shadow:0 16px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4);
+    --inset:inset 0 2px 6px rgba(0,0,0,.45),inset 0 1px 1px rgba(0,0,0,.35);
     --il-a:#6c6cff; --il-a2:#5252e6; --il-b:#3eb3ff; --il-c:#4a4a8a;
     --il-soft:#22223a; --il-paper:#2b2b3a; --il-line:#3d3d52; --il-ink:#d8d8ea; --il-track:#3a3a66;
   }
@@ -958,11 +962,6 @@
           <li><svg class="ico"><use href="#i-heart"/></svg>Passion and pride for own work</li>
           <li><svg class="ico"><use href="#i-chart"/></svg>Receptive to meaningful challenges</li>
         </ul>
-        <h3><label for="rec-notes">Your Notes</label></h3>
-        <div class="notes">
-          <textarea id="rec-notes" placeholder="e.g. Call Joe San before someone else does."></textarea>
-          <div class="foot"><span id="notes-status">Private, saved on this device</span><button type="button" id="notes-clear" hidden>Clear</button></div>
-        </div>
       </div>
     </div>
 
@@ -1069,6 +1068,15 @@
         <div class="pipe-head"><h3>Hiring pipeline</h3><button type="button" id="pipe-all" hidden>Show all</button></div>
         <div class="pipe-sub" id="pipe-sub" aria-live="polite"></div>
         <ol class="pipe" id="pipe"></ol>
+      </div>
+    </div>
+
+    <!-- Notes follow the visitor across every page -->
+    <div class="panel-notes">
+      <h3><label for="rec-notes">Your Notes</label></h3>
+      <div class="notes">
+        <textarea id="rec-notes" placeholder="e.g. Call Joe San before someone else does."></textarea>
+        <div class="foot"><span id="notes-status">Private, saved on this device</span><button type="button" id="notes-clear" hidden>Clear</button></div>
       </div>
     </div>
 
