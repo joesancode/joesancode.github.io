@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joe San · Product Management & Brand Design</title>
+<meta name="description" content="Joe San — Passionate Product Manager skilled in shaping ideas into user-centric solutions. Munich, Germany.">
+<meta property="og:title" content="Joe San · Product Management & Brand Design">
+<meta property="og:description" content="Passionate Product Manager skilled in shaping ideas into user-centric solutions.">
+<meta property="og:image" content="assets/joe.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Ccircle cx='10' cy='12' r='7' fill='%23d9d9e3'/%3E%3Ccircle cx='18' cy='12' r='9' fill='%233eb3ff'/%3E%3Ccircle cx='28' cy='12' r='11' fill='%235050f8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#5050f8;
+    --accent-soft:#ececfe;
+    --accent-2:#3eb3ff;
+    --ink:#1b1b22;
+    --muted:#80808f;
+    --line:#ececf1;
+    --bg:#f7f7f9;
+    --card:#ffffff;
+    --shadow:0 6px 24px rgba(30,30,70,.07), 0 1px 3px rgba(30,30,70,.05);
+    --radius:16px;
+    --sidebar:88px;
+    --panel:300px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#fff;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  img{display:block;max-width:100%}
+  svg{flex:none}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* ---------- App shell ---------- */
+  .app{display:grid;grid-template-columns:var(--sidebar) 1fr var(--panel);height:100vh;overflow:hidden}
+  .app.panel-hidden{grid-template-columns:var(--sidebar) 1fr 0}
+  .app.panel-hidden .panel{display:none}
+
+  .sidebar{border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:28px 0 24px;background:#fff;z-index:2}
+  .logo{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;font-size:14px;letter-spacing:-.01em}
+  .logo-dots{position:relative;width:46px;height:24px}
+  .logo-dots span{position:absolute;top:50%;border-radius:50%;transform:translateY(-50%)}
+  .logo-dots span:nth-child(1){left:0;width:14px;height:14px;background:#d9d9e3}
+  .logo-dots span:nth-child(2){left:9px;width:18px;height:18px;background:var(--accent-2)}
+  .logo-dots span:nth-child(3){left:21px;width:24px;height:24px;background:var(--accent)}
+  .nav{margin:auto 0;display:flex;flex-direction:column;gap:22px;align-items:center}
+  .nav-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#5a5a68;transition:background .2s,color .2s,transform .2s}
+  .nav-btn .ico{width:22px;height:22px}
+  .nav-btn:hover{background:var(--accent-soft);color:var(--accent)}
+  .nav-btn[aria-current="page"]{background:linear-gradient(160deg,#3c3cd8,#5a5af9 60%,#8d8dff);color:#fff;box-shadow:0 6px 16px rgba(80,80,248,.35)}
+  .nav-btn.static{cursor:default}
+  .nav-btn.static:hover{background:none;color:#5a5a68}
+  .nav-btn[data-tip]{position:relative}
+  .nav-btn[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:56px;top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;font-size:12px;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}
+
+  .main{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:#fff}
+  .topbar{height:88px;flex:none;display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid var(--line)}
+  .topbar h1{font-size:21px;font-weight:600;letter-spacing:-.01em;margin-right:auto}
+  .search{display:flex;align-items:center;gap:10px;width:240px;height:36px;border:1px solid #d6d6de;border-radius:10px;padding:0 12px;color:var(--muted)}
+  .search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--ink)}
+  .icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#4a4a58}
+  .icon-btn:hover{background:var(--bg)}
+  .content{flex:1;overflow:auto;background:var(--bg)}
+
+  .panel{border-left:1px solid var(--line);overflow:auto;padding:28px 26px 32px;background:#fff}
+  .panel h3{font-size:16px;font-weight:600;text-align:center;margin:30px 0 18px}
+  .panel .illu{width:100%;max-width:250px;margin:0 auto}
+
+  .view{display:none}
+  .view.active{display:block;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- Shared bits ---------- */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+  .section-head{display:flex;align-items:center;justify-content:space-between;padding:22px 32px 4px}
+  .section-head h2{font-size:16px;font-weight:600}
+  .section-head .tools{display:flex;gap:6px}
+  .label{font-size:12px;color:var(--muted)}
+  .eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px}
+  .pill{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 18px;border-radius:10px;font-size:14px;font-weight:500;transition:transform .15s,box-shadow .15s}
+  .pill:hover{transform:translateY(-1px)}
+  .pill.primary{background:var(--accent);color:#fff;box-shadow:0 6px 14px rgba(80,80,248,.3)}
+  .pill.ghost{border:1px solid #d6d6de;background:#fff}
+  .avatar{border-radius:50%;object-fit:cover}
+
+  /* ring progress */
+  .ring{--p:0;--size:40px;--w:3px;width:var(--size);height:var(--size);border-radius:50%;display:grid;place-items:center;flex:none;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%), #dadafd 0);position:relative;font-weight:600;color:var(--accent);font-size:12px}
+  .ring::before{content:"";position:absolute;inset:var(--w);border-radius:50%;background:#fff}
+  .ring span{position:relative}
+
+  /* ---------- Profile view ---------- */
+  .profile-grid{display:grid;grid-template-columns:270px 1fr 150px;gap:16px;padding:16px 32px 40px;align-items:start}
+  .col-left{display:flex;flex-direction:column;gap:16px;grid-row:span 4}
+  .id-card{text-align:center}
+  .id-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
+  .id-card h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .contacts{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px;text-align:left}
+  .contacts li a,.contacts li span.row{display:flex;align-items:center;gap:12px;font-size:14px;color:#3a3a46}
+  .contacts li a:hover{color:var(--accent)}
+  .contacts .ico{width:18px;height:18px;color:var(--accent)}
+  .lang{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .lang li{display:flex;align-items:center;gap:12px;font-size:14px}
+  .lang b{font-size:11px;font-weight:700;width:36px;height:24px;border-radius:6px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;letter-spacing:.04em}
+  .lang em{margin-left:auto;font-style:normal;font-size:13px;color:var(--muted)}
+  .edu h4{font-size:15px;font-weight:600}
+  .headline h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+  .headline p{color:#55556a;font-size:14.5px}
+  .headline .actions{display:flex;gap:10px;margin-top:18px}
+  .csat{text-align:center;display:flex;flex-direction:column;justify-content:center;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff}
+  .csat strong{font-size:36px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+  .csat .t{font-weight:600;font-size:14px;margin-top:4px}
+  .csat .s{font-size:12px;opacity:.85}
+  .span-2{grid-column:2 / span 2}
+  .job{padding:18px 0;border-bottom:1px solid var(--line)}
+  .job:first-of-type{padding-top:4px}
+  .job:last-child{border-bottom:0;padding-bottom:0}
+  .job h3{font-size:16px;font-weight:600}
+  .job .meta{font-size:13px;color:var(--accent);margin:2px 0 8px;font-weight:500}
+  .job p{font-size:14px;color:#4a4a5a}
+  .job p b{font-weight:600;color:var(--ink)}
+  .initiative{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .initiative h4{font-size:15px;font-weight:600}
+  .badge{font-size:12px;background:var(--accent-soft);color:var(--accent);padding:5px 10px;border-radius:999px;font-weight:500;white-space:nowrap}
+  .interests{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .interest{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:#4a4a5a;min-width:72px}
+  .interest i{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+
+  .fit{display:flex;flex-direction:column;align-items:center}
+  .fit .ring{--size:84px;--w:4px;font-size:26px;font-weight:500}
+  .match-tag{margin-top:14px;display:inline-flex;align-items:center;gap:8px;background:#232328;color:#fff;font-size:12px;padding:6px 14px;border-radius:7px}
+  .match-tag .ico{width:14px;height:14px;color:#4ade80;stroke-width:2.4}
+  .skills{list-style:none;margin-top:22px;display:flex;flex-direction:column;gap:14px}
+  .skills li{display:flex;align-items:center;gap:12px}
+  .skills b{display:block;font-size:13.5px;font-weight:600}
+  .skills small{font-size:12px;color:var(--muted)}
+  .traits{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .traits li{display:flex;align-items:center;gap:12px;font-size:13.5px;color:#55556a}
+  .traits .ico{width:18px;height:18px;color:#6a6a78}
+
+  /* ---------- References view ---------- */
+  .ref-grid{display:grid;grid-template-columns:270px 1fr;gap:16px;padding:16px 32px 40px;align-items:start}
+  .score-card{text-align:center}
+  .score-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
+  .score-card h2{font-size:22px;font-weight:600}
+  .score-card .tag{font-size:13.5px;color:#55556a;margin-top:4px}
+  .big-score{margin:22px auto 4px;font-size:44px;font-weight:700;letter-spacing:-.03em;color:var(--accent);line-height:1}
+  .stars{display:flex;justify-content:center;gap:3px;color:#ffb648;margin:8px 0 4px}
+  .stars svg{width:16px;height:16px;fill:currentColor}
+  .bars{list-style:none;text-align:left;margin-top:22px;display:flex;flex-direction:column;gap:16px}
+  .bars li div{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px}
+  .bars li div b{font-weight:600}
+  .bar{display:block;height:5px;border-radius:5px;background:#ececfb;overflow:hidden}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#3c3cd8,#7a7aff);border-radius:5px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .stat .label{font-size:13px}
+  .stat strong{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;margin:4px 0 0}
+  .stat strong.up{color:#22a861}
+  .stat small{font-size:12.5px;color:var(--muted)}
+  .recs{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+  .recs > h2{font-size:16px;font-weight:600;margin:8px 0 -4px}
+  .rec-head{display:flex;gap:14px;align-items:flex-start}
+  .rec-head .avatar{width:52px;height:52px}
+  .rec-head h3{font-size:16px;font-weight:600}
+  .rec-head .role{font-size:13.5px;color:#4a4a5a}
+  .rec-head .co{font-size:13px;color:var(--muted)}
+  .rec-head time{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+  .rec-meta{display:flex;align-items:center;gap:14px;margin:14px 0 10px}
+  .rec-meta .score{display:flex;align-items:center;gap:6px;font-weight:600}
+  .rec-meta .score svg{width:15px;height:15px;fill:#ffb648}
+  .rec-meta .rel{font-size:12px;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-weight:500}
+  blockquote{font-size:14.5px;color:#3a3a46;line-height:1.6}
+
+  .ranking{display:flex;align-items:stretch;justify-content:center;gap:28px}
+  .stack{position:relative;width:36px;display:flex;flex-direction:column;border-radius:3px;overflow:visible;margin-top:22px}
+  .stack i{display:block}
+  .stack .top{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--accent);font-weight:600;white-space:nowrap}
+  .stack .marker{position:absolute;left:-5px;right:-5px;height:2px;background:var(--accent);top:9px}
+  .legend{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:22px}
+  .legend li{display:grid;grid-template-columns:14px auto;column-gap:10px;align-items:center}
+  .legend li span{width:13px;height:13px;border-radius:50%}
+  .legend b{font-size:13px;font-weight:600}
+  .legend small{grid-column:2;font-size:11.5px;color:var(--muted);line-height:1.1}
+  .total{text-align:center;font-size:12.5px;color:var(--muted);margin-top:14px}
+  .radars{list-style:none;display:flex;flex-direction:column;gap:18px}
+  .radars li{display:flex;gap:12px;align-items:flex-start}
+  .radars .lg{width:30px;height:30px;border-radius:7px;overflow:hidden;display:grid;place-items:center;background:#f3f3f6;flex:none}
+  .radars .lg img{width:100%;height:100%;object-fit:cover}
+  .radars b{display:block;font-size:14px;font-weight:600}
+  .radars span{display:block;font-size:12.5px}
+  .radars small{display:block;font-size:12px;color:var(--muted)}
+
+  /* ---------- Inbox view ---------- */
+  .inbox{display:grid;grid-template-columns:300px 1fr;height:100%}
+  .mail-list{background:#fff;border-right:1px solid var(--line);overflow:auto}
+  .mail-list .bar-top{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:13.5px;color:#55556a}
+  .mail-list .bar-top .sp{margin-left:auto;display:flex;gap:4px}
+  .cb{width:18px;height:18px;border:1.5px solid #c9c9d3;border-radius:5px;flex:none}
+  .mail{display:flex;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:relative}
+  .mail.on{background:#f1f1fe}
+  .mail.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+  .mail .body{min-width:0;flex:1}
+  .mail .from{display:flex;justify-content:space-between;font-size:13px;color:#4a4a5a;gap:8px}
+  .mail .from span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mail .from time{font-size:12px;color:var(--muted);flex:none}
+  .mail h4{font-size:14.5px;font-weight:600;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mail p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .reader{display:flex;flex-direction:column;min-width:0;overflow:auto;background:var(--bg)}
+  .reader-tools{display:flex;align-items:center;gap:4px;padding:12px 28px;background:#fff;border-bottom:1px solid var(--line);font-size:13px;color:#55556a}
+  .reader-tools .grow{flex:1}
+  .letter{margin:20px 28px 32px;padding:30px 34px}
+  .letter-head{display:flex;gap:14px;align-items:center}
+  .letter-head .avatar{width:48px;height:48px}
+  .letter-head b{font-weight:600}
+  .letter-head .addr{color:var(--muted);font-size:13.5px}
+  .letter-head .to{font-size:13px;color:var(--muted)}
+  .letter-head time{margin-left:auto;font-size:13px;color:var(--muted)}
+  .letter h2{font-size:20px;font-weight:600;margin:24px 0 18px;letter-spacing:-.01em}
+  .letter .txt p{font-size:15px;color:#33333f;line-height:1.7;margin-bottom:14px}
+  .sig{display:flex;align-items:center;gap:14px;margin-top:22px}
+  .sig .avatar{width:48px;height:48px}
+  .sig b{display:block;font-weight:600}
+  .sig span{font-size:13.5px;color:var(--muted)}
+  .letter .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:26px}
+  .attach{display:flex;align-items:center;gap:10px;margin-top:22px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;max-width:320px;font-size:13.5px}
+  .attach:hover{border-color:var(--accent)}
+  .attach i{width:36px;height:36px;border-radius:8px;background:#ffe9e9;color:#e5484d;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700}
+  .attach small{display:block;color:var(--muted);font-size:12px}
+
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px}
+  .cal-head h3{margin:0}
+  .cal-head .icon-btn{width:28px;height:28px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px 2px;text-align:center;font-size:12.5px}
+  .cal .dow{color:#55556a;font-weight:500;margin-bottom:2px}
+  .cal span{width:28px;height:28px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:#f4f4f7;color:#3a3a46}
+  .cal span.out{background:none;color:#c2c2cc}
+  .cal span.today{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 0 0 3px #dcdcfd}
+  .events{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .events li{display:flex;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+  .events .d{width:44px;flex:none;background:linear-gradient(170deg,#3c3cd8,#6464fb);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+  .events .d b{font-size:17px}
+  .events .d small{font-size:11px}
+  .events .e{flex:1;padding:10px 12px;display:grid;grid-template-columns:1fr auto;align-items:center}
+  .events .e b{font-size:14px;font-weight:600}
+  .events .e span{grid-column:1;font-size:12.5px;color:var(--muted)}
+  .events .e time{grid-row:1 / span 2;grid-column:2;font-size:12.5px;color:#55556a;display:flex;align-items:center;gap:4px}
+  .events .e time .ico{width:13px;height:13px}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1280px){
+    :root{--panel:280px}
+    .profile-grid{grid-template-columns:250px 1fr}
+    .csat{grid-column:2}
+    .span-2{grid-column:2}
+    .profile-grid > .headline{grid-column:2}
+  }
+  @media (max-width:1100px){
+    .app,.app.panel-hidden{grid-template-columns:var(--sidebar) 1fr}
+    .app{height:auto;overflow:visible;min-height:100vh}
+    .main{overflow:visible}
+    .content{overflow:visible}
+    .panel{grid-column:2;border-left:0;border-top:1px solid var(--line);display:block}
+    .app.panel-hidden .panel{display:none}
+    .panel-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 32px;max-width:900px;margin:0 auto}
+    .sidebar{position:sticky;top:0;height:100vh}
+    .inbox{height:auto}
+    .mail-list{max-height:none}
+  }
+  @media (max-width:860px){
+    .profile-grid,.ref-grid{grid-template-columns:1fr;padding:12px 16px 32px}
+    .col-left{grid-row:auto}
+    .profile-grid > *,.span-2,.csat{grid-column:1 !important}
+    .inbox{grid-template-columns:1fr}
+    .mail-list .mail:not(.on){display:none}
+    .mail-list .more{display:block}
+    .letter{margin:12px 16px 24px;padding:22px 20px}
+  }
+  @media (max-width:640px){
+    :root{--sidebar:0px}
+    body{padding-bottom:76px}
+    .app,.app.panel-hidden{display:block}
+    .sidebar{position:fixed;bottom:0;left:0;right:0;top:auto;height:68px;flex-direction:row;justify-content:center;border-right:0;border-top:1px solid var(--line);padding:0 12px;z-index:10;box-shadow:0 -4px 20px rgba(0,0,0,.05)}
+    .sidebar .logo,.sidebar .info,.nav .static{display:none}
+    .nav{flex-direction:row;margin:0;gap:28px}
+    .nav-btn[data-tip]:hover::after{display:none}
+    .topbar{height:64px;padding:0 16px;gap:8px}
+    .topbar h1{font-size:18px}
+    .search{display:none}
+    .section-head{padding:16px 16px 0}
+    .stats{grid-template-columns:1fr;gap:12px}
+    .reader-tools{padding:10px 16px;overflow-x:auto}
+    .reader-tools .hide-sm{display:none}
+    .panel{padding:24px 20px 32px}
+    .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
+    .rec-head time{grid-column:2;margin:4px 0 0}
+  }
+  .panel-inner[hidden]{display:none!important}
+  .mail-list .more{display:none;padding:12px 22px;font-size:13px;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Inline icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 1 1 21 11.5z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" stroke-width="2.4"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><path d="M2 3h20M4 3v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V3M12 15v3M8 21l4-3 4 3M8 11V9M12 11V6M16 11V8"/></symbol>
+    <symbol id="i-case" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M2 13h20M11 13v2h2v-2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.1-1.3-.3-2.5-1-3.5.3-1.2.3-2.4 0-3.5 0 0-1 0-3 1.5a10.3 10.3 0 0 0-5.5 0C7.5 2 6.5 2 6.5 2c-.3 1.1-.3 2.3 0 3.5A5.4 5.4 0 0 0 5.5 9c0 3.5 3 5.5 6 5.5-.4.5-.7 1-.8 1.6-.2.6-.2 1.3-.2 1.9v4M9 18c-4.5 2-5-2-7-2"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-team" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><circle cx="5" cy="9" r="2.2"/><circle cx="19" cy="9" r="2.2"/><path d="M7 20v-2a5 5 0 0 1 10 0v2M1.5 19v-1a3.5 3.5 0 0 1 4-3.4M22.5 19v-1a3.5 3.5 0 0 0-4-3.4"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 17v-4M12 17V8M16 17v-6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-blocks" viewBox="0 0 24 24"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></symbol>
+    <symbol id="i-brush" viewBox="0 0 24 24"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12 2H2v10l9.3 9.3a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><path d="M7 7h.01" stroke-width="3"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></symbol>
+    <symbol id="i-reply" viewBox="0 0 24 24"><path d="M9 17 4 12l5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></symbol>
+    <symbol id="i-forward" viewBox="0 0 24 24"><path d="m15 17 5-5-5-5"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+  </defs>
+</svg>
+
+<div class="app" id="app">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="logo" aria-label="virtus">
+      <div class="logo-dots"><span></span><span></span><span></span></div>
+      virtus
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav-btn" href="#inbox" data-view="inbox" data-tip="Cover letter"><svg class="ico"><use href="#i-inbox"/></svg><span class="sr-only">Inbox: cover letter</span></a>
+      <a class="nav-btn" href="#profile" data-view="profile" data-tip="Profile"><svg class="ico"><use href="#i-user"/></svg><span class="sr-only">Candidate profile</span></a>
+      <a class="nav-btn" href="#references" data-view="references" data-tip="References"><svg class="ico"><use href="#i-chat"/></svg><span class="sr-only">References</span></a>
+      <a class="nav-btn" href="assets/Joe_San_CV.pdf" target="_blank" rel="noopener" data-tip="CV as PDF"><svg class="ico"><use href="#i-board"/></svg><span class="sr-only">Open the CV as a PDF</span></a>
+      <a class="nav-btn" href="https://github.com/joesancode" target="_blank" rel="noopener" data-tip="Projects on GitHub"><svg class="ico"><use href="#i-case"/></svg><span class="sr-only">Projects on GitHub</span></a>
+    </nav>
+    <a class="nav-btn info" href="mailto:contact.joesan@proton.me" data-tip="Get in touch"><svg class="ico"><use href="#i-info"/></svg><span class="sr-only">Get in touch</span></a>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+    <header class="topbar">
+      <h1 id="view-title">Candidate Scouting</h1>
+      <label class="search"><svg class="ico" style="width:18px;height:18px"><use href="#i-search"/></svg><input type="search" placeholder="Search" aria-label="Search (decorative)"></label>
+      <button class="icon-btn" aria-label="Notifications" type="button"><svg class="ico"><use href="#i-bell"/></svg></button>
+      <button class="icon-btn" id="toggle-panel" aria-label="Toggle side panel" aria-pressed="true" type="button"><svg class="ico"><use href="#i-panel"/></svg></button>
+    </header>
+
+    <div class="content">
+
+      <!-- ========== PROFILE ========== -->
+      <section class="view" id="view-profile" data-title="Candidate Scouting" aria-label="Profile">
+        <div class="section-head">
+          <h2>Profile</h2>
+          <div class="tools">
+            <button class="icon-btn" aria-label="Bookmark" type="button" style="color:#fe8888"><svg class="ico" style="fill:#fe8888"><use href="#i-bookmark"/></svg></button>
+            <a class="icon-btn" href="assets/Joe_San_CV.pdf" download aria-label="Download CV as PDF"><svg class="ico"><use href="#i-download"/></svg></a>
+            <button class="icon-btn share" aria-label="Share this page" type="button"><svg class="ico"><use href="#i-share"/></svg></button>
+            <button class="icon-btn" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div class="col-left">
+            <div class="card id-card">
+              <img class="avatar" src="assets/joe.png" alt="Portrait of Joe San" width="112" height="112">
+              <h2>Joe San</h2>
+              <ul class="contacts">
+                <li><a href="mailto:contact.joesan@proton.me"><svg class="ico"><use href="#i-mail"/></svg>contact.joesan@proton.me</a></li>
+                <li><a href="tel:+491739927926"><svg class="ico"><use href="#i-phone"/></svg>+49 173 992 7926</a></li>
+                <li><a href="https://www.linkedin.com/in/joe-san" target="_blank" rel="noopener"><svg class="ico"><use href="#i-linkedin"/></svg>/in/joe-san</a></li>
+                <li><a href="https://github.com/joesancode" target="_blank" rel="noopener"><svg class="ico"><use href="#i-github"/></svg>/joesancode</a></li>
+                <li><span class="row"><svg class="ico"><use href="#i-pen"/></svg>/joesanart</span></li>
+                <li><span class="row"><svg class="ico"><use href="#i-pin"/></svg>Munich, Germany</span></li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="eyebrow">Languages</div>
+              <ul class="lang">
+                <li><b>ENG</b>English<em>Native</em></li>
+                <li><b>SPA</b>Spanish<em>Native</em></li>
+                <li><b>ITA</b>Italian<em>C2</em></li>
+                <li><b>DEU</b>German<em>A1</em></li>
+              </ul>
+            </div>
+
+            <div class="card edu">
+              <div class="eyebrow">Education</div>
+              <h4>Digital Design & Animation</h4>
+              <div class="label">Anthem College, U.S. · 2008</div>
+            </div>
+          </div>
+
+          <div class="card headline">
+            <h2>Product Management & Brand Design</h2>
+            <p>Passionate Product Manager skilled in shaping ideas into user-centric solutions. Bridging vision, development, and innovation.</p>
+            <div class="actions">
+              <a class="pill primary" href="tel:+491739927926"><svg class="ico" style="width:16px;height:16px"><use href="#i-phone"/></svg>Call</a>
+              <a class="pill ghost" href="mailto:contact.joesan@proton.me?subject=Let%27s%20talk"><svg class="ico" style="width:16px;height:16px"><use href="#i-bookmark"/></svg>Short list</a>
+            </div>
+          </div>
+
+          <div class="card csat">
+            <strong>4.92</strong>
+            <div class="t">CSAT Score</div>
+            <div class="s">of 217 B2B clients</div>
+            <div class="s">Max score of 5.0</div>
+          </div>
+
+          <div class="card span-2">
+            <div class="eyebrow">Experience</div>
+            <article class="job">
+              <h3>Product Owner & UX/UI Designer</h3>
+              <div class="meta">Innosabi · Innovation Management Software · SaaS · Munich, Germany (Hybrid) · 2023</div>
+              <p>Responsible for managing product development specifications under a larger strategic scope while ensuring an exceptional user experience through intuitive and visually appealing designs. <b>Main tasks:</b> feature specification refinement, sprint planning, dynamic backlog, asset and roadmap management.</p>
+            </article>
+            <article class="job">
+              <h3>Senior Product Manager</h3>
+              <div class="meta">Cansativa · Medical Cannabis · Marketplace & Distribution · Frankfurt, Germany (Remote) · 2021 – 2022</div>
+              <p>Spearheaded product discovery and defined the strategic product vision for an end-user mobile application under extremely narrow regulatory constraints. <b>Main tasks:</b> user on-site and industry research, articulation of strategic product vision, established UX/UI direction and oversaw product lifecycle.</p>
+            </article>
+            <article class="job">
+              <h3>Head of Product & Manufacturing</h3>
+              <div class="meta">CKSoul · Wellness & Lifestyle · eCommerce & Retail · Los Angeles, U.S. (Remote) · 2017 – 2020</div>
+              <p>Led the production department, ensuring the timely delivery of medical-grade, customer-centric products via an e-commerce platform. <b>Main tasks:</b> product research and ideation, academic research collaboration with UCLA, scalability tactics, sales support, partnership negotiation support and company-wide briefings.</p>
+            </article>
+          </div>
+
+          <div class="card span-2">
+            <div class="eyebrow">Current Initiative</div>
+            <div class="initiative">
+              <h4>AI Product Management Certification Program · Ironhack</h4>
+              <span class="badge">Estimated completion: 4 Sept, 2026</span>
+            </div>
+          </div>
+
+          <div class="card span-2">
+            <div class="eyebrow">Personal Interests</div>
+            <div class="interests">
+              <div class="interest"><i><svg class="ico"><use href="#i-book"/></svg></i>Reading</div>
+              <div class="interest"><i><svg class="ico"><use href="#i-dumbbell"/></svg></i>Fitness</div>
+              <div class="interest"><i><svg class="ico"><use href="#i-globe"/></svg></i>Languages</div>
+              <div class="interest"><i><svg class="ico"><use href="#i-blocks"/></svg></i>Blockchain</div>
+              <div class="interest"><i><svg class="ico"><use href="#i-brush"/></svg></i>Drawing</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== REFERENCES ========== -->
+      <section class="view" id="view-references" data-title="References" aria-label="References">
+        <div class="section-head"><h2>Performance</h2></div>
+        <div class="ref-grid">
+          <div class="card score-card">
+            <img class="avatar" src="assets/joe.png" alt="Portrait of Joe San" width="112" height="112">
+            <h2>Joe San</h2>
+            <p class="tag">Passionate Product Manager skilled in shaping ideas into user-centric solutions.</p>
+            <div class="big-score">4.8</div>
+            <div class="stars" aria-label="4.8 out of 5 stars">
+              <svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>
+            </div>
+            <div class="label">Based on 24 reviews</div>
+            <ul class="bars">
+              <li><div>Quality of Work<b>5.0</b></div><span class="bar"><i style="width:100%"></i></span></li>
+              <li><div>Productivity & Efficiency<b>4.9</b></div><span class="bar"><i style="width:98%"></i></span></li>
+              <li><div>Problem-Solving<b>4.8</b></div><span class="bar"><i style="width:96%"></i></span></li>
+              <li><div>Job Knowledge & Skills<b>4.6</b></div><span class="bar"><i style="width:92%"></i></span></li>
+              <li><div>Initiative & Innovation<b>4.6</b></div><span class="bar"><i style="width:92%"></i></span></li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="stats">
+              <div class="card stat"><div class="label">Recommended by</div><strong>95%</strong><small>of previous employers</small></div>
+              <div class="card stat"><div class="label">Review Rate</div><strong class="up">+ 4.67%</strong><small>year-on-year</small></div>
+              <div class="card stat"><div class="label">In the top</div><strong>4%</strong><small>of 381 applicants</small></div>
+            </div>
+
+            <div class="recs">
+              <h2>Recommendations</h2>
+
+              <article class="card">
+                <div class="rec-head">
+                  <img class="avatar" src="assets/ref-koziol.png" alt="" width="52" height="52">
+                  <div><h3>Maksymilian Koziol</h3><div class="role">Senior Full-Stack Software Developer</div><div class="co">Innosabi · Innovation Management Software</div></div>
+                  <time datetime="2023-10-30">October 30, 2023</time>
+                </div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Colleague</span></div>
+                <blockquote>“Joe's exceptional commitment to organizational excellence was demonstrated through his meticulous adherence to company processes and his clear communication of complex procedures. His unwavering professionalism, even in challenging situations, was instrumental to our team's success, making him a valuable asset to any organization.”</blockquote>
+              </article>
+
+              <article class="card">
+                <div class="rec-head">
+                  <img class="avatar" src="assets/ref-scheliga.png" alt="" width="52" height="52">
+                  <div><h3>Mario Scheliga</h3><div class="role">Chief Technology Officer & Director of Product</div><div class="co">Cansativa · Medical Cannabis Distribution</div></div>
+                  <time datetime="2022-11-15">November 15, 2022</time>
+                </div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.8</span><span class="rel">Direct Manager</span></div>
+                <blockquote>“Fast, creative, thoughtful, on-point delivery was always the norm. Joe was a pleasure to work with. His passion for new fields and engagement in these tasks was my favorite part.”</blockquote>
+              </article>
+
+              <article class="card">
+                <div class="rec-head">
+                  <img class="avatar" src="assets/ref-berklee.png" alt="" width="52" height="52">
+                  <div><h3>Ken Berklee</h3><div class="role">Chief Executive Officer & Strategic Business Advisor</div><div class="co">Tuatara Capital & CKSoul · Venture Capital, Private Equity & Medical Cannabis</div></div>
+                  <time datetime="2021-12-11">December 11, 2021</time>
+                </div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Direct Manager</span></div>
+                <blockquote>“I valued working with Joe during a crucial period at CKSoul. His competence, composure, and collaborative approach were commendable. With strong organizational skills and sound judgment, he demonstrated excellent capabilities on all fronts. I would gladly work with Joe again and wholeheartedly recommend him.”</blockquote>
+              </article>
+
+              <!-- TODO: Angie Macaraeg (Sales Manager, December 07, 2021) — her quote is cut off in the PDF.
+                   Add her card here (avatar: assets/ref-macaraeg.png) once the full text is available. -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== INBOX ========== -->
+      <section class="view" id="view-inbox" data-title="Inbox" aria-label="Cover letter">
+        <div class="inbox">
+          <div class="mail-list">
+            <div class="bar-top"><span class="cb"></span>Select all<span class="sp"><button class="icon-btn" aria-label="Refresh" type="button"><svg class="ico" style="width:18px;height:18px"><use href="#i-refresh"/></svg></button></span></div>
+            <div class="mail on">
+              <span class="cb"></span>
+              <div class="body"><div class="from"><span>Joe San</span><time>3 mins</time></div><h4>Product Manager: Cover Letter & CV</h4><p>Dear talent team, I am writing to express my interest in exploring a partnership…</p></div>
+            </div>
+            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>chilldude1992@gmail.com</span><time>2 hrs</time></div><h4>Inquiry for available position</h4><p>Dear hiring manager, I’d like to inquire about a position you have posted on LinkedIn…</p></div></div>
+            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>Personio Team</span><time>8 hrs</time></div><h4>Your monthly invoice</h4><p>Hi Helena, We hope this message finds you well. Attached is your monthly invoice…</p></div></div>
+            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>sunloverlily924@yahoo.com</span><time>8 hrs</time></div><h4>My application for the position</h4><p>Hello, I am excited to apply for the position posted on Stepstone…</p></div></div>
+            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>antjewies@gmail.com</span><time>1 day</time></div><h4>Application enclosed</h4><p>To whom it may concern, I am submitting my application for your review…</p></div></div>
+            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>MailChimp</span><time>1 day</time></div><h4>We’re updating our terms of service</h4><p>Here’s what’s changing and what it means for your account…</p></div></div>
+            <div class="more">+ 24 more messages</div>
+          </div>
+
+          <div class="reader">
+            <div class="reader-tools">
+              <span>1 of 25</span>
+              <button class="icon-btn" aria-label="Previous" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
+              <button class="icon-btn" aria-label="Next" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
+              <span class="grow"></span>
+              <button class="icon-btn hide-sm" aria-label="Archive" type="button"><svg class="ico"><use href="#i-archive"/></svg></button>
+              <button class="icon-btn hide-sm" aria-label="Delete" type="button"><svg class="ico"><use href="#i-trash"/></svg></button>
+              <button class="icon-btn hide-sm" aria-label="Mark unread" type="button"><svg class="ico"><use href="#i-mail"/></svg></button>
+              <button class="icon-btn hide-sm" aria-label="Snooze" type="button"><svg class="ico"><use href="#i-clock"/></svg></button>
+              <button class="icon-btn hide-sm" aria-label="Label" type="button"><svg class="ico"><use href="#i-tag"/></svg></button>
+              <button class="icon-btn" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
+            </div>
+
+            <article class="card letter">
+              <div class="letter-head">
+                <img class="avatar" src="assets/joe.png" alt="" width="48" height="48">
+                <div><b>Joe San</b> <span class="addr">contact.joesan@proton.me</span><div class="to">to me</div></div>
+                <time datetime="2026-06-18">18 June, 2026</time>
+              </div>
+              <h2>Product Manager: Cover Letter & CV</h2>
+              <div class="txt">
+                <p>Dear talent team,</p>
+                <p>I am writing to express my interest in exploring a partnership within your organization and offer my expertise in Product Management. I am delighted to share my CV with you for your consideration.</p>
+                <p>With over five years of experience in Product Management, I have proven competence in enabling teams to accomplish their objectives by developing innovative solutions that combine profound customer understanding, powerful technology and strategic business needs.</p>
+                <p>As a Senior Product Manager at Cansativa, a leader in medical cannabis distribution in Germany, I led the initiative of connecting pharmacies, doctors, patients and producers via an online marketplace and a mobile application. Central to my role was developing a compelling positioning based on product strategy, competitive analysis, a clear UX/UI direction and keen customer empathy.</p>
+                <p>I’ve also operated as Product Owner and UX/UI Designer at Innosabi, a leader in innovation management tools based in Munich, where key feature requests were crafted by means of cross-functional collaboration, alongside internal teams and international clients to guarantee alignment with their company goals and overarching strategy.</p>
+                <p>Additionally, I’ve had the opportunity of working at CKSoul, a wellness and lifestyle brand in Los Angeles, as Head of Product & Manufacturing, where I collaborated in launch strategies alongside the marketing, sales and customer success teams and ensured the successful production of medical-grade, customer-centric products.</p>
+                <p>I am confident I could be of great contribution to your mission. I’m eager to learn more about your mission and look forward to your reply.</p>
+                <p>Sincerely,</p>
+              </div>
+              <div class="sig">
+                <img class="avatar" src="assets/joe.png" alt="" width="48" height="48">
+                <div><b>Joe San</b><span>Product Management & Brand Design</span></div>
+              </div>
+              <a class="attach" href="#profile"><i>CV</i><div>Joe_San_CV<small>Open the full profile →</small></div></a>
+              <div class="actions">
+                <a class="pill primary" href="mailto:contact.joesan@proton.me?subject=Re%3A%20Product%20Manager%3A%20Cover%20Letter%20%26%20CV"><svg class="ico" style="width:16px;height:16px"><use href="#i-reply"/></svg>Reply</a>
+                <button class="pill ghost share" type="button"><svg class="ico" style="width:16px;height:16px"><use href="#i-forward"/></svg>Forward</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== Right panel ===== -->
+  <aside class="panel" aria-label="Details">
+
+    <div class="panel-inner" data-for="profile">
+      <div>
+        <img class="illu" src="assets/illu-profile.png" alt="">
+        <h3>Fit Score</h3>
+        <div class="fit">
+          <div class="ring" style="--p:93"><span>93%</span></div>
+          <span class="match-tag"><svg class="ico"><use href="#i-check"/></svg>This applicant is a great match!</span>
+        </div>
+      </div>
+      <div>
+        <ul class="skills">
+          <li><div class="ring" style="--p:98"><span>98%</span></div><div><b>Customer-Centric Assessment</b><small>Excellent match</small></div></li>
+          <li><div class="ring" style="--p:94"><span>94%</span></div><div><b>Cross-Functional Collaboration</b><small>Great match</small></div></li>
+          <li><div class="ring" style="--p:92"><span>92%</span></div><div><b>Effective Communication</b><small>Great match</small></div></li>
+          <li><div class="ring" style="--p:91"><span>91%</span></div><div><b>Strategic Product Planning</b><small>Great match</small></div></li>
+          <li><div class="ring" style="--p:89"><span>89%</span></div><div><b>Team & Resource Coordination</b><small>Good match</small></div></li>
+        </ul>
+        <h3>Culture Compatibility Traits</h3>
+        <ul class="traits">
+          <li><svg class="ico"><use href="#i-team"/></svg>Driven by values and principles</li>
+          <li><svg class="ico"><use href="#i-heart"/></svg>Passion and pride for own work</li>
+          <li><svg class="ico"><use href="#i-chart"/></svg>Receptive to meaningful challenges</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel-inner" data-for="references">
+      <div>
+        <img class="illu" src="assets/illu-references.png" alt="">
+        <h3>Reviews Ranking</h3>
+        <div class="ranking">
+          <div class="stack" style="height:190px">
+            <span class="top">Top 4%</span><span class="marker"></span>
+            <i style="flex:9;background:#4f4ff0;border-radius:3px 3px 0 0"></i>
+            <i style="flex:25;background:#6262f6"></i>
+            <i style="flex:32;background:#8686f9"></i>
+            <i style="flex:18;background:#a6a6fb"></i>
+            <i style="flex:15;background:#c3c3fd;border-radius:0 0 3px 3px"></i>
+          </div>
+          <ul class="legend">
+            <li><span style="background:#4f4ff0"></span><b>9%</b><small>5.0 – 4.5</small></li>
+            <li><span style="background:#6262f6"></span><b>25%</b><small>4.5 – 4.0</small></li>
+            <li><span style="background:#8686f9"></span><b>32%</b><small>4.0 – 3.5</small></li>
+            <li><span style="background:#a6a6fb"></span><b>18%</b><small>3.5 – 3.0</small></li>
+            <li><span style="background:#c3c3fd"></span><b>15%</b><small>3.0 – 0.0</small></li>
+          </ul>
+        </div>
+        <p class="total">Total of 381 applicants</p>
+      </div>
+      <div>
+        <h3>Scouting Radars</h3>
+        <ul class="radars">
+          <li><span class="lg"><img src="assets/logo-waveform.png" alt=""></span><div><b>Waveform</b><span>Scouting Management Software</span><small>Interviewed candidate 1 week ago</small></div></li>
+          <li><span class="lg" style="color:#3b7ddd"><svg class="ico" style="width:18px;height:18px"><use href="#i-chart"/></svg></span><div><b>Asirium</b><span>Blockchain Identification Services</span><small>Scheduled candidate 1 day ago</small></div></li>
+          <li><span class="lg"><img src="assets/logo-innosync.png" alt=""></span><div><b>Innosync</b><span>Innovation Management Software</span><small>Viewed candidate 2 weeks ago</small></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel-inner" data-for="inbox">
+      <div>
+        <img class="illu" src="assets/illu-inbox.png" alt="">
+        <div class="cal-head">
+          <button class="icon-btn" aria-label="Previous month" type="button" disabled><svg class="ico"><use href="#i-left"/></svg></button>
+          <h3>June 2026</h3>
+          <button class="icon-btn" aria-label="Next month" type="button" disabled><svg class="ico"><use href="#i-right"/></svg></button>
+        </div>
+        <div class="cal" id="cal"></div>
+      </div>
+      <div>
+        <div class="cal-head">
+          <button class="icon-btn" aria-label="Previous week" type="button" disabled><svg class="ico"><use href="#i-left"/></svg></button>
+          <h3>Next Week</h3>
+          <button class="icon-btn" aria-label="Following week" type="button" disabled><svg class="ico"><use href="#i-right"/></svg></button>
+        </div>
+        <ul class="events">
+          <li><div class="d"><b>18</b><small>Jun</small></div><div class="e"><b>First Impressions</b><span>with Recruiter</span><time><svg class="ico"><use href="#i-clock"/></svg>12:30</time></div></li>
+          <li><div class="d"><b>19</b><small>Jun</small></div><div class="e"><b>Interview</b><span>with Sr. Product Mgr.</span><time><svg class="ico"><use href="#i-clock"/></svg>10:45</time></div></li>
+          <li><div class="d"><b>22</b><small>Jun</small></div><div class="e"><b>Case Study</b><span>with Dir. of Product</span><time><svg class="ico"><use href="#i-clock"/></svg>14:00</time></div></li>
+          <li><div class="d"><b>23</b><small>Jun</small></div><div class="e"><b>Offer</b><span>with COO</span><time><svg class="ico"><use href="#i-clock"/></svg>09:00</time></div></li>
+        </ul>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<script>
+  // ----- Calendar (June 2026 starts on a Monday) -----
+  (function(){
+    const cal=document.getElementById('cal');
+    let html=['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="dow">${d}</div>`).join('');
+    for(let d=1; d<=30; d++) html+=`<span${d===18?' class="today" aria-current="date"':''}>${d}</span>`;
+    for(let d=1; d<=5; d++) html+=`<span class="out">${d}</span>`;
+    cal.innerHTML=html;
+  })();
+
+  // ----- View switching via URL hash -----
+  const views=['inbox','profile','references'];
+  function show(){
+    let v=location.hash.replace('#','');
+    if(!views.includes(v)) v='profile';
+    document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active', el.id==='view-'+v));
+    document.querySelectorAll('.panel-inner').forEach(el=>el.hidden = el.dataset.for!==v);
+    document.querySelectorAll('.nav-btn[data-view]').forEach(el=>{
+      if(el.dataset.view===v) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current');
+    });
+    const title=document.getElementById('view-'+v).dataset.title;
+    document.getElementById('view-title').textContent=title;
+    document.querySelector('.content').scrollTop=0;
+  }
+  window.addEventListener('hashchange', ()=>{ show(); window.scrollTo(0,0); });
+  show();
+
+  // ----- Side panel toggle -----
+  const app=document.getElementById('app'), tog=document.getElementById('toggle-panel');
+  tog.addEventListener('click',()=>{
+    const hidden=app.classList.toggle('panel-hidden');
+    tog.setAttribute('aria-pressed', String(!hidden));
+  });
+
+  // ----- Share / forward -----
+  document.querySelectorAll('.share').forEach(b=>b.addEventListener('click', async ()=>{
+    const data={title:'Joe San · Product Management & Brand Design', url:location.href.split('#')[0]};
+    try{
+      if(navigator.share){ await navigator.share(data); return; }
+      await navigator.clipboard.writeText(data.url);
+      const old=b.innerHTML; b.setAttribute('aria-label','Link copied');
+      if(b.classList.contains('pill')){ b.textContent='Link copied ✓'; setTimeout(()=>b.innerHTML=old,1800); }
+    }catch(e){}
+  }));
+</script>
+</body>
+</html>
