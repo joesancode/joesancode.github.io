@@ -222,6 +222,9 @@
   button.interest[aria-expanded="true"]{color:var(--ink)}
   .int-pop{position:absolute;bottom:calc(100% + 12px);width:min(340px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop-shadow);padding:16px 18px;z-index:20;animation:fade .15s ease;text-align:left}
   .int-pop[hidden]{display:none}
+  .int-pop .book{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px}
+  .int-pop .book .by{margin-bottom:0}
+  .int-pop .cover{width:64px;height:96px;object-fit:cover;border-radius:4px;box-shadow:0 4px 12px rgba(20,20,50,.18);background:var(--bg);flex:none}
   .int-pop .sig{margin-top:8px;font-size:13px;color:var(--muted);text-align:right}
   .int-pop .embed{margin-top:10px;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--line)}
   .int-pop .embed iframe{display:block;width:100%;height:440px;border:0}
@@ -1468,7 +1471,8 @@
 
   // ----- Personal interests: click for a short note -----
   window.interests={
-    reading:{eyebrow:'Currently reading',title:'Thanosis',by:'Jason Reza Jorjani · 2025',
+    reading:{eyebrow:'Currently reading',title:'Thanosis',
+      cover:['https://covers.openlibrary.org/b/isbn/9781917646888-M.jpg?default=false','https://books.google.com/books/content?id=uQnF0QEACAAJ&printsec=frontcover&img=1&zoom=1'],by:'Jason Reza Jorjani · 2025',
       text:'A philosophical investigation of life after death. Drawing on a century of parapsychological research, Jorjani argues that individuality and creative agency survive death.',
       link:['View at Arktos','https://arktos.com/product/thanosis/']},
     fitness:{eyebrow:'Fitness',text:'Not crazy stuff: push-ups, pull-ups, squats and the like. Pretty vanilla but consistent.'},
@@ -1488,10 +1492,14 @@
       close();
       const d=interests[btn.dataset.int];
       pop.innerHTML=`<div class="eyebrow">${esc(d.eyebrow)}</div>`
+        +(d.cover?`<div class="book"><img class="cover" alt="Cover of ${esc(d.title)}" width="64" height="96" referrerpolicy="no-referrer" data-i="0" src="${d.cover[0]}"><div>`:'')
         +(d.title?`<h4>${esc(d.title)}</h4>`:'')+(d.by?`<div class="by">${esc(d.by)}</div>`:'')
+        +(d.cover?`</div></div>`:'')
         +(d.quote?`<blockquote>“${esc(d.quote)}”</blockquote>`:'')+(d.sig?`<div class="sig">— ${esc(d.sig)}</div>`:'')+(d.text?`<p>${esc(d.text)}</p>`:'')
         +(d.embed?`<div class="embed"><iframe src="${d.embed}" title="${esc(d.text)} (Instagram)" loading="lazy" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'')
         +(d.link?`<a href="${d.link[1]}" target="_blank" rel="noopener">${esc(d.link[0])} ↗</a>`:'');
+      const cv=pop.querySelector('img.cover');
+      if(cv) cv.addEventListener('error',()=>{ const n=+cv.dataset.i+1; if(d.cover[n]){ cv.dataset.i=n; cv.src=d.cover[n]; } else cv.remove(); });
       pop.setAttribute('aria-label',btn.textContent.trim());
       pop.hidden=false; btn.setAttribute('aria-expanded','true'); openBtn=btn;
       // centre under the icon, kept inside the card
