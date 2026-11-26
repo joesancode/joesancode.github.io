@@ -91,6 +91,29 @@
   .search{display:flex;align-items:center;gap:10px;width:240px;height:38px;border:0;background:var(--bg);border-radius:10px;padding:0 12px;color:var(--muted)}
   .search:focus-within{box-shadow:0 0 0 2px var(--accent-soft)}
   .search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--ink)}
+  .search input::-webkit-search-cancel-button{display:none}
+  .search-wrap{position:relative}
+  .q-key{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--line-2);border-radius:5px;padding:0 6px;line-height:18px}
+  .search:focus-within .q-key{display:none}
+  .icon-btn.search-btn{display:none}
+  .search-pop{position:absolute;top:46px;left:0;width:420px;max-height:min(70vh,560px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--pop-shadow);padding:8px;z-index:45;animation:fade .15s ease}
+  .search-pop[hidden]{display:none}
+  .q-group{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 10px 4px}
+  .q-opt{display:block;padding:8px 10px;border-radius:10px;cursor:pointer}
+  .q-opt[aria-selected="true"]{background:var(--bg)}
+  .q-opt b{display:block;font-size:14px;font-weight:600;color:var(--ink)}
+  .q-opt span{display:block;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .q-opt mark,.q-empty mark{background:var(--accent-soft);color:var(--ink);border-radius:3px;padding:0 1px}
+  .q-empty{padding:14px 10px;font-size:13.5px;color:var(--ink-2)}
+  .q-empty p+p{margin-top:6px}
+  .q-chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 10px 10px}
+  .q-chips button{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--ink-2)}
+  .q-chips button:hover{color:var(--ink)}
+  .q-count{font-size:12px;color:var(--muted);padding:6px 10px 2px}
+  .flash{animation:flash 1.6s ease}
+  @keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 3px transparent}}
+  .mail[hidden]{display:none}
+  .mail-none{padding:24px 16px;font-size:13.5px;color:var(--muted);text-align:center}
   .icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink-2)}
   .icon-btn:hover{background:var(--bg)}
   .content{flex:1;overflow:auto;background:var(--bg)}
@@ -147,12 +170,10 @@
   .id-card{text-align:center}
   .id-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
   .id-card h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
-  .status-line{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13px;color:var(--muted)}
-  .status-line i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
   .contacts a[data-copy]{position:relative}
   .contacts a[data-copy] .cp{margin-left:auto;width:15px;height:15px;color:var(--muted);opacity:0;transition:opacity .15s}
   .contacts a[data-copy]:hover .cp,.contacts a[data-copy]:focus-visible .cp{opacity:1}
-  .notes textarea{width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;padding:10px 12px;outline:0}
+  .notes textarea{display:block;width:100%;min-height:120px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;padding:10px 12px;outline:0}
   .notes textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .notes textarea::placeholder{color:var(--muted)}
   .notes .foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted)}
@@ -387,6 +408,11 @@
     .topbar{height:64px;padding:0 16px;gap:8px}
     .topbar h1{font-size:18px}
     .search{display:none}
+    .icon-btn.search-btn{display:grid}
+    .topbar{position:relative}
+    .topbar.q-open .search-wrap{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);z-index:46}
+    .topbar.q-open .search{display:flex;width:100%;background:var(--surface);box-shadow:var(--pop-shadow)}
+    .topbar.q-open .search-pop{position:fixed;left:12px;right:12px;top:64px;width:auto}
     .section-head{padding:16px 16px 0}
     .stats{grid-template-columns:1fr;gap:12px}
     .reader-tools{padding:10px 16px;overflow-x:auto}
@@ -609,7 +635,11 @@
   <main class="main">
     <header class="topbar">
       <h1 id="view-title">Candidate Scouting</h1>
-      <label class="search"><svg class="ico" style="width:18px;height:18px"><use href="#i-search"/></svg><input type="search" placeholder="Search" aria-label="Search (decorative)"></label>
+      <div class="search-wrap" id="search-wrap">
+        <label class="search"><svg class="ico" style="width:18px;height:18px"><use href="#i-search"/></svg><input type="search" id="q" placeholder="Search" autocomplete="off" spellcheck="false" role="combobox" aria-label="Search Joe San’s CV" aria-expanded="false" aria-controls="q-results" aria-autocomplete="list"><kbd class="q-key" aria-hidden="true">/</kbd></label>
+        <div class="search-pop" id="q-pop" hidden><div id="q-results" role="listbox" aria-label="Search results"></div></div>
+      </div>
+      <button class="icon-btn search-btn" id="search-btn" type="button" aria-label="Search"><svg class="ico"><use href="#i-search"/></svg></button>
       <div class="bell-wrap">
         <button class="icon-btn" id="bell" aria-label="Notifications, 3 new" aria-haspopup="dialog" aria-expanded="false" type="button"><svg class="ico"><use href="#i-bell"/></svg><span class="badge" id="bell-badge">3</span></button>
         <div class="notifs" id="notifs" role="dialog" aria-label="Notifications" hidden>
@@ -650,7 +680,6 @@
             <div class="card id-card">
               <img class="avatar" src="assets/joe.png" alt="Portrait of Joe San" width="112" height="112">
               <h2>Joe San</h2>
-              <div class="status-line"><i aria-hidden="true"></i>Open to work · Munich / Remote</div>
               <ul class="contacts">
                 <li><a href="mailto:contact.joesan@proton.me" data-copy="contact.joesan@proton.me" data-what="Email"><svg class="ico"><use href="#i-mail"/></svg>contact.joesan@proton.me<svg class="ico cp" aria-hidden="true"><use href="#i-copy"/></svg></a></li>
                 <li><a href="tel:+491739927926" data-copy="+49 173 992 7926" data-what="Phone number"><svg class="ico"><use href="#i-phone"/></svg>+49 173 992 7926<svg class="ico cp" aria-hidden="true"><use href="#i-copy"/></svg></a></li>
@@ -675,12 +704,6 @@
               <div class="eyebrow">Education</div>
               <h4>Digital Design & Animation</h4>
               <div class="label">Anthem College, U.S. · 2008</div>
-            </div>
-
-            <div class="card notes">
-              <label class="eyebrow" for="rec-notes" style="display:block">Your notes</label>
-              <textarea id="rec-notes" placeholder="e.g. Call Joe San before someone else does."></textarea>
-              <div class="foot"><span id="notes-status">Private, saved on this device</span><button type="button" id="notes-clear" hidden>Clear</button></div>
             </div>
           </div>
 
@@ -935,6 +958,11 @@
           <li><svg class="ico"><use href="#i-heart"/></svg>Passion and pride for own work</li>
           <li><svg class="ico"><use href="#i-chart"/></svg>Receptive to meaningful challenges</li>
         </ul>
+        <h3><label for="rec-notes">Your Notes</label></h3>
+        <div class="notes">
+          <textarea id="rec-notes" placeholder="e.g. Call Joe San before someone else does."></textarea>
+          <div class="foot"><span id="notes-status">Private, saved on this device</span><button type="button" id="notes-clear" hidden>Clear</button></div>
+        </div>
       </div>
     </div>
 
@@ -1217,16 +1245,23 @@
     mails.forEach(x=>{ if(!x.preview) x.preview=x.body.join(' '); if(x.read===undefined) x.read=x.ago>sinceMidnight; });
     document.querySelectorAll('.mail-date').forEach(t=>t.textContent=full(+t.dataset.ago));
 
+    let filter='';
+    const joeText=()=>joeL.textContent;
+    const hay=x=>(x.from+' '+x.subject+' '+(x.id==='joe'?joeText():(x.body||[]).join(' '))).toLowerCase();
+    window.inbox={ mails, text:x=>x.id==='joe'?joeText():(x.body||[]).join(' '),
+      open:x=>{ const i=mails.indexOf(x); if(i>-1) open(i,true); },
+      filter:q=>{ filter=q.trim().toLowerCase(); renderList(); } };
     function renderList(){
+      const hits=mails.filter(x=>!filter||hay(x).includes(filter)).length;
       list.innerHTML=mails.map((x,i)=>`
-        <div class="mail${i===cur?' on':''}${x.read?'':' unread'}" role="listitem" tabindex="0" data-i="${i}" aria-current="${i===cur}">
+        <div class="mail${i===cur?' on':''}${x.read?'':' unread'}" role="listitem" tabindex="0" data-i="${i}" aria-current="${i===cur}"${filter&&!hay(x).includes(filter)?' hidden':''}>
           <span class="cb" role="checkbox" tabindex="0" aria-checked="${!!x.sel}" aria-label="Select message" data-cb="${i}"></span>
           <div class="body">
             <div class="from"><span>${esc(x.from)}${x.fav?' <em class="fav-tag">Favorite</em>':''}</span><time>${rel(x.ago)}</time></div>
             <h4>${x.fav?'<svg class="fav-star" viewBox="0 0 24 24" aria-label="Favorite" role="img"><use href="#i-star"/></svg>':''}<span>${esc(x.subject)}</span></h4>
             <p>${esc(x.preview)}</p>
           </div>
-        </div>`).join('');
+        </div>`).join('')+(hits?'':`<div class="mail-none">No messages match “${esc(filter)}”.</div>`);
     }
     function open(i, focusReader){
       cur=Math.max(0,Math.min(mails.length-1,i)); const x=mails[cur]; x.read=true;
@@ -1400,6 +1435,112 @@
       showToast('Notes cleared','Undo',()=>{ ta.value=old; sync(); try{ localStorage.setItem('recruiterNotes',old); }catch(e){} });
     });
     sync();
+  })();
+
+  // ----- Search across the whole CV -----
+  (function(){
+    const q=document.getElementById('q'), pop=document.getElementById('q-pop'), box=document.getElementById('q-results');
+    const topbar=document.querySelector('.topbar'), sBtn=document.getElementById('search-btn');
+    const $=(sel,root=document)=>[...root.querySelectorAll(sel)];
+    const T=el=>el?el.textContent.replace(/\s+/g,' ').trim():'';
+    const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const P='#view-profile', PP='.panel-inner[data-for="profile"]', R='#view-references';
+
+    // Build the index fresh each time (the inbox can change)
+    function index(){
+      const out=[], add=(group,view,el,title,sub,text)=>{ const e={group,view,el,title,sub,text:text||''}; out.push(e); return e; };
+      const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),'Headline',T(hl.querySelector('p')));
+      $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),'Contact'));
+      $(P+' .job').forEach(j=>add('Experience','profile',j,T(j.querySelector('h3')),T(j.querySelector('.meta')),T(j.querySelector('p'))));
+      const cs=document.querySelector(P+' .csat'); add('Profile','profile',cs,'CSAT Score 4.92','of 217 B2B clients · max 5.0');
+      $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),'Language · '+T(li.querySelector('em'))));
+      const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),'Education · '+T(ed.querySelector('.label')));
+      const ini=document.querySelector(P+' .initiative'); add('Profile','profile',ini.closest('.card'),T(ini.querySelector('h4')),'Certification · '+T(ini.querySelector('.badge')));
+      $(P+' .interest').forEach(i=>add('Profile','profile',i,T(i),'Personal interest'));
+      $(PP+' .skills li').forEach(li=>add('Skills','profile',li,T(li.querySelector('b')),T(li.querySelector('.ring'))+' · '+T(li.querySelector('small'))));
+      $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),'Culture compatibility trait'));
+      $(R+' .bars li').forEach(li=>add('References','references',li,T(li.querySelector('div')).replace(/[\d.]+$/,''),'Rating '+T(li.querySelector('b'))));
+      $(R+' .stat').forEach(st=>add('References','references',st,T(st.querySelector('.label'))+' '+T(st.querySelector('strong')),T(st.querySelector('small'))));
+      $(R+' .recs article').forEach(a=>add('References','references',a,T(a.querySelector('h3')),T(a.querySelector('.role'))+' · '+T(a.querySelector('.co')),T(a.querySelector('blockquote'))));
+      const joe=inbox.mails.find(m=>m.id==='joe');
+      if(joe) $('#letter-joe p').forEach(p=>add('Cover letter','inbox',p,'Joe San · Cover letter','',T(p)).mail=joe);
+      inbox.mails.filter(m=>m.id!=='joe').forEach(m=>{ const e=out[out.push({group:'Inbox',view:'inbox',title:m.subject,sub:m.from,text:inbox.text(m)})-1]; e.mail=m; });
+      return out;
+    }
+    function mark(text,term){
+      const i=text.toLowerCase().indexOf(term); if(i<0) return esc(text);
+      return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+term.length))+'</mark>'+esc(text.slice(i+term.length));
+    }
+    function snippet(text,term){
+      const i=text.toLowerCase().indexOf(term); if(i<0) return null;
+      const a=Math.max(0,i-28), b=Math.min(text.length,i+term.length+60);
+      return (a?'…':'')+mark(text.slice(a,b),term)+(b<text.length?'…':'');
+    }
+    const suggestions=['roadmap','UX','research','Munich','communication','Ken Berklee'];
+    let results=[], active=-1;
+    function render(){
+      const term=q.value.trim().toLowerCase();
+      if(!term){
+        results=[]; active=-1;
+        box.innerHTML='<div class="q-group">Try searching for</div><div class="q-chips">'+suggestions.map(s=>`<button type="button" data-s="${esc(s)}">${esc(s)}</button>`).join('')+'</div>';
+        return;
+      }
+      results=index().filter(e=>(e.title+' '+e.sub+' '+e.text).toLowerCase().includes(term));
+      active=results.length?0:-1;
+      if(!results.length){
+        box.innerHTML=`<div class="q-empty"><p>No results for “<mark>${esc(q.value.trim())}</mark>”.</p><p>The only candidate here is Joe San.</p></div><div class="q-chips"><button type="button" data-go="profile">Open Joe’s profile</button></div>`;
+        return;
+      }
+      let html=`<div class="q-count">${results.length} result${results.length>1?'s':''}</div>`, g='';
+      results.forEach((e,i)=>{
+        if(e.group!==g){ g=e.group; html+=`<div class="q-group">${esc(g)}</div>`; }
+        const sn=(!e.title.toLowerCase().includes(term)&&snippet(e.text,term))||snippet(e.sub,term)||snippet(e.text,term)||esc(e.sub);
+        html+=`<div class="q-opt" role="option" id="q-o${i}" data-i="${i}" aria-selected="${i===active}"><b>${mark(e.title,term)}</b><span>${sn}</span></div>`;
+      });
+      box.innerHTML=html;
+      q.setAttribute('aria-activedescendant','q-o0');
+    }
+    function setActive(i){
+      if(!results.length) return;
+      active=(i+results.length)%results.length;
+      $('.q-opt',box).forEach(o=>o.setAttribute('aria-selected',String(+o.dataset.i===active)));
+      const o=document.getElementById('q-o'+active); q.setAttribute('aria-activedescendant',o.id); o.scrollIntoView({block:'nearest'});
+    }
+    function openPop(){ pop.hidden=false; q.setAttribute('aria-expanded','true'); render(); }
+    function closePop(){ pop.hidden=true; q.setAttribute('aria-expanded','false'); q.removeAttribute('aria-activedescendant'); topbar.classList.remove('q-open'); }
+    function flash(el){ if(!el) return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); el.scrollIntoView({block:'center',behavior:'smooth'}); }
+    function go(e){
+      closePop(); q.blur();
+      if(document.getElementById('app').classList.contains('panel-hidden') && e.el && e.el.closest('.panel')) document.getElementById('toggle-panel').click();
+      const after=()=>{
+        if(e.mail){ inbox.open(e.mail); if(e.el) setTimeout(()=>flash(e.el),60); else setTimeout(()=>flash(document.querySelector('.mail.on')),60); }
+        else flash(e.el);
+      };
+      if(location.hash!=='#'+e.view){ location.hash=e.view; setTimeout(after,80); } else after();
+    }
+    q.addEventListener('focus',openPop);
+    q.addEventListener('input',()=>{ pop.hidden&&openPop(); render(); if(location.hash==='#inbox') inbox.filter(q.value); });
+    q.addEventListener('keydown',e=>{
+      if(e.key==='ArrowDown'){ e.preventDefault(); setActive(active+1); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); setActive(active-1); }
+      else if(e.key==='Enter'){ e.preventDefault(); if(results[active]) go(results[active]); }
+      else if(e.key==='Escape'){ if(q.value){ q.value=''; render(); inbox.filter(''); } else { closePop(); q.blur(); } }
+    });
+    box.addEventListener('mousedown',e=>e.preventDefault()); // keep focus in the field
+    box.addEventListener('click',e=>{
+      const o=e.target.closest('.q-opt'), s=e.target.closest('[data-s]'), g=e.target.closest('[data-go]');
+      if(o) go(results[+o.dataset.i]);
+      else if(s){ q.value=s.dataset.s; render(); if(location.hash==='#inbox') inbox.filter(q.value); }
+      else if(g){ closePop(); location.hash=g.dataset.go; }
+    });
+    box.addEventListener('mousemove',e=>{ const o=e.target.closest('.q-opt'); if(o&&+o.dataset.i!==active) setActive(+o.dataset.i); });
+    document.addEventListener('click',e=>{ if(!pop.hidden&&!e.target.closest('#search-wrap')&&e.target!==sBtn&&!sBtn.contains(e.target)) closePop(); });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='/'&&!/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)&&!document.activeElement.isContentEditable){ e.preventDefault(); sBtn.offsetParent?sBtn.click():q.focus(); }
+    });
+    sBtn.addEventListener('click',()=>{ topbar.classList.add('q-open'); q.focus(); });
+    // leaving the inbox clears its filter
+    window.addEventListener('hashchange',()=>{ if(location.hash!=='#inbox') inbox.filter(''); else if(q.value) inbox.filter(q.value); });
   })();
 
   // ----- View switching via URL hash -----
