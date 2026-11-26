@@ -34,6 +34,8 @@
     --fav-bg:#fff3dc;
     --pdf-bg:#ffe9e9;
     --saved:#f47a86;
+    --ok:#1f9d55;
+    --invert-bg:#1b1b22; --invert-ink:#ffffff;
     --pop-shadow:0 16px 40px rgba(20,20,50,.18),0 2px 6px rgba(20,20,50,.08);
     --il-a:#5050f8; --il-a2:#6c6cfb; --il-b:#3eb3ff; --il-c:#c9c9fd;
     --il-soft:#eeeefe; --il-paper:#ffffff; --il-line:#e3e3f0; --il-ink:#2a2a40; --il-track:#e0e0fd;
@@ -116,7 +118,7 @@
 
   /* ring progress */
   .ring{--p:0;--size:40px;--w:3px;width:var(--size);height:var(--size);border-radius:50%;display:grid;place-items:center;flex:none;
-    background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--track) 0);position:relative;font-weight:600;color:var(--accent);font-size:12px}
+    background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--track) 0);position:relative;font-weight:600;color:var(--ink);font-size:12px}
   .ring::before{content:"";position:absolute;inset:var(--w);border-radius:50%;background:var(--surface)}
   .ring span{position:relative}
   @property --p{syntax:'<number>';inherits:false;initial-value:0}
@@ -145,6 +147,18 @@
   .id-card{text-align:center}
   .id-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
   .id-card h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .status-line{display:inline-flex;align-items:center;gap:7px;margin-top:4px;font-size:13px;color:var(--muted)}
+  .status-line i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+  .contacts a[data-copy]{position:relative}
+  .contacts a[data-copy] .cp{margin-left:auto;width:15px;height:15px;color:var(--muted);opacity:0;transition:opacity .15s}
+  .contacts a[data-copy]:hover .cp,.contacts a[data-copy]:focus-visible .cp{opacity:1}
+  .notes textarea{width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px;line-height:1.5;padding:10px 12px;outline:0}
+  .notes textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .notes textarea::placeholder{color:var(--muted)}
+  .notes .foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted)}
+  .notes .foot button{font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+  .notes .foot button:hover{color:var(--ink)}
+  .notes .foot button[hidden]{display:none}
   .contacts{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px;text-align:left}
   .contacts li a,.contacts li span.row{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-2)}
   .contacts li a:hover{color:var(--accent)}
@@ -153,8 +167,8 @@
   .lang li{display:flex;align-items:center;gap:12px;font-size:14px}
   .lang em{margin-left:auto;font-style:normal;font-size:13px;color:var(--muted)}
   .edu h4{font-size:15px;font-weight:600}
-  .card.edu{background:var(--ink);color:var(--surface)}
-  .card.edu .eyebrow,.card.edu .label{color:var(--surface);opacity:.7}
+  .card.edu{background:var(--invert-bg);color:var(--invert-ink)}
+  .card.edu .eyebrow,.card.edu .label{color:var(--invert-ink);opacity:.7}
   .headline h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
   .headline p{color:var(--ink-2);font-size:14.5px}
   .headline .actions{display:flex;gap:10px;margin-top:18px}
@@ -484,6 +498,8 @@
     --fav-bg:#3a2e14;
     --pdf-bg:#3b1f22;
     --saved:#ff9aa4;
+    --ok:#4ade80;
+    --invert-bg:#3a3a4c; --invert-ink:#ececf3;
     --shadow:0 6px 24px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
     --pop-shadow:0 16px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4);
     --il-a:#6c6cff; --il-a2:#5252e6; --il-b:#3eb3ff; --il-c:#4a4a8a;
@@ -634,9 +650,10 @@
             <div class="card id-card">
               <img class="avatar" src="assets/joe.png" alt="Portrait of Joe San" width="112" height="112">
               <h2>Joe San</h2>
+              <div class="status-line"><i aria-hidden="true"></i>Open to work · Munich / Remote</div>
               <ul class="contacts">
-                <li><a href="mailto:contact.joesan@proton.me"><svg class="ico"><use href="#i-mail"/></svg>contact.joesan@proton.me</a></li>
-                <li><a href="tel:+491739927926"><svg class="ico"><use href="#i-phone"/></svg>+49 173 992 7926</a></li>
+                <li><a href="mailto:contact.joesan@proton.me" data-copy="contact.joesan@proton.me" data-what="Email"><svg class="ico"><use href="#i-mail"/></svg>contact.joesan@proton.me<svg class="ico cp" aria-hidden="true"><use href="#i-copy"/></svg></a></li>
+                <li><a href="tel:+491739927926" data-copy="+49 173 992 7926" data-what="Phone number"><svg class="ico"><use href="#i-phone"/></svg>+49 173 992 7926<svg class="ico cp" aria-hidden="true"><use href="#i-copy"/></svg></a></li>
                 <li><a href="https://www.linkedin.com/in/joe-san" target="_blank" rel="noopener"><svg class="ico"><use href="#i-linkedin"/></svg>/in/joe-san</a></li>
                 <li><a href="https://github.com/joesancode" target="_blank" rel="noopener"><svg class="ico"><use href="#i-github"/></svg>/joesancode</a></li>
                 <li><a href="https://www.instagram.com/joesanart" target="_blank" rel="noopener"><svg class="ico"><use href="#i-instagram"/></svg>/joesanart</a></li>
@@ -658,6 +675,12 @@
               <div class="eyebrow">Education</div>
               <h4>Digital Design & Animation</h4>
               <div class="label">Anthem College, U.S. · 2008</div>
+            </div>
+
+            <div class="card notes">
+              <label class="eyebrow" for="rec-notes" style="display:block">Your notes</label>
+              <textarea id="rec-notes" placeholder="e.g. Call Joe San before someone else does."></textarea>
+              <div class="foot"><span id="notes-status">Private, saved on this device</span><button type="button" id="notes-clear" hidden>Clear</button></div>
             </div>
           </div>
 
@@ -697,10 +720,10 @@
           </div>
 
           <div class="card span-2">
-            <div class="eyebrow">Current Initiative</div>
+            <div class="eyebrow">Latest Certification</div>
             <div class="initiative">
               <h4>AI Product Management Certification Program · Ironhack</h4>
-              <span class="badge">Estimated completion: 4 Sept, 2026</span>
+              <span class="badge">Completed · 20 Nov 2026</span>
             </div>
           </div>
 
@@ -1347,6 +1370,36 @@
         if(k<1) requestAnimationFrame(tick);
       })(t0);
     };
+  })();
+
+  // ----- Profile: click-to-copy contacts (desktop), recruiter notes -----
+  (function(){
+    const canHover=window.matchMedia('(hover: hover) and (pointer: fine)');
+    document.querySelectorAll('.contacts a[data-copy]').forEach(a=>{
+      if(canHover.matches) a.title='Copy '+a.dataset.what.toLowerCase();
+      a.addEventListener('click',async e=>{
+        if(!canHover.matches) return; // phones: keep native mail / call
+        e.preventDefault();
+        const href=a.href, isMail=href.startsWith('mailto:');
+        try{ await navigator.clipboard.writeText(a.dataset.copy); }catch(err){}
+        showToast(a.dataset.what+' copied', isMail?'Open mail app':'Call', ()=>{ location.href=href; });
+      });
+    });
+
+    const ta=document.getElementById('rec-notes'), st=document.getElementById('notes-status'), clr=document.getElementById('notes-clear');
+    const idle='Private, saved on this device'; let t;
+    try{ ta.value=localStorage.getItem('recruiterNotes')||''; }catch(e){}
+    const sync=()=>{ clr.hidden=!ta.value.trim(); };
+    ta.addEventListener('input',()=>{
+      sync(); clearTimeout(t);
+      t=setTimeout(()=>{ try{ localStorage.setItem('recruiterNotes',ta.value); st.textContent='Saved ✓'; }catch(e){ st.textContent='Couldn’t save in this browser'; }
+        setTimeout(()=>st.textContent=idle,1600); },400);
+    });
+    clr.addEventListener('click',()=>{
+      const old=ta.value; ta.value=''; sync(); try{ localStorage.removeItem('recruiterNotes'); }catch(e){}
+      showToast('Notes cleared','Undo',()=>{ ta.value=old; sync(); try{ localStorage.setItem('recruiterNotes',old); }catch(e){} });
+    });
+    sync();
   })();
 
   // ----- View switching via URL hash -----
