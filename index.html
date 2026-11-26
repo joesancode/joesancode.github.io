@@ -1155,7 +1155,9 @@
     const rel=m=>m<60?`${m} mins`:m<1440?`${Math.round(m/60)} hrs`:`${Math.round(m/1440)} day${Math.round(m/1440)>1?'s':''}`;
     const full=m=>new Date(now-m*60000).toLocaleString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
     const name=f=>f.includes('@')?f.split('@')[0]:f;
-    mails.forEach(x=>{ if(!x.preview) x.preview=x.body.join(' '); if(x.read===undefined) x.read=false; });
+    const sinceMidnight=(new Date()-new Date().setHours(0,0,0,0))/60000;
+    // only messages that arrived today start unread
+    mails.forEach(x=>{ if(!x.preview) x.preview=x.body.join(' '); if(x.read===undefined) x.read=x.ago>sinceMidnight; });
     document.querySelectorAll('.mail-date').forEach(t=>t.textContent=full(+t.dataset.ago));
 
     function renderList(){
