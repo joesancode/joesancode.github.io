@@ -33,6 +33,7 @@
     --fav-ink:#a86400;
     --fav-bg:#fff3dc;
     --pdf-bg:#ffe9e9;
+    --saved:#f47a86;
     --pop-shadow:0 16px 40px rgba(20,20,50,.18),0 2px 6px rgba(20,20,50,.08);
     --il-a:#5050f8; --il-a2:#6c6cfb; --il-b:#3eb3ff; --il-c:#c9c9fd;
     --il-soft:#eeeefe; --il-paper:#ffffff; --il-line:#e3e3f0; --il-ink:#2a2a40; --il-track:#e0e0fd;
@@ -118,6 +119,25 @@
     background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--track) 0);position:relative;font-weight:600;color:var(--accent);font-size:12px}
   .ring::before{content:"";position:absolute;inset:var(--w);border-radius:50%;background:var(--surface)}
   .ring span{position:relative}
+  @property --p{syntax:'<number>';inherits:false;initial-value:0}
+  .ring.anim{transition:--p 1.3s cubic-bezier(.2,.7,.2,1)}
+
+  /* bookmark + ⋯ menu in section heads */
+  .section-head .tools{position:relative}
+  .bm-btn .ico{transition:fill .2s,color .2s}
+  .bm-btn[aria-pressed="true"]{color:var(--saved)}
+  .bm-btn[aria-pressed="true"] .ico{fill:var(--saved)}
+  .bm-btn.pop .ico{animation:bm-pop .4s ease}
+  @keyframes bm-pop{40%{transform:scale(1.3)}}
+  .menu{position:absolute;right:0;top:44px;min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop-shadow);padding:6px;z-index:30;animation:fade .15s ease}
+  .menu[hidden]{display:none}
+  .menu a,.menu button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border-radius:9px;font-size:14px;color:var(--ink);text-align:left}
+  .menu a:hover,.menu button:hover,.menu a:focus-visible,.menu button:focus-visible{background:var(--bg);outline:0}
+  .menu .ico{width:18px;height:18px;color:var(--ink-2)}
+  .menu small{margin-left:auto;font-size:11.5px;color:var(--muted)}
+  .menu hr{border:0;border-top:1px solid var(--line);margin:6px 4px}
+  .pill.ghost.on{border-color:var(--saved);color:var(--saved)}
+  .pill.ghost.on .ico{fill:var(--saved)}
 
   /* ---------- Profile view ---------- */
   .profile-grid{display:grid;grid-template-columns:270px 1fr 150px;gap:16px;padding:16px 32px 40px;align-items:start}
@@ -236,8 +256,8 @@
   html[data-theme="dark"] .toast button{color:#4545e6}
   .bell-wrap{position:relative}
   #bell{position:relative}
-  .badge{position:absolute;top:0;right:-2px;min-width:13px;height:13px;border-radius:7px;background:#e5484d;color:#fff;font-size:9px;line-height:1;font-weight:700;display:grid;place-items:center;padding:0 2px;border:2px solid var(--surface);box-sizing:content-box}
-  .badge[hidden]{display:none}
+  .icon-btn .badge{position:absolute;top:0;right:-2px;min-width:13px;height:13px;border-radius:7px;background:#e5484d;color:#fff;font-size:9px;line-height:1;font-weight:700;display:grid;place-items:center;padding:0 2px;border:2px solid var(--surface);box-sizing:content-box}
+  .icon-btn .badge[hidden]{display:none}
   .notifs{position:absolute;right:0;top:46px;width:340px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--pop-shadow);padding:8px;z-index:40;animation:fade .18s ease}
   .notifs[hidden]{display:none}
   .notifs-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 10px}
@@ -462,6 +482,7 @@
     --fav-ink:#ffc46b;
     --fav-bg:#3a2e14;
     --pdf-bg:#3b1f22;
+    --saved:#ff9aa4;
     --shadow:0 6px 24px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
     --pop-shadow:0 16px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4);
     --il-a:#6c6cff; --il-a2:#5252e6; --il-b:#3eb3ff; --il-c:#4a4a8a;
@@ -498,6 +519,9 @@
     <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6C3.7 8.4 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4s1.5-1 5-1 5 2 8 2 3-1 3-1v11s-1 1-3 1-5-2-8-2-5 1-5 1"/></symbol>
     <symbol id="i-dots" viewBox="0 0 24 24"><path d="M12 5h.01M12 12h.01M12 19h.01" stroke-width="3"/></symbol>
     <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
@@ -588,10 +612,19 @@
         <div class="section-head">
           <h2>Profile</h2>
           <div class="tools">
-            <button class="icon-btn" aria-label="Bookmark" type="button" style="color:#fe8888"><svg class="ico" style="fill:#fe8888"><use href="#i-bookmark"/></svg></button>
+            <button class="icon-btn bm-btn" id="bm-btn" aria-label="Add to shortlist" aria-pressed="false" type="button"><svg class="ico"><use href="#i-bookmark"/></svg></button>
             <a class="icon-btn" href="assets/Joe_San_CV.pdf" download aria-label="Download CV as PDF"><svg class="ico"><use href="#i-download"/></svg></a>
             <button class="icon-btn share" aria-label="Share this page" type="button"><svg class="ico"><use href="#i-share"/></svg></button>
-            <button class="icon-btn" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
+            <button class="icon-btn" id="pf-more" aria-label="More actions" aria-haspopup="menu" aria-expanded="false" aria-controls="pf-menu" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
+            <div class="menu" id="pf-menu" role="menu" aria-label="Profile actions" hidden>
+              <a role="menuitem" href="assets/Joe_San_CV.pdf" download><svg class="ico"><use href="#i-download"/></svg>Download CV<small>PDF</small></a>
+              <button role="menuitem" type="button" data-act="share"><svg class="ico"><use href="#i-share"/></svg>Share profile</button>
+              <button role="menuitem" type="button" data-act="email"><svg class="ico"><use href="#i-copy"/></svg>Copy email</button>
+              <button role="menuitem" type="button" data-act="phone"><svg class="ico"><use href="#i-phone"/></svg>Copy phone number</button>
+              <hr>
+              <button role="menuitem" type="button" data-act="hide"><svg class="ico"><use href="#i-eye-off"/></svg>Hide candidate</button>
+              <button role="menuitem" type="button" data-act="report"><svg class="ico"><use href="#i-flag"/></svg>Report candidate</button>
+            </div>
           </div>
         </div>
 
@@ -632,7 +665,7 @@
             <p>Passionate Product Manager skilled in shaping ideas into user-centric solutions. Bridging vision, development, and innovation.</p>
             <div class="actions">
               <a class="pill primary" href="tel:+491739927926"><svg class="ico" style="width:16px;height:16px"><use href="#i-phone"/></svg>Call</a>
-              <a class="pill ghost" href="mailto:contact.joesan@proton.me?subject=Let%27s%20talk"><svg class="ico" style="width:16px;height:16px"><use href="#i-bookmark"/></svg>Short list</a>
+              <button class="pill ghost" id="sl-btn" type="button" aria-pressed="false"><svg class="ico" style="width:16px;height:16px"><use href="#i-bookmark"/></svg><span>Short list</span></button>
             </div>
           </div>
 
@@ -1248,6 +1281,73 @@
     open(0);
   })();
 
+  // ----- Profile: shortlist, ⋯ menu, animated rings -----
+  (function(){
+    const bm=document.getElementById('bm-btn'), sl=document.getElementById('sl-btn'), slTxt=sl.querySelector('span');
+    let on=false; try{ on=localStorage.getItem('shortlisted')==='1'; }catch(e){}
+    const keepJokes=[
+      'Removing Joe San from your shortlist? He’s load-bearing.',
+      'The shortlist would be a list of zero. Keeping him.',
+      'Request denied: shortlists need at least one great candidate.'
+    ]; let kj=0;
+    function paint(){
+      bm.setAttribute('aria-pressed',String(on)); sl.setAttribute('aria-pressed',String(on));
+      bm.setAttribute('aria-label', on?'Shortlisted':'Add to shortlist');
+      sl.classList.toggle('on',on); slTxt.textContent=on?'Shortlisted':'Short list';
+    }
+    function toggle(){
+      if(on){ showToast(keepJokes[kj++%keepJokes.length]); return; }
+      on=true; try{ localStorage.setItem('shortlisted','1'); }catch(e){}
+      paint(); bm.classList.remove('pop'); void bm.offsetWidth; bm.classList.add('pop');
+      showToast('Joe San added to your shortlist','Email him',()=>{ location.href='mailto:contact.joesan@proton.me?subject=You%27re%20on%20my%20shortlist'; });
+    }
+    bm.addEventListener('click',toggle); sl.addEventListener('click',toggle); paint();
+
+    // ⋯ menu
+    const more=document.getElementById('pf-more'), menu=document.getElementById('pf-menu');
+    const items=()=>[...menu.querySelectorAll('[role=menuitem]')];
+    function setMenu(open){ menu.hidden=!open; more.setAttribute('aria-expanded',String(open)); if(open) items()[0].focus(); }
+    more.addEventListener('click',e=>{ e.stopPropagation(); setMenu(menu.hidden); });
+    document.addEventListener('click',e=>{ if(!menu.hidden&&!menu.contains(e.target)) setMenu(false); });
+    menu.addEventListener('keydown',e=>{
+      const list=items(), i=list.indexOf(document.activeElement);
+      if(e.key==='Escape'){ setMenu(false); more.focus(); }
+      else if(e.key==='ArrowDown'){ e.preventDefault(); list[(i+1)%list.length].focus(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); list[(i-1+list.length)%list.length].focus(); }
+    });
+    async function copy(text,done){
+      try{ await navigator.clipboard.writeText(text); showToast(done); }
+      catch(e){ showToast(text); }
+    }
+    menu.addEventListener('click',e=>{
+      const it=e.target.closest('[role=menuitem]'); if(!it) return;
+      setMenu(false);
+      switch(it.dataset.act){
+        case 'share': document.querySelector('#view-profile .icon-btn.share').click(); break;
+        case 'email': copy('contact.joesan@proton.me','Email copied: contact.joesan@proton.me'); break;
+        case 'phone': copy('+49 173 992 7926','Phone number copied: +49 173 992 7926'); break;
+        case 'hide': showToast('Hiding Joe San would leave this app with nothing to show.'); break;
+        case 'report': showToast('Report filed: candidate is overqualified. No action needed.'); break;
+      }
+    });
+
+    // rings fill up and count from 0 each time the profile opens
+    const calm=window.matchMedia('(prefers-reduced-motion: reduce)');
+    const rings=[...document.querySelectorAll('.panel-inner[data-for="profile"] .ring')].map(r=>({r,s:r.querySelector('span'),p:+r.style.getPropertyValue('--p')}));
+    window.animateRings=function(){
+      if(calm.matches) return;
+      rings.forEach(x=>{ x.r.classList.remove('anim'); x.r.style.setProperty('--p',0); x.s.textContent='0%'; });
+      void document.body.offsetWidth;
+      const t0=performance.now(), D=1300;
+      rings.forEach(x=>{ x.r.classList.add('anim'); x.r.style.setProperty('--p',x.p); });
+      (function tick(t){
+        const k=Math.min(1,(t-t0)/D), ease=1-Math.pow(1-k,3);
+        rings.forEach(x=>x.s.textContent=Math.round(x.p*ease)+'%');
+        if(k<1) requestAnimationFrame(tick);
+      })(t0);
+    };
+  })();
+
   // ----- View switching via URL hash -----
   const views=['inbox','profile','references'];
   function show(){
@@ -1263,6 +1363,7 @@
     const content=document.querySelector('.content');
     content.classList.toggle('inbox-mode', v==='inbox');
     content.scrollTop=0;
+    if(v==='profile') animateRings();
   }
   window.addEventListener('hashchange', ()=>{ show(); window.scrollTo(0,0); });
   show();
@@ -1282,6 +1383,7 @@
       await navigator.clipboard.writeText(data.url);
       const old=b.innerHTML; b.setAttribute('aria-label','Link copied');
       if(b.classList.contains('pill')){ b.textContent='Link copied ✓'; setTimeout(()=>b.innerHTML=old,1800); }
+      else showToast('Link copied');
     }catch(e){}
   }));
 </script>
