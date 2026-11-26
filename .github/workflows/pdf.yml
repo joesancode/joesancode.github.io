@@ -1,0 +1,45 @@
+name: Rebuild CV PDF
+
+# Whenever the site changes, regenerate assets/Joe_San_CV.pdf from it
+# so the download always matches what visitors see.
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - assets/**
+      - tools/make_pdf.py
+      - '!assets/Joe_San_CV.pdf'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cv-pdf
+  cancel-in-progress: true
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright and pypdf
+        run: |
+          pip install playwright pypdf
+          python -m playwright install --with-deps chromium
+      - name: Build PDF
+        env:
+          TZ: Europe/Berlin
+        run: python tools/make_pdf.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- assets/Joe_San_CV.pdf; then echo "PDF unchanged"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add assets/Joe_San_CV.pdf
+          git commit -m "Rebuild CV PDF from site"
+          git push
