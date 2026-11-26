@@ -32,6 +32,8 @@
     --fav-bg:#fff3dc;
     --pdf-bg:#ffe9e9;
     --pop-shadow:0 16px 40px rgba(20,20,50,.18),0 2px 6px rgba(20,20,50,.08);
+    --il-a:#5050f8; --il-a2:#6c6cfb; --il-b:#3eb3ff; --il-c:#c9c9fd;
+    --il-soft:#eeeefe; --il-paper:#ffffff; --il-line:#e3e3f0; --il-ink:#2a2a40; --il-track:#e0e0fd;
     --accent:#5050f8;
     --accent-soft:#ececfe;
     --accent-2:#3eb3ff;
@@ -81,7 +83,8 @@
   .main{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--surface)}
   .topbar{height:88px;flex:none;display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid var(--line)}
   .topbar h1{font-size:21px;font-weight:600;letter-spacing:-.01em;margin-right:auto}
-  .search{display:flex;align-items:center;gap:10px;width:240px;height:36px;border:1px solid var(--line-2);border-radius:10px;padding:0 12px;color:var(--muted)}
+  .search{display:flex;align-items:center;gap:10px;width:240px;height:38px;border:0;background:var(--bg);border-radius:10px;padding:0 12px;color:var(--muted)}
+  .search:focus-within{box-shadow:0 0 0 2px var(--accent-soft)}
   .search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--ink)}
   .icon-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink-2)}
   .icon-btn:hover{background:var(--bg)}
@@ -89,7 +92,7 @@
 
   .panel{border-left:1px solid var(--line);overflow:auto;padding:28px 26px 32px;background:var(--surface)}
   .panel h3{font-size:16px;font-weight:600;text-align:center;margin:30px 0 18px}
-  .panel .illu{width:100%;max-width:250px;margin:0 auto}
+  .panel .illu{display:block;width:100%;max-width:250px;height:auto;margin:0 auto}
 
   .view{display:none}
   .view.active{display:block;animation:fade .35s ease}
@@ -220,7 +223,32 @@
   .mail-list{background:var(--surface);border-right:1px solid var(--line);overflow:auto}
   .mail-list .bar-top{display:flex;align-items:center;gap:12px;height:60px;box-sizing:border-box;padding:0 22px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2);position:sticky;top:0;background:var(--surface);z-index:1}
   .mail-list .bar-top .sp{margin-left:auto;display:flex;gap:4px}
-  .cb{width:18px;height:18px;border:1.5px solid var(--line-2);border-radius:5px;flex:none}
+  .cb{width:18px;height:18px;border:1.5px solid var(--line-2);border-radius:5px;flex:none;cursor:pointer;display:grid;place-items:center;background:var(--surface)}
+  .cb[aria-checked="true"],.cb[aria-checked="mixed"]{background:var(--accent);border-color:var(--accent)}
+  .cb[aria-checked="mixed"]::after{content:"";width:8px;height:2px;background:#fff;border-radius:1px}
+  .cb[aria-checked="true"]::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#1f1f29;color:#fff;font-size:14px;padding:12px 16px;border-radius:12px;box-shadow:var(--pop-shadow);display:flex;align-items:center;gap:14px;max-width:min(520px,calc(100vw - 32px));transition:opacity .2s,transform .2s;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+  .toast button{color:#a9a9ff;font-weight:600;font-size:13.5px;flex:none}
+  html[data-theme="dark"] .toast{background:#ececf3;color:#1b1b22}
+  html[data-theme="dark"] .toast button{color:#4545e6}
+  .bell-wrap{position:relative}
+  #bell{position:relative}
+  .badge{position:absolute;top:0;right:-2px;min-width:13px;height:13px;border-radius:7px;background:#e5484d;color:#fff;font-size:9px;line-height:1;font-weight:700;display:grid;place-items:center;padding:0 2px;border:2px solid var(--surface);box-sizing:content-box}
+  .badge[hidden]{display:none}
+  .notifs{position:absolute;right:0;top:46px;width:340px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--pop-shadow);padding:8px;z-index:40;animation:fade .18s ease}
+  .notifs[hidden]{display:none}
+  .notifs-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 10px}
+  .notifs-head button{font-size:12.5px;color:var(--accent);font-weight:500}
+  .notif{display:flex;gap:12px;padding:10px;border-radius:12px;font-size:13.5px;line-height:1.4;color:var(--ink-2);position:relative}
+  .notif:hover{background:var(--hover)}
+  .notif b{color:var(--ink);font-weight:600}
+  .notif small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .notif img,.notif-ico{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none}
+  .notif-ico{display:grid;place-items:center;background:#dff6ea;color:#127a52}
+  .notif-ico .ico{width:18px;height:18px;stroke-width:2.4}
+  .notif.unread::after{content:"";position:absolute;right:10px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  @media (max-width:640px){ .notifs{position:fixed;left:12px;right:12px;top:64px;width:auto} }
   .mail{display:flex;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:relative;cursor:pointer;width:100%;text-align:left;background:var(--surface)}
   .mail:hover{background:var(--hover)}
   .mail:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
@@ -234,7 +262,6 @@
   .mail h4 span{overflow:hidden;text-overflow:ellipsis}
   .mail.unread h4{font-weight:700}
   .mail.unread .from span:first-child{font-weight:600;color:var(--ink)}
-  .mail.unread .from time{color:var(--accent);font-weight:600}
   .fav-star{width:15px;height:15px;fill:#ffb648;stroke:#ffb648;flex:none}
   .fav-tag{font-style:normal;margin-left:4px;font-size:11px;font-weight:600;color:var(--fav-ink);background:var(--fav-bg);border-radius:999px;padding:1px 8px;flex:none}
   .mail p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -376,6 +403,11 @@
   .appt-top .t{flex:1;min-width:0}
   .appt-top b{display:block;font-size:14px;font-weight:600}
   .appt-top span{display:block;font-size:12.5px;color:var(--muted)}
+  .appt-top .cand{display:flex;align-items:center;gap:6px;color:var(--ink-2);font-weight:500;margin:2px 0 1px}
+  .appt-top .cand img{width:18px;height:18px;border-radius:50%;object-fit:cover}
+  .attendees{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .attendees img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+  .attendees b{color:var(--ink);font-weight:600}
   .appt-top .when{flex:none;text-align:right;font-size:12px;color:var(--ink-2);line-height:1.3}
   .appt-top .when strong{display:block;font-weight:600;color:var(--ink)}
   .next .appt-top .when strong{color:var(--accent)}
@@ -424,9 +456,10 @@
     --pdf-bg:#3b1f22;
     --shadow:0 6px 24px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
     --pop-shadow:0 16px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4);
+    --il-a:#6c6cff; --il-a2:#5252e6; --il-b:#3eb3ff; --il-c:#4a4a8a;
+    --il-soft:#22223a; --il-paper:#2b2b3a; --il-line:#3d3d52; --il-ink:#d8d8ea; --il-track:#3a3a66;
   }
   html[data-theme="dark"] body{background:var(--surface)}
-  html[data-theme="dark"] .panel .illu{background:#f3f3f8;border-radius:18px;padding:10px;filter:brightness(.94)}
   html[data-theme="dark"] .logo-dots span:nth-child(1){background:#4a4a5c}
   html[data-theme="dark"] .match-tag{background:#2c2c38}
   html[data-theme="dark"] .stat strong.up{color:#4ade80}
@@ -528,7 +561,15 @@
     <header class="topbar">
       <h1 id="view-title">Candidate Scouting</h1>
       <label class="search"><svg class="ico" style="width:18px;height:18px"><use href="#i-search"/></svg><input type="search" placeholder="Search" aria-label="Search (decorative)"></label>
-      <button class="icon-btn" aria-label="Notifications" type="button"><svg class="ico"><use href="#i-bell"/></svg></button>
+      <div class="bell-wrap">
+        <button class="icon-btn" id="bell" aria-label="Notifications, 3 new" aria-haspopup="dialog" aria-expanded="false" type="button"><svg class="ico"><use href="#i-bell"/></svg><span class="badge" id="bell-badge">3</span></button>
+        <div class="notifs" id="notifs" role="dialog" aria-label="Notifications" hidden>
+          <div class="notifs-head"><b>Notifications</b><button type="button" id="notifs-read">Mark all as read</button></div>
+          <a class="notif unread" href="#inbox"><img src="assets/joe.png" alt=""><span><b>Joe San</b> confirmed his interview with your Sr. Product Manager.<small>2 hrs ago</small></span></a>
+          <a class="notif unread" href="#references"><img src="assets/ref-berklee.png" alt=""><span><b>Ken Berklee</b> left a 4.9 reference for Joe San.<small>Yesterday</small></span></a>
+          <a class="notif unread" href="#profile"><span class="notif-ico"><svg class="ico"><use href="#i-check"/></svg></span><span><b>Joe San</b> is a 93% match for your Product Manager role.<small>2 days ago</small></span></a>
+        </div>
+      </div>
       <button class="icon-btn" id="toggle-panel" aria-label="Toggle side panel" aria-pressed="true" type="button"><svg class="ico"><use href="#i-panel"/></svg></button>
     </header>
 
@@ -707,7 +748,7 @@
       <section class="view" id="view-inbox" data-title="Inbox" aria-label="Cover letter">
         <div class="inbox">
           <div class="mail-list">
-            <div class="bar-top"><span class="cb"></span>Select all<span class="sp"><button class="icon-btn" id="mail-refresh" aria-label="Refresh" type="button"><svg class="ico" style="width:18px;height:18px"><use href="#i-refresh"/></svg></button></span></div>
+            <div class="bar-top"><span class="cb" id="select-all" role="checkbox" aria-checked="false" tabindex="0" aria-label="Select all"></span>Select all<span class="sp"><button class="icon-btn" id="mail-refresh" aria-label="Refresh" type="button"><svg class="ico" style="width:18px;height:18px"><use href="#i-refresh"/></svg></button></span></div>
             <div id="mail-items" role="list" aria-label="Messages"></div>
           </div>
 
@@ -717,12 +758,12 @@
               <button class="icon-btn" id="mail-prev" aria-label="Previous message" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
               <button class="icon-btn" id="mail-next" aria-label="Next message" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
               <span class="grow"></span>
-              <button class="icon-btn hide-sm" aria-label="Archive" type="button"><svg class="ico"><use href="#i-archive"/></svg></button>
-              <button class="icon-btn hide-sm" aria-label="Delete" type="button"><svg class="ico"><use href="#i-trash"/></svg></button>
-              <button class="icon-btn hide-sm" aria-label="Mark unread" type="button"><svg class="ico"><use href="#i-mail"/></svg></button>
-              <button class="icon-btn hide-sm" aria-label="Snooze" type="button"><svg class="ico"><use href="#i-clock"/></svg></button>
-              <button class="icon-btn hide-sm" aria-label="Label" type="button"><svg class="ico"><use href="#i-tag"/></svg></button>
-              <button class="icon-btn" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
+              <button class="icon-btn hide-sm" id="tb-archive" aria-label="Archive" type="button"><svg class="ico"><use href="#i-archive"/></svg></button>
+              <button class="icon-btn hide-sm" id="tb-delete" aria-label="Delete" type="button"><svg class="ico"><use href="#i-trash"/></svg></button>
+              <button class="icon-btn hide-sm" id="tb-unread" aria-label="Mark unread" type="button"><svg class="ico"><use href="#i-mail"/></svg></button>
+              <button class="icon-btn hide-sm" id="tb-snooze" aria-label="Snooze" type="button"><svg class="ico"><use href="#i-clock"/></svg></button>
+              <button class="icon-btn hide-sm" id="tb-label" aria-label="Label" type="button"><svg class="ico"><use href="#i-tag"/></svg></button>
+              <button class="icon-btn" id="tb-more" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
             </div>
 
             <article class="letter" id="letter-joe">
@@ -775,7 +816,34 @@
 
     <div class="panel-inner" data-for="profile">
       <div>
-        <img class="illu" src="assets/illu-profile.png" alt="">
+        <svg class="illu" viewBox="0 0 260 200" aria-hidden="true">
+          <circle cx="130" cy="100" r="82" fill="var(--il-soft)"/>
+          <ellipse cx="130" cy="186" rx="92" ry="7" fill="var(--il-soft)"/>
+          <rect x="56" y="34" width="118" height="146" rx="14" fill="var(--il-paper)"/>
+          <circle cx="115" cy="76" r="24" fill="var(--il-c)"/>
+          <clipPath id="il-av"><circle cx="115" cy="76" r="24"/></clipPath>
+          <g clip-path="url(#il-av)"><circle cx="115" cy="70" r="9" fill="var(--il-a)"/><ellipse cx="115" cy="98" rx="17" ry="13" fill="var(--il-a)"/></g>
+          <rect x="85" y="110" width="60" height="7" rx="3.5" fill="var(--il-ink)" opacity=".75"/>
+          <rect x="95" y="122" width="40" height="5" rx="2.5" fill="var(--il-line)"/>
+          <rect x="72" y="136" width="26" height="10" rx="5" fill="var(--il-soft)"/>
+          <rect x="102" y="136" width="26" height="10" rx="5" fill="var(--il-soft)"/>
+          <rect x="132" y="136" width="26" height="10" rx="5" fill="var(--il-soft)"/>
+          <rect x="72" y="156" width="86" height="14" rx="7" fill="var(--il-a)"/>
+          <g transform="translate(196 60)">
+            <circle r="30" fill="var(--il-paper)"/>
+            <circle r="21" fill="none" stroke="var(--il-track)" stroke-width="6"/>
+            <circle r="21" fill="none" stroke="var(--il-a)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.7 132" transform="rotate(-90)"/>
+            <text y="4.5" text-anchor="middle" font-size="12" font-weight="700" fill="var(--il-a)" font-family="DM Sans, sans-serif">93%</text>
+          </g>
+          <g transform="translate(192 140)">
+            <circle r="17" fill="var(--il-paper)" stroke="var(--il-b)" stroke-width="6"/>
+            <path d="M12 12 26 26" stroke="var(--il-b)" stroke-width="7" stroke-linecap="round"/>
+            <path d="m-6 0 4 4 8-8" stroke="var(--il-a)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <path transform="translate(38 54)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-b)"/>
+          <path transform="translate(232 108) scale(.6)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-c)"/>
+          <path transform="translate(36 150) scale(.7)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-a)"/>
+        </svg>
         <h3>Fit Score</h3>
         <div class="fit">
           <div class="ring" style="--p:93"><span>93%</span></div>
@@ -801,7 +869,35 @@
 
     <div class="panel-inner" data-for="references">
       <div>
-        <img class="illu" src="assets/illu-references.png" alt="">
+        <svg class="illu" viewBox="0 0 260 200" aria-hidden="true">
+          <circle cx="130" cy="100" r="82" fill="var(--il-soft)"/>
+          <ellipse cx="130" cy="186" rx="92" ry="7" fill="var(--il-soft)"/>
+          <rect x="34" y="44" width="136" height="78" rx="14" fill="var(--il-a)"/>
+          <path d="M58 122v18l20-18Z" fill="var(--il-a)"/>
+          <text x="50" y="80" font-size="34" font-weight="700" fill="#fff" opacity=".9" font-family="Georgia, serif">“</text>
+          <g fill="#ffb648">
+            <use href="#i-star" x="74" y="58" width="14" height="14"/><use href="#i-star" x="90" y="58" width="14" height="14"/><use href="#i-star" x="106" y="58" width="14" height="14"/><use href="#i-star" x="122" y="58" width="14" height="14"/><use href="#i-star" x="138" y="58" width="14" height="14"/>
+          </g>
+          <rect x="50" y="88" width="104" height="5" rx="2.5" fill="#fff" opacity=".55"/>
+          <rect x="50" y="99" width="82" height="5" rx="2.5" fill="#fff" opacity=".55"/>
+          <rect x="102" y="114" width="128" height="62" rx="14" fill="var(--il-paper)"/>
+          <path d="M206 176v14l-16-14Z" fill="var(--il-paper)"/>
+          <circle cx="124" cy="136" r="11" fill="var(--il-c)"/>
+          <rect x="142" y="130" width="62" height="6" rx="3" fill="var(--il-ink)" opacity=".75"/>
+          <rect x="142" y="141" width="40" height="5" rx="2.5" fill="var(--il-line)"/>
+          <rect x="116" y="156" width="98" height="5" rx="2.5" fill="var(--il-line)"/>
+          <g transform="translate(206 50)">
+            <path d="M-12 14-18 42-8 36-2 46 4 18Z" fill="var(--il-a2)"/>
+            <path d="M12 14 18 42 8 36 2 46-4 18Z" fill="var(--il-b)"/>
+            <circle r="24" fill="#ffb648"/>
+            <circle r="17.5" fill="#ffd27a"/>
+            <text y="-2" text-anchor="middle" font-size="7.5" font-weight="700" fill="#8a5a00" font-family="DM Sans, sans-serif" letter-spacing=".08em">TOP</text>
+            <text y="9" text-anchor="middle" font-size="12" font-weight="700" fill="#8a5a00" font-family="DM Sans, sans-serif">4%</text>
+          </g>
+          <path transform="translate(30 140) scale(.7)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-b)"/>
+          <path transform="translate(240 112) scale(.55)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-a)"/>
+          <path transform="translate(176 28) scale(.6)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-c)"/>
+        </svg>
         <h3>Reviews Ranking</h3>
         <div class="ranking">
           <div class="stack" style="height:190px">
@@ -834,7 +930,35 @@
 
     <div class="panel-inner" data-for="inbox">
       <div>
-        <img class="illu" src="assets/illu-inbox.png" alt="">
+        <svg class="illu" viewBox="0 0 260 200" aria-hidden="true">
+          <circle cx="130" cy="100" r="82" fill="var(--il-soft)"/>
+          <ellipse cx="130" cy="186" rx="92" ry="7" fill="var(--il-soft)"/>
+          <rect x="62" y="92" width="136" height="86" rx="12" fill="var(--il-a)"/>
+          <rect x="78" y="44" width="104" height="110" rx="10" fill="var(--il-paper)"/>
+          <circle cx="98" cy="66" r="10" fill="var(--il-c)"/>
+          <rect x="114" y="59" width="52" height="6" rx="3" fill="var(--il-ink)" opacity=".75"/>
+          <rect x="114" y="70" width="34" height="5" rx="2.5" fill="var(--il-line)"/>
+          <rect x="90" y="90" width="80" height="5" rx="2.5" fill="var(--il-line)"/>
+          <rect x="90" y="101" width="66" height="5" rx="2.5" fill="var(--il-line)"/>
+          <rect x="90" y="112" width="74" height="5" rx="2.5" fill="var(--il-line)"/>
+          <path d="M62 116 130 152 198 116V166a12 12 0 0 1-12 12H74a12 12 0 0 1-12-12Z" fill="var(--il-a2)"/>
+          <path d="M62 178 116 140M198 178 144 140" stroke="var(--il-a)" stroke-width="2" opacity=".5"/>
+          <g transform="translate(176 26)">
+            <rect width="64" height="60" rx="11" fill="var(--il-paper)"/>
+            <path d="M0 11a11 11 0 0 1 11-11h42a11 11 0 0 1 11 11v5H0Z" fill="var(--il-b)"/>
+            <g fill="var(--il-line)"><circle cx="12" cy="28" r="3"/><circle cx="25" cy="28" r="3"/><circle cx="38" cy="28" r="3"/><circle cx="51" cy="28" r="3"/><circle cx="12" cy="40" r="3"/><circle cx="25" cy="40" r="3"/><circle cx="51" cy="40" r="3"/><circle cx="12" cy="51" r="3"/><circle cx="25" cy="51" r="3"/><circle cx="38" cy="51" r="3"/></g>
+            <circle cx="38" cy="40" r="5.5" fill="var(--il-a)"/>
+          </g>
+          <g transform="translate(18 58)">
+            <rect width="62" height="30" rx="15" fill="var(--il-paper)"/>
+            <circle cx="15" cy="15" r="9" fill="#22c55e"/>
+            <path d="m10.5 15 3 3 6-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="29" y="12" width="24" height="6" rx="3" fill="var(--il-line)"/>
+          </g>
+          <path transform="translate(44 30)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-b)"/>
+          <path transform="translate(226 112) scale(.7)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-a)"/>
+          <path transform="translate(40 132) scale(.55)" d="M0 -6 1.5 -1.5 6 0 1.5 1.5 0 6 -1.5 1.5 -6 0 -1.5 -1.5Z" fill="var(--il-c)"/>
+        </svg>
         <div class="cal-head">
           <button class="icon-btn" id="cal-prev" aria-label="Previous month" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
           <h3 id="cal-title" aria-live="polite"></h3>
@@ -851,6 +975,7 @@
 
   </aside>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-msg"></span><button type="button" id="toast-act" hidden></button></div>
 
 <script>
   // ----- Calendar + hiring pipeline (dates always relative to today) -----
@@ -918,7 +1043,7 @@
       const list=picked?appts.filter(a=>same(a.date,picked)):appts;
       all.hidden=!picked;
       if(picked) sub.textContent=list.length?longDay(picked):'';
-      else{ const n=appts[nextIdx]; sub.textContent=n?`${appts.length} steps · next: ${dayLabel(n.date)}, ${n.time}`:'All steps completed'; }
+      else{ const n=appts[nextIdx]; sub.textContent=n?`Joe San · ${appts.length} steps · next: ${dayLabel(n.date)}, ${n.time}`:'Joe San · all steps completed'; }
       if(!list.length){ pipe.innerHTML=`<li style="padding-left:0"><div class="pipe-empty">No appointments on ${longDay(picked)}</div></li>`; return; }
       pipe.innerHTML=list.map(a=>{
         const i=appts.indexOf(a), isOpen=i===open||!!picked;
@@ -926,7 +1051,7 @@
           <span class="dot" aria-hidden="true">${a.state==='done'?'<svg class="ico"><use href="#i-check"/></svg>':''}</span>
           <div class="appt" data-i="${i}" aria-expanded="${isOpen}">
             <button type="button" class="appt-top" style="width:100%;text-align:left" aria-expanded="${isOpen}" aria-controls="appt-${i}">
-              <div class="t"><b>${a.title}</b><span>with ${a.who}</span></div>
+              <div class="t"><b>${a.title}</b><span class="cand"><img src="assets/joe.png" alt="">Joe San</span><span>with ${a.who}</span></div>
               <div class="when"><strong>${dayLabel(a.date)}</strong>${a.time}</div>
               <svg class="ico chev" aria-hidden="true"><use href="#i-down"/></svg>
             </button>
@@ -935,6 +1060,7 @@
                 <span><svg class="ico"><use href="#i-clock"/></svg>${a.time} · ${a.mins} min</span>
                 <span><svg class="ico"><use href="#${a.icon}"/></svg>${a.where}</span>
               </div>
+              <div class="attendees"><img src="assets/joe.png" alt=""><span><b>Joe San</b> · Candidate</span></div>
               <div>Agenda</div>
               <ul>${a.agenda.map(t=>`<li>${t}</li>`).join('')}</ul>
               ${a.note?`<div class="note">${a.note}</div>`:''}
@@ -971,6 +1097,16 @@
     document.addEventListener('click',e=>{ if(!pop.hidden&&!pop.contains(e.target)) toggle(false); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!pop.hidden){ toggle(false); btn.focus(); } });
     apply();
+
+    // notifications
+    const bell=document.getElementById('bell'), np=document.getElementById('notifs'), badge=document.getElementById('bell-badge');
+    function nToggle(open){ np.hidden=!open; bell.setAttribute('aria-expanded',String(open)); }
+    bell.addEventListener('click',e=>{ e.stopPropagation(); nToggle(np.hidden); });
+    document.addEventListener('click',e=>{ if(!np.hidden&&!np.contains(e.target)) nToggle(false); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!np.hidden){ nToggle(false); bell.focus(); } });
+    function markRead(){ np.querySelectorAll('.notif.unread').forEach(n=>n.classList.remove('unread')); badge.hidden=true; bell.setAttribute('aria-label','Notifications'); }
+    document.getElementById('notifs-read').addEventListener('click',markRead);
+    np.querySelectorAll('.notif').forEach(n=>n.addEventListener('click',()=>{ n.classList.remove('unread'); const left=np.querySelectorAll('.notif.unread').length; badge.textContent=left; if(!left) markRead(); nToggle(false); }));
   })();
 
   // ----- Inbox: every message can be opened -----
@@ -1011,7 +1147,7 @@
     function renderList(){
       list.innerHTML=mails.map((x,i)=>`
         <div class="mail${i===cur?' on':''}${x.read?'':' unread'}" role="listitem" tabindex="0" data-i="${i}" aria-current="${i===cur}">
-          <span class="cb"></span>
+          <span class="cb" role="checkbox" tabindex="0" aria-checked="${!!x.sel}" aria-label="Select message" data-cb="${i}"></span>
           <div class="body">
             <div class="from"><span>${esc(x.from)}${x.fav?' <em class="fav-tag">Favorite</em>':''}</span><time>${rel(x.ago)}</time></div>
             <h4>${x.fav?'<svg class="fav-star" viewBox="0 0 24 24" aria-label="Favorite" role="img"><use href="#i-star"/></svg>':''}<span>${esc(x.subject)}</span></h4>
@@ -1037,12 +1173,54 @@
       document.querySelector('.reader').scrollTop=0;
       if(window.matchMedia('(max-width:860px)').matches && focusReader) document.querySelector('.reader').scrollIntoView({behavior:'smooth'});
     }
-    list.addEventListener('click',e=>{ const el=e.target.closest('.mail'); if(el) open(+el.dataset.i,true); });
+    list.addEventListener('click',e=>{
+      const cb=e.target.closest('[data-cb]');
+      if(cb){ e.stopPropagation(); const x=mails[+cb.dataset.cb]; x.sel=!x.sel; cb.setAttribute('aria-checked',String(x.sel)); syncAll(); return; }
+      const el=e.target.closest('.mail'); if(el) open(+el.dataset.i,true); });
+    const selAll=document.getElementById('select-all');
+    function syncAll(){ const n=mails.filter(x=>x.sel).length; selAll.setAttribute('aria-checked', n===mails.length?'true':n?'mixed':'false'); }
+    function toggleAll(){ const on=selAll.getAttribute('aria-checked')!=='true'; mails.forEach(x=>x.sel=on); renderList(); syncAll(); }
+    selAll.addEventListener('click',toggleAll);
+    selAll.addEventListener('keydown',e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggleAll(); } });
+
+    // ----- toast -----
+    const toast=document.getElementById('toast'), tMsg=document.getElementById('toast-msg'), tAct=document.getElementById('toast-act'); let tTimer;
+    window.showToast=function(msg, actLabel, act){
+      tMsg.textContent=msg; tAct.hidden=!actLabel;
+      if(actLabel){ tAct.textContent=actLabel; tAct.onclick=()=>{ toast.classList.remove('show'); act(); }; }
+      toast.classList.add('show'); clearTimeout(tTimer); tTimer=setTimeout(()=>toast.classList.remove('show'), actLabel?5000:3500);
+    };
+
+    // ----- toolbar: real actions on other mail, jokes on Joe's -----
+    const jokes={
+      archive:"Archiving your favorite candidate? Let’s keep him where you can see him.",
+      delete:"Sorry, I’m your favorite candidate. My message can’t be deleted.",
+      unread:"Already marked as unforgettable.",
+      snooze:"Snoozing on top talent? Bold move. Reminder set for… right now.",
+      label:"Already labelled: Favorite. Some things don’t change."
+    };
+    function removeCur(verb){
+      const i=cur, x=mails[i]; mails.splice(i,1);
+      open(Math.min(i,mails.length-1)); syncAll();
+      showToast(verb,'Undo',()=>{ mails.splice(i,0,x); open(i); syncAll(); });
+    }
+    const isJoe=()=>mails[cur].id==='joe';
+    document.getElementById('tb-archive').addEventListener('click',()=> isJoe()?showToast(jokes.archive):removeCur('Conversation archived'));
+    document.getElementById('tb-delete').addEventListener('click',()=> isJoe()?showToast(jokes.delete):removeCur('Message deleted'));
+    document.getElementById('tb-snooze').addEventListener('click',()=> isJoe()?showToast(jokes.snooze):removeCur('Snoozed until tomorrow'));
+    document.getElementById('tb-unread').addEventListener('click',()=>{
+      if(isJoe()) return showToast(jokes.unread);
+      mails[cur].read=false; renderList(); showToast('Marked as unread'); });
+    document.getElementById('tb-label').addEventListener('click',()=> isJoe()?showToast(jokes.label):showToast('Labelled: Not a fit'));
+    document.getElementById('tb-more').addEventListener('click',()=> isJoe()
+      ? showToast('Want the full picture? Joe’s profile has it all.','Open profile',()=>{ location.hash='profile'; })
+      : showToast('Tip: Joe San’s message is still waiting at the top.','Open',()=>open(0)));
     list.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('mail')){ e.preventDefault(); open(+e.target.dataset.i,true); } });
     prevB.addEventListener('click',()=>open(cur-1));
     nextB.addEventListener('click',()=>open(cur+1));
     document.getElementById('mail-refresh').addEventListener('click',e=>{
       const b=e.currentTarget; b.animate([{transform:'rotate(0)'},{transform:'rotate(360deg)'}],{duration:600});
+      setTimeout(()=>showToast('You’re all caught up'),600);
     });
     open(0);
   })();
