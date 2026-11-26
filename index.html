@@ -23,7 +23,9 @@
     --surface:#ffffff;
     --ink-2:#4a4a5a;
     --line-2:#d6d6de;
-    --hover:#fafafe;
+    --hover:#ebebf8;
+    --hover-read:#fafafc;
+    --unread:#f2f2fb;
     --selected:#f1f1fe;
     --chip:#f4f4f7;
     --faint:#c2c2cc;
@@ -250,9 +252,9 @@
   .notif.unread::after{content:"";position:absolute;right:10px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
   @media (max-width:640px){ .notifs{position:fixed;left:12px;right:12px;top:64px;width:auto} }
   .mail{display:flex;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:relative;cursor:pointer;width:100%;text-align:left;background:var(--surface)}
-  .mail:hover{background:var(--hover)}
+  .mail:hover{background:var(--hover-read)}
   .mail:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-  .mail.on{background:var(--selected)}
+  .mail.on,.mail.on:hover{background:var(--selected)}
   .mail.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
   .mail .body{min-width:0;flex:1}
   .mail .from{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-2);gap:8px}
@@ -260,6 +262,8 @@
   .mail .from time{font-size:12px;color:var(--muted);flex:none}
   .mail h4{font-size:14.5px;font-weight:500;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
   .mail h4 span{overflow:hidden;text-overflow:ellipsis}
+  .mail.unread{background:var(--unread)}
+  .mail.unread:hover{background:var(--hover)}
   .mail.unread h4{font-weight:700}
   .mail.unread .from span:first-child{font-weight:600;color:var(--ink)}
   .fav-star{width:15px;height:15px;fill:#ffb648;stroke:#ffb648;flex:none}
@@ -274,8 +278,12 @@
   .letter-head b{font-weight:600}
   .letter-head .addr{color:var(--muted);font-size:13.5px}
   .letter-head .to{font-size:13px;color:var(--muted)}
-  .letter-head time{margin-left:auto;font-size:13px;color:var(--muted);text-align:right}
-  .letter-head .fav-star{width:18px;height:18px;margin-left:8px}
+  .letter-meta{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:13px;color:var(--muted);margin-bottom:14px;min-height:32px}
+  .letter-meta .fav-tag{margin:0 auto 0 0;font-size:12px;padding:2px 10px}
+  .star-btn{width:32px;height:32px;border-radius:8px;display:grid;place-items:center}
+  .star-btn:hover{background:var(--chip)}
+  .star-btn svg{width:19px;height:19px;fill:none;stroke:var(--muted);stroke-width:1.7;stroke-linejoin:round}
+  .star-btn.on svg{fill:#ffb648;stroke:#ffb648}
   .letter h2{font-size:20px;font-weight:600;margin:24px 0 18px;letter-spacing:-.01em}
   .letter .txt p{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:12px}
   .icon-btn:disabled{opacity:.35;cursor:default}
@@ -349,8 +357,6 @@
     .reader-tools{padding:10px 16px;overflow-x:auto}
     .reader-tools .hide-sm{display:none}
     .panel{padding:24px 20px 32px}
-    .letter-head{flex-wrap:wrap}
-    .letter-head time{order:5;width:100%;text-align:left;padding-left:62px;margin-top:-4px}
     .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
     .rec-head time{grid-column:2;margin:4px 0 0}
   }
@@ -446,7 +452,9 @@
     --bg:#121218;
     --surface:#1a1a22;
     --card:#20202a;
-    --hover:#22222e;
+    --hover:#262634;
+    --hover-read:#1f1f28;
+    --unread:#20202e;
     --selected:#262648;
     --chip:#272733;
     --faint:#55556a;
@@ -767,11 +775,14 @@
             </div>
 
             <article class="letter" id="letter-joe">
+              <div class="letter-meta">
+                <span class="fav-tag">Favorite</span>
+                <time class="mail-date" data-ago="3"></time>
+                <button type="button" class="star-btn on" id="joe-star" aria-label="Starred" aria-pressed="true"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></button>
+              </div>
               <div class="letter-head">
                 <img class="avatar" src="assets/joe.png" alt="" width="48" height="48">
                 <div><b>Joe San</b> <span class="addr">contact.joesan@proton.me</span><div class="to">to me</div></div>
-                <time class="mail-date" data-ago="3"></time>
-                <svg class="fav-star" viewBox="0 0 24 24" role="img" aria-label="Favorite"><use href="#i-star"/></svg>
               </div>
               <h2>Product Manager: Cover Letter & CV</h2>
               <div class="txt">
@@ -796,10 +807,13 @@
             </article>
 
             <article class="letter" id="letter-other" hidden>
+              <div class="letter-meta">
+                <time id="lo-date"></time>
+                <button type="button" class="star-btn" id="lo-star" aria-label="Star" aria-pressed="false"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></button>
+              </div>
               <div class="letter-head">
                 <span class="avatar initials" id="lo-initial" aria-hidden="true"></span>
                 <div><b id="lo-name"></b> <span class="addr" id="lo-addr"></span><div class="to">to me</div></div>
-                <time id="lo-date"></time>
               </div>
               <h2 id="lo-subject"></h2>
               <div class="txt" id="lo-body"></div>
@@ -1205,6 +1219,14 @@
       showToast(verb,'Undo',()=>{ mails.splice(i,0,x); open(i); syncAll(); });
     }
     const isJoe=()=>mails[cur].id==='joe';
+    const starJokes=[
+      'Stars are reserved for Joe San. House rules.',
+      'This inbox has room for one favorite. You know who.',
+      'Starring is disabled for emails that don’t include a CV.',
+      'Nice try. The star budget was spent on Joe San.'
+    ]; let sj=0;
+    document.getElementById('lo-star').addEventListener('click',()=>{ showToast(starJokes[sj%starJokes.length]); sj++; });
+    document.getElementById('joe-star').addEventListener('click',()=>showToast('Unstarring your favorite candidate? That button only goes one way.'));
     document.getElementById('tb-archive').addEventListener('click',()=> isJoe()?showToast(jokes.archive):removeCur('Conversation archived'));
     document.getElementById('tb-delete').addEventListener('click',()=> isJoe()?showToast(jokes.delete):removeCur('Message deleted'));
     document.getElementById('tb-snooze').addEventListener('click',()=> isJoe()?showToast(jokes.snooze):removeCur('Snoozed until tomorrow'));
