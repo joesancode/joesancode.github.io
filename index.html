@@ -214,6 +214,21 @@
   .badge{font-size:12px;background:var(--accent-soft);color:var(--accent);padding:5px 10px;border-radius:999px;font-weight:500;white-space:nowrap}
   .interests{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .interest{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);min-width:72px}
+  .interests{position:relative}
+  button.interest{font-family:inherit;cursor:pointer;border-radius:12px;padding:4px 2px}
+  button.interest i{transition:background .15s,color .15s,transform .15s}
+  button.interest:hover i{transform:translateY(-2px)}
+  button.interest[aria-expanded="true"] i{background:var(--invert-bg);color:var(--invert-ink)}
+  button.interest[aria-expanded="true"]{color:var(--ink)}
+  .int-pop{position:absolute;bottom:calc(100% + 12px);width:min(340px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop-shadow);padding:16px 18px;z-index:20;animation:fade .15s ease;text-align:left}
+  .int-pop[hidden]{display:none}
+  .int-pop .eyebrow{margin-bottom:6px}
+  .int-pop h4{font-size:15px;font-weight:600}
+  .int-pop .by{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+  .int-pop p{font-size:13.5px;color:var(--ink-2)}
+  .int-pop blockquote{font-size:14.5px;line-height:1.55;color:var(--ink);font-style:italic}
+  .int-pop a{display:inline-flex;margin-top:10px;font-size:13px;font-weight:500;color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-2)}
+  .int-pop a:hover{text-decoration-color:var(--ink)}
   .interest i{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
 
   .fit{display:flex;flex-direction:column;align-items:center}
@@ -567,6 +582,7 @@
     <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20.2 12.2a6 6 0 0 0-8.5-8.5L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
     <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.2 3.2M6.6 6.6C3.7 8.4 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></symbol>
     <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4s1.5-1 5-1 5 2 8 2 3-1 3-1v11s-1 1-3 1-5-2-8-2-5 1-5 1"/></symbol>
@@ -758,11 +774,12 @@
           <div class="card span-2">
             <div class="eyebrow">Personal Interests</div>
             <div class="interests">
-              <div class="interest"><i><svg class="ico"><use href="#i-book"/></svg></i>Reading</div>
-              <div class="interest"><i><svg class="ico"><use href="#i-dumbbell"/></svg></i>Fitness</div>
-              <div class="interest"><i><svg class="ico"><use href="#i-globe"/></svg></i>Languages</div>
-              <div class="interest"><i><svg class="ico"><use href="#i-blocks"/></svg></i>Blockchain</div>
-              <div class="interest"><i><svg class="ico"><use href="#i-brush"/></svg></i>Drawing</div>
+              <button type="button" class="interest" data-int="reading" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-book"/></svg></i>Reading</button>
+              <button type="button" class="interest" data-int="fitness" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-dumbbell"/></svg></i>Fitness</button>
+              <button type="button" class="interest" data-int="writing" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-feather"/></svg></i>Writing</button>
+              <button type="button" class="interest" data-int="blockchain" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-blocks"/></svg></i>Blockchain</button>
+              <button type="button" class="interest" data-int="drawing" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-brush"/></svg></i>Drawing</button>
+              <div class="int-pop" id="int-pop" role="dialog" aria-live="polite" hidden></div>
             </div>
           </div>
         </div>
@@ -1446,6 +1463,45 @@
     sync();
   })();
 
+  // ----- Personal interests: click for a short note -----
+  window.interests={
+    reading:{eyebrow:'Currently reading',title:'Thanosis',by:'Jason Reza Jorjani · 2025',
+      text:'A philosophical investigation of life after death. Drawing on a century of parapsychological research, Jorjani argues that individuality and creative agency survive death.',
+      link:['Book details','https://books.google.com/books/about/Thanosis.html?id=uQnF0QEACAAJ']},
+    fitness:{eyebrow:'Fitness',text:'Not crazy stuff: push-ups, pull-ups, squats and the like. Pretty vanilla but consistent.'},
+    writing:{eyebrow:'Writing',quote:'Consider not a man he who is yet to act in wisdom. Consider not a human he who fails to see truth in love.'},
+    blockchain:{eyebrow:'Blockchain I follow',title:'Midnight',
+      text:'A data-protection blockchain, built as a partner chain to Cardano. It uses zero-knowledge proofs, so you can prove something is true without revealing the data behind it.',
+      link:['midnight.network','https://midnight.network']},
+    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
+  };
+  (function(){
+    const wrap=document.querySelector('.interests'), pop=document.getElementById('int-pop');
+    const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    let openBtn=null;
+    function close(){ if(!openBtn) return; openBtn.setAttribute('aria-expanded','false'); pop.hidden=true; openBtn=null; }
+    function show(btn){
+      if(openBtn===btn) return close();
+      close();
+      const d=interests[btn.dataset.int];
+      pop.innerHTML=`<div class="eyebrow">${esc(d.eyebrow)}</div>`
+        +(d.title?`<h4>${esc(d.title)}</h4>`:'')+(d.by?`<div class="by">${esc(d.by)}</div>`:'')
+        +(d.quote?`<blockquote>“${esc(d.quote)}”</blockquote>`:'')+(d.text?`<p>${esc(d.text)}</p>`:'')
+        +(d.link?`<a href="${d.link[1]}" target="_blank" rel="noopener">${esc(d.link[0])} ↗</a>`:'');
+      pop.setAttribute('aria-label',btn.textContent.trim());
+      pop.hidden=false; btn.setAttribute('aria-expanded','true'); openBtn=btn;
+      // centre under the icon, kept inside the card
+      const w=wrap.getBoundingClientRect(), b=btn.getBoundingClientRect(), pw=pop.offsetWidth;
+      const left=Math.max(0,Math.min(w.width-pw, b.left-w.left+b.width/2-pw/2));
+      pop.style.left=left+'px';
+    }
+    wrap.addEventListener('click',e=>{ const b=e.target.closest('button.interest'); if(b){ e.stopPropagation(); show(b); } });
+    document.addEventListener('click',e=>{ if(openBtn&&!pop.contains(e.target)) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&openBtn){ const b=openBtn; close(); b.focus(); } });
+    window.addEventListener('hashchange',close);
+    window.openInterest=key=>{ const b=wrap.querySelector(`[data-int="${key}"]`); if(b&&openBtn!==b) show(b); };
+  })();
+
   // ----- Search across the whole CV -----
   (function(){
     const q=document.getElementById('q'), pop=document.getElementById('q-pop'), box=document.getElementById('q-results');
@@ -1465,7 +1521,7 @@
       $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),'Language · '+T(li.querySelector('em'))));
       const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),'Education · '+T(ed.querySelector('.label')));
       const ini=document.querySelector(P+' .initiative'); add('Profile','profile',ini.closest('.card'),T(ini.querySelector('h4')),'Certification · '+T(ini.querySelector('.badge')));
-      $(P+' .interest').forEach(i=>add('Profile','profile',i,T(i),'Personal interest'));
+      $(P+' .interest').forEach(i=>{ const d=interests[i.dataset.int]; add('Profile','profile',i,T(i),'Personal interest',[d.title,d.by,d.text,d.quote].filter(Boolean).join(' ')).open=()=>openInterest(i.dataset.int); });
       $(PP+' .skills li').forEach(li=>add('Skills','profile',li,T(li.querySelector('b')),T(li.querySelector('.ring'))+' · '+T(li.querySelector('small'))));
       $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),'Culture compatibility trait'));
       $(R+' .bars li').forEach(li=>add('References','references',li,T(li.querySelector('div')).replace(/[\d.]+$/,''),'Rating '+T(li.querySelector('b'))));
@@ -1523,7 +1579,7 @@
       if(document.getElementById('app').classList.contains('panel-hidden') && e.el && e.el.closest('.panel')) document.getElementById('toggle-panel').click();
       const after=()=>{
         if(e.mail){ inbox.open(e.mail); if(e.el) setTimeout(()=>flash(e.el),60); else setTimeout(()=>flash(document.querySelector('.mail.on')),60); }
-        else flash(e.el);
+        else { flash(e.el); if(e.open) setTimeout(e.open,350); }
       };
       if(location.hash!=='#'+e.view){ location.hash=e.view; setTimeout(after,80); } else after();
     }
