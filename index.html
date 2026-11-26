@@ -222,6 +222,9 @@
   button.interest[aria-expanded="true"]{color:var(--ink)}
   .int-pop{position:absolute;bottom:calc(100% + 12px);width:min(340px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop-shadow);padding:16px 18px;z-index:20;animation:fade .15s ease;text-align:left}
   .int-pop[hidden]{display:none}
+  .int-pop .sig{margin-top:8px;font-size:13px;color:var(--muted);text-align:right}
+  .int-pop .embed{margin-top:10px;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--line)}
+  .int-pop .embed iframe{display:block;width:100%;height:440px;border:0}
   .int-pop .eyebrow{margin-bottom:6px}
   .int-pop h4{font-size:15px;font-weight:600}
   .int-pop .by{font-size:12.5px;color:var(--muted);margin-bottom:8px}
@@ -1467,13 +1470,13 @@
   window.interests={
     reading:{eyebrow:'Currently reading',title:'Thanosis',by:'Jason Reza Jorjani · 2025',
       text:'A philosophical investigation of life after death. Drawing on a century of parapsychological research, Jorjani argues that individuality and creative agency survive death.',
-      link:['Book details','https://books.google.com/books/about/Thanosis.html?id=uQnF0QEACAAJ']},
+      link:['View at Arktos','https://arktos.com/product/thanosis/']},
     fitness:{eyebrow:'Fitness',text:'Not crazy stuff: push-ups, pull-ups, squats and the like. Pretty vanilla but consistent.'},
-    writing:{eyebrow:'Writing',quote:'Consider not a man he who is yet to act in wisdom. Consider not a human he who fails to see truth in love.'},
+    writing:{eyebrow:'Writing',sig:'Joe San',quote:'Consider not a man he who is yet to act in wisdom. Consider not a human he who fails to see truth in love.'},
     blockchain:{eyebrow:'Blockchain I follow',title:'Midnight',
       text:'A data-protection blockchain, built as a partner chain to Cardano. It uses zero-knowledge proofs, so you can prove something is true without revealing the data behind it.',
       link:['midnight.network','https://midnight.network']},
-    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
+    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',embed:'https://www.instagram.com/p/Be3WgfXlVh7/embed/',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
   };
   (function(){
     const wrap=document.querySelector('.interests'), pop=document.getElementById('int-pop');
@@ -1486,7 +1489,8 @@
       const d=interests[btn.dataset.int];
       pop.innerHTML=`<div class="eyebrow">${esc(d.eyebrow)}</div>`
         +(d.title?`<h4>${esc(d.title)}</h4>`:'')+(d.by?`<div class="by">${esc(d.by)}</div>`:'')
-        +(d.quote?`<blockquote>“${esc(d.quote)}”</blockquote>`:'')+(d.text?`<p>${esc(d.text)}</p>`:'')
+        +(d.quote?`<blockquote>“${esc(d.quote)}”</blockquote>`:'')+(d.sig?`<div class="sig">— ${esc(d.sig)}</div>`:'')+(d.text?`<p>${esc(d.text)}</p>`:'')
+        +(d.embed?`<div class="embed"><iframe src="${d.embed}" title="${esc(d.text)} (Instagram)" loading="lazy" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'')
         +(d.link?`<a href="${d.link[1]}" target="_blank" rel="noopener">${esc(d.link[0])} ↗</a>`:'');
       pop.setAttribute('aria-label',btn.textContent.trim());
       pop.hidden=false; btn.setAttribute('aria-expanded','true'); openBtn=btn;
@@ -1494,6 +1498,7 @@
       const w=wrap.getBoundingClientRect(), b=btn.getBoundingClientRect(), pw=pop.offsetWidth;
       const left=Math.max(0,Math.min(w.width-pw, b.left-w.left+b.width/2-pw/2));
       pop.style.left=left+'px';
+      requestAnimationFrame(()=>{ const r=pop.getBoundingClientRect(); if(r.top<100) pop.scrollIntoView({block:'nearest',behavior:'smooth'}); });
     }
     wrap.addEventListener('click',e=>{ const b=e.target.closest('button.interest'); if(b){ e.stopPropagation(); show(b); } });
     document.addEventListener('click',e=>{ if(openBtn&&!pop.contains(e.target)) close(); });
