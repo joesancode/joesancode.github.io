@@ -199,30 +199,41 @@
   /* ---------- Inbox view ---------- */
   .inbox{display:grid;grid-template-columns:300px 1fr;height:100%}
   .mail-list{background:#fff;border-right:1px solid var(--line);overflow:auto}
-  .mail-list .bar-top{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:13.5px;color:#55556a}
+  .mail-list .bar-top{display:flex;align-items:center;gap:12px;height:60px;box-sizing:border-box;padding:0 22px;border-bottom:1px solid var(--line);font-size:13.5px;color:#55556a;position:sticky;top:0;background:#fff;z-index:1}
   .mail-list .bar-top .sp{margin-left:auto;display:flex;gap:4px}
   .cb{width:18px;height:18px;border:1.5px solid #c9c9d3;border-radius:5px;flex:none}
-  .mail{display:flex;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:relative}
+  .mail{display:flex;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:relative;cursor:pointer;width:100%;text-align:left;background:#fff}
+  .mail:hover{background:#fafafe}
+  .mail:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .mail.on{background:#f1f1fe}
   .mail.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
   .mail .body{min-width:0;flex:1}
   .mail .from{display:flex;justify-content:space-between;font-size:13px;color:#4a4a5a;gap:8px}
   .mail .from span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mail .from time{font-size:12px;color:var(--muted);flex:none}
-  .mail h4{font-size:14.5px;font-weight:600;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mail h4{font-size:14.5px;font-weight:500;margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+  .mail h4 span{overflow:hidden;text-overflow:ellipsis}
+  .mail.unread h4{font-weight:700}
+  .mail.unread .from span:first-child{font-weight:600;color:var(--ink)}
+  .mail.unread .from time{color:var(--accent);font-weight:600}
+  .fav-star{width:15px;height:15px;fill:#ffb648;stroke:#ffb648;flex:none}
+  .fav-tag{font-style:normal;margin-left:4px;font-size:11px;font-weight:600;color:#a86400;background:#fff3dc;border-radius:999px;padding:1px 8px;flex:none}
   .mail p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .reader{display:flex;flex-direction:column;min-width:0;overflow:auto;background:var(--bg)}
-  .reader-tools{display:flex;align-items:center;gap:4px;padding:12px 28px;background:#fff;border-bottom:1px solid var(--line);font-size:13px;color:#55556a}
+  .reader-tools{display:flex;align-items:center;gap:4px;height:60px;box-sizing:border-box;padding:0 28px;flex:none;position:sticky;top:0;z-index:1;background:#fff;border-bottom:1px solid var(--line);font-size:13px;color:#55556a}
   .reader-tools .grow{flex:1}
-  .letter{margin:20px 28px 32px;padding:30px 34px}
+  .letter{margin:20px 28px 32px;padding:30px 34px;max-width:860px}
   .letter-head{display:flex;gap:14px;align-items:center}
   .letter-head .avatar{width:48px;height:48px}
   .letter-head b{font-weight:600}
   .letter-head .addr{color:var(--muted);font-size:13.5px}
   .letter-head .to{font-size:13px;color:var(--muted)}
-  .letter-head time{margin-left:auto;font-size:13px;color:var(--muted)}
+  .letter-head time{margin-left:auto;font-size:13px;color:var(--muted);text-align:right}
+  .letter-head .fav-star{width:18px;height:18px;margin-left:8px}
   .letter h2{font-size:20px;font-weight:600;margin:24px 0 18px;letter-spacing:-.01em}
-  .letter .txt p{font-size:15px;color:#33333f;line-height:1.7;margin-bottom:14px}
+  .letter .txt p{font-size:13px;color:#33333f;line-height:1.7;margin-bottom:12px}
+  .icon-btn:disabled{opacity:.35;cursor:default}
+  .icon-btn:disabled:hover{background:none}
   .sig{display:flex;align-items:center;gap:14px;margin-top:22px}
   .sig .avatar{width:48px;height:48px}
   .sig b{display:block;font-weight:600}
@@ -232,6 +243,7 @@
   .attach:hover{border-color:var(--accent)}
   .attach i{width:36px;height:36px;border-radius:8px;background:#ffe9e9;color:#e5484d;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700}
   .attach small{display:block;color:var(--muted);font-size:12px}
+  .initials{width:48px;height:48px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:18px;text-transform:uppercase;flex:none}
 
   .cal-head{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px}
   .cal-head h3{margin:0}
@@ -277,9 +289,8 @@
     .col-left{grid-row:auto}
     .profile-grid > *,.span-2,.csat{grid-column:1 !important}
     .inbox{grid-template-columns:1fr}
-    .mail-list .mail:not(.on){display:none}
-    .mail-list .more{display:block}
-    .letter{margin:12px 16px 24px;padding:22px 20px}
+    .mail-list{max-height:330px;border-right:0;border-bottom:1px solid var(--line)}
+    .letter{margin:8px 0 24px;padding:22px 20px}
   }
   @media (max-width:640px){
     :root{--sidebar:0px}
@@ -297,11 +308,12 @@
     .reader-tools{padding:10px 16px;overflow-x:auto}
     .reader-tools .hide-sm{display:none}
     .panel{padding:24px 20px 32px}
+    .letter-head{flex-wrap:wrap}
+    .letter-head time{order:5;width:100%;text-align:left;padding-left:62px;margin-top:-4px}
     .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
     .rec-head time{grid-column:2;margin:4px 0 0}
   }
   .panel-inner[hidden]{display:none!important}
-  .mail-list .more{display:none;padding:12px 22px;font-size:13px;color:var(--muted)}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -553,24 +565,15 @@
       <section class="view" id="view-inbox" data-title="Inbox" aria-label="Cover letter">
         <div class="inbox">
           <div class="mail-list">
-            <div class="bar-top"><span class="cb"></span>Select all<span class="sp"><button class="icon-btn" aria-label="Refresh" type="button"><svg class="ico" style="width:18px;height:18px"><use href="#i-refresh"/></svg></button></span></div>
-            <div class="mail on">
-              <span class="cb"></span>
-              <div class="body"><div class="from"><span>Joe San</span><time>3 mins</time></div><h4>Product Manager: Cover Letter & CV</h4><p>Dear talent team, I am writing to express my interest in exploring a partnership…</p></div>
-            </div>
-            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>chilldude1992@quokkamail.com</span><time>2 hrs</time></div><h4>Inquiry for available position</h4><p>Dear hiring manager, I’d like to inquire about a position you have posted on LinkedIn…</p></div></div>
-            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>Personio Team</span><time>8 hrs</time></div><h4>Your monthly invoice</h4><p>Hi Helena, We hope this message finds you well. Attached is your monthly invoice…</p></div></div>
-            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>sunloverlily924@owlpost.net</span><time>8 hrs</time></div><h4>My application for the position</h4><p>Hello, I am excited to apply for the position posted on Stepstone…</p></div></div>
-            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>antjewies@pigeonbox.io</span><time>1 day</time></div><h4>Application enclosed</h4><p>To whom it may concern, I am submitting my application for your review…</p></div></div>
-            <div class="mail"><span class="cb"></span><div class="body"><div class="from"><span>MailChimp</span><time>1 day</time></div><h4>We’re updating our terms of service</h4><p>Here’s what’s changing and what it means for your account…</p></div></div>
-            <div class="more">+ 24 more messages</div>
+            <div class="bar-top"><span class="cb"></span>Select all<span class="sp"><button class="icon-btn" id="mail-refresh" aria-label="Refresh" type="button"><svg class="ico" style="width:18px;height:18px"><use href="#i-refresh"/></svg></button></span></div>
+            <div id="mail-items" role="list" aria-label="Messages"></div>
           </div>
 
           <div class="reader">
             <div class="reader-tools">
-              <span>1 of 25</span>
-              <button class="icon-btn" aria-label="Previous" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
-              <button class="icon-btn" aria-label="Next" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
+              <span id="mail-pos">1 of 1</span>
+              <button class="icon-btn" id="mail-prev" aria-label="Previous message" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
+              <button class="icon-btn" id="mail-next" aria-label="Next message" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
               <span class="grow"></span>
               <button class="icon-btn hide-sm" aria-label="Archive" type="button"><svg class="ico"><use href="#i-archive"/></svg></button>
               <button class="icon-btn hide-sm" aria-label="Delete" type="button"><svg class="ico"><use href="#i-trash"/></svg></button>
@@ -580,11 +583,12 @@
               <button class="icon-btn" aria-label="More" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
             </div>
 
-            <article class="card letter">
+            <article class="letter" id="letter-joe">
               <div class="letter-head">
                 <img class="avatar" src="assets/joe.png" alt="" width="48" height="48">
                 <div><b>Joe San</b> <span class="addr">contact.joesan@proton.me</span><div class="to">to me</div></div>
-                <time datetime="2026-06-18">18 June, 2026</time>
+                <time class="mail-date" data-ago="3"></time>
+                <svg class="fav-star" viewBox="0 0 24 24" role="img" aria-label="Favorite"><use href="#i-star"/></svg>
               </div>
               <h2>Product Manager: Cover Letter & CV</h2>
               <div class="txt">
@@ -606,6 +610,16 @@
                 <a class="pill primary" href="mailto:contact.joesan@proton.me?subject=Re%3A%20Product%20Manager%3A%20Cover%20Letter%20%26%20CV"><svg class="ico" style="width:16px;height:16px"><use href="#i-reply"/></svg>Reply</a>
                 <button class="pill ghost share" type="button"><svg class="ico" style="width:16px;height:16px"><use href="#i-forward"/></svg>Forward</button>
               </div>
+            </article>
+
+            <article class="letter" id="letter-other" hidden>
+              <div class="letter-head">
+                <span class="avatar initials" id="lo-initial" aria-hidden="true"></span>
+                <div><b id="lo-name"></b> <span class="addr" id="lo-addr"></span><div class="to">to me</div></div>
+                <time id="lo-date"></time>
+              </div>
+              <h2 id="lo-subject"></h2>
+              <div class="txt" id="lo-body"></div>
             </article>
           </div>
         </div>
@@ -680,9 +694,9 @@
       <div>
         <img class="illu" src="assets/illu-inbox.png" alt="">
         <div class="cal-head">
-          <button class="icon-btn" aria-label="Previous month" type="button" disabled><svg class="ico"><use href="#i-left"/></svg></button>
-          <h3>June 2026</h3>
-          <button class="icon-btn" aria-label="Next month" type="button" disabled><svg class="ico"><use href="#i-right"/></svg></button>
+          <button class="icon-btn" id="cal-prev" aria-label="Previous month" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
+          <h3 id="cal-title" aria-live="polite"></h3>
+          <button class="icon-btn" id="cal-next" aria-label="Next month" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
         </div>
         <div class="cal" id="cal"></div>
       </div>
@@ -705,13 +719,101 @@
 </div>
 
 <script>
-  // ----- Calendar (June 2026 starts on a Monday) -----
+  // ----- Calendar: always opens on the visitor's current month -----
   (function(){
-    const cal=document.getElementById('cal');
-    let html=['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="dow">${d}</div>`).join('');
-    for(let d=1; d<=30; d++) html+=`<span${d===18?' class="today" aria-current="date"':''}>${d}</span>`;
-    for(let d=1; d<=5; d++) html+=`<span class="out">${d}</span>`;
-    cal.innerHTML=html;
+    const cal=document.getElementById('cal'), title=document.getElementById('cal-title');
+    const today=new Date(); let y=today.getFullYear(), m=today.getMonth();
+    function draw(){
+      const first=new Date(y,m,1), days=new Date(y,m+1,0).getDate();
+      const lead=(first.getDay()+6)%7, prevDays=new Date(y,m,0).getDate();
+      title.textContent=first.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+      let html=['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="dow">${d}</div>`).join('');
+      for(let i=lead; i>0; i--) html+=`<span class="out">${prevDays-i+1}</span>`;
+      for(let d=1; d<=days; d++){
+        const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+        html+=`<span${isToday?' class="today" aria-current="date"':''}>${d}</span>`;
+      }
+      const cells=lead+days, trail=(7-cells%7)%7;
+      for(let d=1; d<=trail; d++) html+=`<span class="out">${d}</span>`;
+      cal.innerHTML=html;
+    }
+    document.getElementById('cal-prev').addEventListener('click',()=>{ m--; if(m<0){m=11;y--;} draw(); });
+    document.getElementById('cal-next').addEventListener('click',()=>{ m++; if(m>11){m=0;y++;} draw(); });
+    draw();
+  })();
+
+  // ----- Inbox: every message can be opened -----
+  (function(){
+    const mails=[
+      {id:'joe', from:'Joe San', ago:3, fav:true, read:true, subject:'Product Manager: Cover Letter & CV',
+       preview:'Dear talent team, I am writing to express my interest in exploring a partnership within your organization…'},
+      {from:'chilldude1992@quokkamail.com', ago:120, subject:'Inquiry for available position',
+       body:["Dear hiring manager, I’d like to inquire about a position you have posted on LinkedIn. Please, let me know if its still open.","I can start whenever. Monday works but not before 11 because I have a thing.","thx","Sent from my phone"]},
+      {from:'xXgamerpro_maxXx@quokkamail.com', ago:300, subject:'yo job??',
+       body:["hey is this the job thing","saw ur post. i have tons of leadership experience (guild master for 3 years, 40+ members, zero drama… mostly).","what does product manager pay? asking for me","gg"]},
+      {from:'sunloverlily924@owlpost.net', ago:480, subject:'My application for the position',
+       body:["Hello, I am excited to apply for the position posted on Stepstone. I am super enthusiastic for the chance to contribute!!!","I don’t have a CV right now but I am a people person and I love good vibes ☀️","Also is the office dog friendly? My dog Biscuit comes everywhere with me.","xoxo, Lily"]},
+      {from:'antjewies@pigeonbox.io', ago:1440, subject:'Application enclosed',
+       body:["To whom it may concern, I am submitting my application for your review. I look forward to the opportunity to discuss my qualifications.","PS: the attachment didn’t upload. I will send it tomorrow.","PPS: or Thursday."]},
+      {from:'party.ron@owlpost.net', ago:1620, subject:'RE: RE: Fwd: job',
+       body:["interested. call me","not before noon tho","— Ron"]},
+      {from:'dragonslayer88@pigeonbox.io', ago:2900, subject:'Hiring?',
+       body:["To whom it may concern (or whoever reads this),","I am basically a natural born leader. My friends always say I should be the boss of something, so here I am.","Experience: I organised my cousin’s wedding (it rained but still). Skills: Excel (a bit), vibes (a lot).","Please reply before Friday, I have other offers (not really)."]},
+      {from:'kev.in.charge@quokkamail.com', ago:4400, subject:'pls read!!!!',
+       body:["I know I don’t have the 5 years of experience you’re asking for, but I watched like 30 hours of YouTube videos about product management so I think that counts.","I also have a podcast idea. Will tell you in the interview.","Kevin"]},
+      {from:'mom_of_jake@owlpost.net', ago:5800, subject:'Application for my son Jake',
+       body:["Hello,","I am writing on behalf of my son Jake, who is too shy to apply himself. He is very good with computers and fixed our printer twice.","He would be an excellent manager of products. Please call me, not him, he doesn’t answer the phone.","Kind regards,","Linda (Jake’s mom)"]},
+      {from:'no.cv.no.problem@pigeonbox.io', ago:8700, subject:'(no subject)',
+       body:["hi","is this still available?"]}
+    ];
+    const list=document.getElementById('mail-items'), pos=document.getElementById('mail-pos');
+    const prevB=document.getElementById('mail-prev'), nextB=document.getElementById('mail-next');
+    const joeL=document.getElementById('letter-joe'), otherL=document.getElementById('letter-other');
+    const now=Date.now(); let cur=0;
+    const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const rel=m=>m<60?`${m} mins`:m<1440?`${Math.round(m/60)} hrs`:`${Math.round(m/1440)} day${Math.round(m/1440)>1?'s':''}`;
+    const full=m=>new Date(now-m*60000).toLocaleString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const name=f=>f.includes('@')?f.split('@')[0]:f;
+    mails.forEach(x=>{ if(!x.preview) x.preview=x.body.join(' '); if(x.read===undefined) x.read=false; });
+    document.querySelectorAll('.mail-date').forEach(t=>t.textContent=full(+t.dataset.ago));
+
+    function renderList(){
+      list.innerHTML=mails.map((x,i)=>`
+        <div class="mail${i===cur?' on':''}${x.read?'':' unread'}" role="listitem" tabindex="0" data-i="${i}" aria-current="${i===cur}">
+          <span class="cb"></span>
+          <div class="body">
+            <div class="from"><span>${esc(x.from)}${x.fav?' <em class="fav-tag">Favorite</em>':''}</span><time>${rel(x.ago)}</time></div>
+            <h4>${x.fav?'<svg class="fav-star" viewBox="0 0 24 24" aria-label="Favorite" role="img"><use href="#i-star"/></svg>':''}<span>${esc(x.subject)}</span></h4>
+            <p>${esc(x.preview)}</p>
+          </div>
+        </div>`).join('');
+    }
+    function open(i, focusReader){
+      cur=Math.max(0,Math.min(mails.length-1,i)); const x=mails[cur]; x.read=true;
+      if(x.id==='joe'){ joeL.hidden=false; otherL.hidden=true; }
+      else{
+        joeL.hidden=true; otherL.hidden=false;
+        document.getElementById('lo-initial').textContent=name(x.from).replace(/[^a-z]/gi,'').charAt(0)||'?';
+        document.getElementById('lo-name').textContent=name(x.from);
+        document.getElementById('lo-addr').textContent=x.from;
+        document.getElementById('lo-date').textContent=full(x.ago);
+        document.getElementById('lo-subject').textContent=x.subject;
+        document.getElementById('lo-body').innerHTML=x.body.map(t=>`<p>${esc(t)}</p>`).join('');
+      }
+      pos.textContent=`${cur+1} of ${mails.length}`;
+      prevB.disabled=cur===0; nextB.disabled=cur===mails.length-1;
+      renderList();
+      document.querySelector('.reader').scrollTop=0;
+      if(window.matchMedia('(max-width:860px)').matches && focusReader) document.querySelector('.reader').scrollIntoView({behavior:'smooth'});
+    }
+    list.addEventListener('click',e=>{ const el=e.target.closest('.mail'); if(el) open(+el.dataset.i,true); });
+    list.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('mail')){ e.preventDefault(); open(+e.target.dataset.i,true); } });
+    prevB.addEventListener('click',()=>open(cur-1));
+    nextB.addEventListener('click',()=>open(cur+1));
+    document.getElementById('mail-refresh').addEventListener('click',e=>{
+      const b=e.currentTarget; b.animate([{transform:'rotate(0)'},{transform:'rotate(360deg)'}],{duration:600});
+    });
+    open(0);
   })();
 
   // ----- View switching via URL hash -----
