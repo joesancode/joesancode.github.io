@@ -528,12 +528,25 @@
     .panel .panel-inner > div:first-child > h3:first-of-type,.panel .radar-wrap h3{margin-top:22px}
 
     /* Fit Score line on Profile */
-    .m-fit{display:flex!important;align-items:center;gap:12px;margin:14px 16px 0;width:calc(100% - 32px);padding:12px 14px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);text-align:left;color:var(--ink)}
+    .m-fit{display:flex!important;align-items:center;gap:12px;margin:0;width:100%;padding:12px 14px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);text-align:left;color:var(--ink)}
     .m-ring{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:radial-gradient(closest-side,var(--card) 74%,transparent 76%),conic-gradient(var(--accent) 0 93%,var(--track) 0)}
     .m-fit-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
     .m-fit-t b{font-size:15px;font-weight:600}
     .m-fit-t small{font-size:13px;color:var(--muted)}
     .m-fit-go{font-size:13px;font-weight:500;color:var(--accent)}
+
+    /* Profile order on phones: pitch first, contact details last */
+    .profile-grid .col-left{display:contents}
+    .id-card{order:1}
+    .profile-grid > .headline{order:2}
+    .profile-grid > .m-fit{order:3}
+    .profile-grid > .cert{order:4}
+    .exp-card{order:5}
+    .card.edu{order:6}
+    .lang-card{order:7}
+    .int-card{order:8}
+    .m-contacts{display:block!important;order:9}
+    .m-contacts .contacts{margin-top:14px}
 
     /* Notes bubble */
     .m-fab{display:grid!important;place-items:center;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(80,80,248,.38);z-index:56;transition:background .2s}
@@ -818,8 +831,6 @@
           </div>
         </div>
 
-        <button type="button" class="m-fit m-only" id="m-fit"><span class="m-ring" aria-hidden="true">93%</span><span class="m-fit-t"><b>Fit Score</b><small>This applicant is a great match!</small></span><span class="m-fit-go">Details</span></button>
-
         <div class="profile-grid">
           <div class="col-left">
             <div class="card id-card">
@@ -835,7 +846,7 @@
               </ul>
             </div>
 
-            <div class="card">
+            <div class="card lang-card">
               <div class="eyebrow">Languages</div>
               <ul class="lang">
                 <li>English<em>Native</em></li>
@@ -861,6 +872,8 @@
             </div>
           </div>
 
+          <button type="button" class="m-fit m-only" id="m-fit"><span class="m-ring" aria-hidden="true">93%</span><span class="m-fit-t"><b>Fit Score</b><small>This applicant is a great match!</small></span><span class="m-fit-go">Details</span></button>
+
           <div class="card cert">
             <img class="cert-logo" src="assets/logo-ironhack.png" alt="Ironhack" width="200" height="213">
             <div class="cert-txt">
@@ -871,7 +884,7 @@
             <a class="cert-btn" id="cert-btn" href="" target="_blank" rel="noopener" hidden>View certificate</a>
           </div>
 
-          <div class="card span-2">
+          <div class="card span-2 exp-card">
             <div class="eyebrow">Experience</div>
             <article class="job">
               <h3>Product Owner & UX/UI Designer</h3>
@@ -890,7 +903,7 @@
             </article>
           </div>
 
-          <div class="card span-2">
+          <div class="card span-2 int-card">
             <div class="eyebrow">Personal Interests</div>
             <div class="interests">
               <button type="button" class="interest" data-int="reading" aria-expanded="false" aria-controls="int-pop"><i><svg class="ico"><use href="#i-book"/></svg></i>Reading</button>
@@ -901,6 +914,8 @@
               <div class="int-pop" id="int-pop" role="dialog" aria-live="polite" hidden></div>
             </div>
           </div>
+
+          <div class="card m-contacts m-only" id="m-contacts"><div class="eyebrow">Contact</div></div>
         </div>
       </section>
 
@@ -1914,6 +1929,11 @@
       }
     }
     mq.addEventListener('change',place); place();
+    // Profile: the contact list closes the page on phones
+    const cl=document.querySelector('.id-card .contacts'), clHome=document.createComment('home'); cl.before(clHome);
+    const placeContacts=()=>{ if(mq.matches) $('m-contacts').append(cl); else clHome.after(cl); };
+    mq.addEventListener('change',placeContacts); placeContacts();
+
 
     menuBtn.addEventListener('click',()=>set('m-menu'));
     ctxBtn.addEventListener('click',()=>set('m-ctx'));
