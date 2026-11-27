@@ -814,7 +814,7 @@
             <div class="eyebrow">Latest Certification</div>
             <div class="initiative">
               <h4>AI Product Management Certification Program · Ironhack</h4>
-              <span class="badge">Completed · 20 Nov 2026</span>
+              <span class="badge">Completed · Nov 20, 2026</span>
             </div>
           </div>
 
@@ -895,22 +895,22 @@
                 <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.8</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“Fast, creative, thoughtful, on-point delivery was always the norm. Joe was a pleasure to work with. His passion for new fields and engagement in these tasks was my favorite part.”</blockquote>
               </article>
-              <article class="card" data-rel="Direct Manager" data-date="2022-02-19" data-rating="">
+              <article class="card" data-rel="Direct Manager" data-date="2022-02-19" data-rating="5.0">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-carter.png" alt="" width="52" height="52">
-                  <div><h3>Melissa Carter</h3><div class="role">Life Coach, Inspirational Speaker, Reiki II Master, Energy Healer, Herbalist</div></div>
+                  <div><h3>Melissa Carter</h3><div class="role">Chief Strategist</div></div>
                   <time datetime="2022-02-19">February 19, 2022</time>
                 </div>
-                <div class="rec-meta"><span class="rel">Direct Manager</span></div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>5.0</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“I had the honor of working closely with Joe. He was an honor to work with. He is a team player and is always thinking of ways to improve not only himself but his team and the company. His design skills are incredible and he is very easy to work with. He provided many good ideas on how to improve our workflows and made the company stronger. Joe's relationship skills and professionalism also impressed me as I witnessed him working with outside vendors and other company contacts. Joe is also always there to jump in and help wherever it was needed. There was never a task he was not willing to take head-on. I wish I could duplicate him. He is an asset to any team he joins. He is a great leader and I would HIGHLY recommend him to any company.”</blockquote>
               </article>
-              <article class="card" data-rel="Partner" data-date="2022-01-28" data-rating="">
+              <article class="card" data-rel="Partner" data-date="2022-01-28" data-rating="4.9">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-macaraeg.png" alt="" width="52" height="52">
                   <div><h3>Angie Macaraeg</h3><div class="role">VP of Sales &amp; Marketing</div><div class="co">Encore Labs · Hemp Industry</div></div>
                   <time datetime="2022-01-28">January 28, 2022</time>
                 </div>
-                <div class="rec-meta"><span class="rel">Partner</span></div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Partner</span></div>
                 <blockquote>“Joe was phenomenal to work with in the tumultuous hemp industry. His high level of professionalism and dedication to service has always made all of our projects go smoothly. Whether everything in the project was going right, or whether we would run into continuous roadblocks, he's always led with his heart and stepped forward with kindness and forward-based thinking. This has always made him a pleasure to work with. I recommend Joe to any company who values quality work. Joe will put his heart and soul into it.”</blockquote>
               </article>
               <article class="card" data-rel="Direct Manager" data-date="2021-12-11" data-rating="4.9">
@@ -1186,14 +1186,14 @@
       return d;
     }
     const appts=[
-      {title:'First Impressions', who:'Recruiter', date:bizDay(-2), time:'12:30', mins:30, where:'Video call', icon:'i-video',
+      {title:'First Impressions', who:'Recruiter', date:bizDay(-2), time:'12:30 PM', mins:30, where:'Video call', icon:'i-video',
        agenda:['Introductions and motivation','Availability and location','Overview of the hiring process'],
        note:'Strong fit for the role. Moved forward to interview.'},
-      {title:'Interview', who:'Sr. Product Manager', date:bizDay(1), time:'10:45', mins:45, where:'Video call', icon:'i-video',
+      {title:'Interview', who:'Sr. Product Manager', date:bizDay(1), time:'10:45 AM', mins:45, where:'Video call', icon:'i-video',
        agenda:['Product sense and discovery','Walk-through of the Cansativa marketplace launch','Working with engineering and design']},
-      {title:'Case Study', who:'Dir. of Product', date:bizDay(4), time:'14:00', mins:90, where:'Munich office', icon:'i-building',
-       agenda:['Present a product case (30 min)','Prioritisation exercise','Q&A with the product team']},
-      {title:'Offer', who:'COO', date:bizDay(6), time:'09:00', mins:30, where:'Video call', icon:'i-video',
+      {title:'Case Study', who:'Dir. of Product', date:bizDay(4), time:'2:00 PM', mins:90, where:'Munich office', icon:'i-building',
+       agenda:['Present a product case (30 min)','Prioritization exercise','Q&A with the product team']},
+      {title:'Offer', who:'COO', date:bizDay(6), time:'9:00 AM', mins:30, where:'Video call', icon:'i-video',
        agenda:['Role scope and first 90 days','Compensation and benefits','Start date']}
     ];
     const nextIdx=appts.findIndex(a=>a.date>=today);
@@ -1203,18 +1203,18 @@
     const dayLabel=d=>{
       const diff=Math.round((d-today)/864e5);
       if(diff===0) return 'Today'; if(diff===1) return 'Tomorrow'; if(diff===-1) return 'Yesterday';
-      return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+      return d.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short'});
     };
-    const longDay=d=>d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+    const longDay=d=>d.toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});
 
     // calendar
     const cal=document.getElementById('cal'), title=document.getElementById('cal-title');
     let y=today.getFullYear(), m=today.getMonth(), picked=null;
     function draw(){
       const first=new Date(y,m,1), days=new Date(y,m+1,0).getDate();
-      const lead=(first.getDay()+6)%7, prevDays=new Date(y,m,0).getDate();
-      title.textContent=first.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
-      let html=['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="dow">${d}</div>`).join('');
+      const lead=first.getDay(), prevDays=new Date(y,m,0).getDate();
+      title.textContent=first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      let html=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="dow">${d}</div>`).join('');
       for(let i=lead; i>0; i--) html+=`<span class="out">${prevDays-i+1}</span>`;
       for(let d=1; d<=days; d++){
         const dt=new Date(y,m,d), ev=appts.some(a=>same(a.date,dt));
@@ -1324,7 +1324,7 @@
       {from:'party.ron@owlpost.net', ago:1620, subject:'RE: RE: Fwd: job',
        body:["interested. call me","not before noon tho","— Ron"]},
       {from:'dragonslayer88@pigeonbox.io', ago:2900, subject:'Hiring?',
-       body:["To whom it may concern (or whoever reads this),","I am basically a natural born leader. My friends always say I should be the boss of something, so here I am.","Experience: I organised my cousin’s wedding (it rained but still). Skills: Excel (a bit), vibes (a lot).","Please reply before Friday, I have other offers (not really)."]},
+       body:["To whom it may concern (or whoever reads this),","I am basically a natural born leader. My friends always say I should be the boss of something, so here I am.","Experience: I organized my cousin’s wedding (it rained but still). Skills: Excel (a bit), vibes (a lot).","Please reply before Friday, I have other offers (not really)."]},
       {from:'kev.in.charge@quokkamail.com', ago:4400, subject:'pls read!!!!',
        body:["I know I don’t have the 5 years of experience you’re asking for, but I watched like 30 hours of YouTube videos about product management so I think that counts.","I also have a podcast idea. Will tell you in the interview.","Kevin"]},
       {from:'mom_of_jake@owlpost.net', ago:5800, subject:'Application for my son Jake',
@@ -1338,7 +1338,7 @@
     const now=Date.now(); let cur=0;
     const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const rel=m=>m<60?`${m} mins`:m<1440?`${Math.round(m/60)} hrs`:`${Math.round(m/1440)} day${Math.round(m/1440)>1?'s':''}`;
-    const full=m=>new Date(now-m*60000).toLocaleString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const full=m=>new Date(now-m*60000).toLocaleString('en-US',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'});
     const name=f=>f.includes('@')?f.split('@')[0]:f;
     const sinceMidnight=(new Date()-new Date().setHours(0,0,0,0))/60000;
     // only messages that arrived today start unread
@@ -1405,7 +1405,7 @@
       delete:"Sorry, I’m your favorite candidate. My message can’t be deleted.",
       unread:"Already marked as unforgettable.",
       snooze:"Snoozing on top talent? Bold move. Reminder set for… right now.",
-      label:"Already labelled: Favorite. Some things don’t change."
+      label:"Already labeled: Favorite. Some things don’t change."
     };
     function removeCur(verb){
       const i=cur, x=mails[i]; mails.splice(i,1);
@@ -1426,7 +1426,7 @@
     document.getElementById('tb-unread').addEventListener('click',()=>{
       if(isJoe()) return showToast(jokes.unread);
       mails[cur].read=false; renderList(); showToast('Marked as unread'); });
-    document.getElementById('tb-label').addEventListener('click',()=> isJoe()?showToast(jokes.label):showToast('Labelled: Not a fit'));
+    document.getElementById('tb-label').addEventListener('click',()=> isJoe()?showToast(jokes.label):showToast('Labeled: Not a fit'));
     document.getElementById('tb-more').addEventListener('click',()=> isJoe()
       ? showToast('Want the full picture? Joe’s profile has it all.','Open profile',()=>{ location.hash='profile'; })
       : showToast('Tip: Joe San’s message is still waiting at the top.','Open',()=>open(0)));
@@ -1570,7 +1570,7 @@
       if(cv) cv.addEventListener('error',()=>{ const n=+cv.dataset.i+1; if(d.cover[n]){ cv.dataset.i=n; cv.src=d.cover[n]; } else cv.remove(); });
       pop.setAttribute('aria-label',btn.textContent.trim());
       pop.hidden=false; btn.setAttribute('aria-expanded','true'); openBtn=btn;
-      // centre under the icon, kept inside the card
+      // center under the icon, kept inside the card
       const w=wrap.getBoundingClientRect(), b=btn.getBoundingClientRect(), pw=pop.offsetWidth;
       const left=Math.max(0,Math.min(w.width-pw, b.left-w.left+b.width/2-pw/2));
       pop.style.left=left+'px';
