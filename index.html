@@ -441,6 +441,28 @@
   .cal span.out{background:none;color:var(--faint)}
   .cal span.today{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 0 0 3px var(--track)}
 
+  /* Notes bubble: bottom right of the content area, at every size */
+  .m-fab{position:fixed;right:calc(var(--panel) + 28px);bottom:28px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(80,80,248,.38);z-index:56;transition:background .2s,transform .2s}
+  .m-fab:hover{transform:translateY(-2px)}
+  .m-fab .ico{width:22px;height:22px}
+  .m-fab .i-off,html.m-notes .m-fab .i-on{display:none}
+  html.m-notes .m-fab .i-off{display:block}
+  html.m-notes .m-fab{background:var(--invert-bg);color:var(--invert-ink);box-shadow:var(--pop-shadow)}
+  body:has(.app.panel-hidden) .m-fab,body:has(.app.panel-hidden) .panel-notes.m-pop{right:28px}
+  .panel-notes.m-pop{display:none;position:fixed;right:calc(var(--panel) + 28px);bottom:96px;width:min(380px,calc(100vw - 32px));z-index:55;max-width:none;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--pop-shadow);padding:16px;animation:fade .18s ease}
+  html.m-notes .panel-notes.m-pop{display:block}
+  .panel-notes.m-pop h3{font-size:16px;font-weight:600;margin:0 0 10px;text-align:left}
+
+  #view-profile,#view-references{padding-bottom:56px}
+
+  /* Profile header: label becomes Joe's photo + name once the ID card scrolls away */
+  #view-profile .section-head{position:sticky;top:0;z-index:6;background:var(--bg);min-height:56px;box-sizing:border-box;padding-top:12px;padding-bottom:8px;transition:box-shadow .2s}
+  #view-profile .section-head.stuck{box-shadow:0 1px 0 var(--line)}
+  .section-head .sh-id{display:none;align-items:center;gap:10px;font-size:16px;font-weight:600;margin-right:auto;animation:fade .18s ease}
+  .section-head .sh-id img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+  .section-head.stuck h2{display:none}
+  .section-head.stuck .sh-id{display:flex}
+
   /* ---------- Responsive ---------- */
   @media (max-width:1280px){
     :root{--panel:280px}
@@ -456,6 +478,7 @@
     .content{overflow:visible}
     .panel{grid-column:2;border-left:0;border-top:1px solid var(--line);display:block}
     .app.panel-hidden .panel{display:none}
+    .m-fab,.panel-notes.m-pop{right:28px}
     .panel-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 32px;max-width:900px;margin:0 auto}
     .sidebar{position:sticky;top:0;height:100vh}
     .content.inbox-mode{overflow:visible}
@@ -548,16 +571,10 @@
     .m-contacts{display:block!important;order:9}
     .m-contacts .contacts{margin-top:14px}
 
-    /* Notes bubble */
-    .m-fab{display:grid!important;place-items:center;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(80,80,248,.38);z-index:56;transition:background .2s}
-    .m-fab .ico{width:22px;height:22px}
-    .m-fab .i-off,html.m-notes .m-fab .i-on{display:none}
-    html.m-notes .m-fab .i-off{display:block}
-    html.m-notes .m-fab{background:var(--invert-bg);color:var(--invert-ink);box-shadow:var(--pop-shadow)}
-    html.m-menu .m-fab,html.m-ctx .m-fab{display:none!important}
-    .panel-notes.m-pop{display:none;position:fixed;left:16px;right:16px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:55;max-width:none;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--pop-shadow);padding:16px;animation:fade .18s ease}
-    html.m-notes .panel-notes.m-pop{display:block}
-    .panel-notes.m-pop h3{font-size:16px;font-weight:600;margin:0 0 10px}
+    .m-fab{right:16px;bottom:calc(20px + env(safe-area-inset-bottom))}
+    .panel-notes.m-pop,body:has(.app.panel-hidden) .panel-notes.m-pop{left:16px;right:16px;width:auto;bottom:calc(88px + env(safe-area-inset-bottom))}
+    html.m-menu .m-fab,html.m-ctx .m-fab{display:none}
+    #view-profile .section-head{top:56px;padding:8px 16px}
     .toast{bottom:calc(92px + env(safe-area-inset-bottom))}
 
     .section-head{padding:16px 16px 0}
@@ -814,10 +831,9 @@
       <section class="view" id="view-profile" data-title="Candidate Scouting" aria-label="Profile">
         <div class="section-head">
           <h2>Profile</h2>
+          <div class="sh-id" aria-hidden="true"><img src="assets/joe.png" alt="" width="32" height="32"><b>Joe San</b></div>
           <div class="tools">
             <button class="icon-btn bm-btn" id="bm-btn" aria-label="Add to shortlist" aria-pressed="false" type="button"><svg class="ico"><use href="#i-bookmark"/></svg></button>
-            <a class="icon-btn" href="assets/Joe_San_CV.pdf" download aria-label="Download CV as PDF"><svg class="ico"><use href="#i-download"/></svg></a>
-            <button class="icon-btn share" aria-label="Share this page" type="button"><svg class="ico"><use href="#i-share"/></svg></button>
             <button class="icon-btn" id="pf-more" aria-label="More actions" aria-haspopup="menu" aria-expanded="false" aria-controls="pf-menu" type="button"><svg class="ico"><use href="#i-dots"/></svg></button>
             <div class="menu" id="pf-menu" role="menu" aria-label="Profile actions" hidden>
               <a role="menuitem" href="assets/Joe_San_CV.pdf" download><svg class="ico"><use href="#i-download"/></svg>Download CV<small>PDF</small></a>
@@ -1265,7 +1281,7 @@
   </aside>
 </div>
 <div class="scrim" id="scrim"></div>
-<button class="m-fab m-only" id="m-notes" type="button" aria-label="Your Notes" aria-expanded="false"><svg class="ico i-on"><use href="#i-feather"/></svg><svg class="ico i-off"><use href="#i-x"/></svg></button>
+<button class="m-fab" id="m-notes" type="button" aria-label="Your Notes" aria-expanded="false"><svg class="ico i-on"><use href="#i-feather"/></svg><svg class="ico i-off"><use href="#i-x"/></svg></button>
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-msg"></span><button type="button" id="toast-act" hidden></button></div>
 
 <script src="assets/i18n.js"></script>
@@ -1912,23 +1928,27 @@
     const sw=$('search-wrap'), np=$('notifs'), notes=document.querySelector('.panel-notes');
     const T=s=>window.i18n&&i18n.t?i18n.t(s):s;
     // remember where the moved parts live on desktop
-    const homes=[sw,np,notes].map(el=>{ const m=document.createComment('home'); el.before(m); return [el,m]; });
+    // notes live in the bubble at every size
+    document.body.insertBefore(notes,fab); notes.classList.add('m-pop'); notes.setAttribute('role','dialog'); notes.setAttribute('aria-label',T('Your Notes'));
+    const homes=[sw,np].map(el=>{ const m=document.createComment('home'); el.before(m); return [el,m]; });
     const btnFor={'m-menu':menuBtn,'m-ctx':ctxBtn,'m-notes':fab};
     let last=null;
     function set(state){
       ['m-menu','m-ctx','m-notes'].forEach(c=>{ root.classList.toggle(c,c===state); btnFor[c].setAttribute('aria-expanded',String(c===state)); });
       if(state){ last=btnFor[state]; const f={'m-menu':$('m-close'),'m-ctx':$('ctx-close'),'m-notes':$('rec-notes')}[state]; setTimeout(()=>f.focus({preventScroll:true}),50); }
     }
-    function close(){ const was=root.classList.contains('m-menu')||root.classList.contains('m-ctx')||root.classList.contains('m-notes'); set(null); if(was&&last&&mq.matches) last.focus({preventScroll:true}); }
+    function close(){ const was=root.matches('.m-menu,.m-ctx,.m-notes'); set(null); if(was&&last&&last.offsetParent) last.focus({preventScroll:true}); }
     function place(){
-      if(mq.matches){
-        $('m-close').after(sw); side.append(np); document.body.insertBefore(notes,fab); notes.classList.add('m-pop');
-        notes.setAttribute('role','dialog'); notes.setAttribute('aria-label',T('Your Notes'));
-      } else {
-        set(null); homes.forEach(([el,m])=>m.after(el)); notes.classList.remove('m-pop'); notes.removeAttribute('role'); notes.removeAttribute('aria-label');
-      }
+      if(mq.matches){ $('m-close').after(sw); side.append(np); }
+      else { if(!root.classList.contains('m-notes')) set(null); else ['m-menu','m-ctx'].forEach(c=>root.classList.remove(c)); homes.forEach(([el,m])=>m.after(el)); }
     }
     mq.addEventListener('change',place); place();
+    // Profile header: once Joe's name scrolls under it, it shows his photo + name
+    const sh=document.querySelector('#view-profile .section-head'), nm=document.querySelector('.id-card h2');
+    let raf=0;
+    const stick=()=>{ raf=0; if(!sh.offsetParent) return; sh.classList.toggle('stuck', nm.getBoundingClientRect().bottom < sh.getBoundingClientRect().bottom); };
+    document.addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(stick); },{capture:true,passive:true});
+    window.addEventListener('hashchange',()=>setTimeout(stick,50)); addEventListener('resize',stick);
     // Profile: the contact list closes the page on phones
     const cl=document.querySelector('.id-card .contacts'), clHome=document.createComment('home'); cl.before(clHome);
     const placeContacts=()=>{ if(mq.matches) $('m-contacts').append(cl); else clHome.after(cl); };
@@ -1941,7 +1961,7 @@
     fab.addEventListener('click',()=>root.classList.contains('m-notes')?close():set('m-notes'));
     $('m-close').addEventListener('click',close); $('ctx-close').addEventListener('click',close);
     $('scrim').addEventListener('click',close);
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&mq.matches&&root.matches('.m-menu,.m-ctx,.m-notes')&&!e.defaultPrevented) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&root.matches('.m-menu,.m-ctx,.m-notes')&&!e.defaultPrevented) close(); });
     document.addEventListener('click',e=>{ if(root.classList.contains('m-notes')&&!notes.contains(e.target)&&!fab.contains(e.target)) close(); });
     // leaving the drawer: any link, a search result, or a new page
     side.addEventListener('click',e=>{ if(e.target.closest('a[href]')) set(null); });
