@@ -579,6 +579,21 @@
     /* Inbox: list first, message on tap */
     .mail-list,.content.inbox-mode .mail-list{max-height:none;border-bottom:0}
     .inbox:not(.reading) .reader{display:none}
+    .inbox{overflow-x:clip}
+    .content.inbox-mode{padding-bottom:0}
+    .inbox .mail-list,.inbox.reading .reader{min-height:calc(100vh - 56px);min-height:calc(100dvh - 56px);box-sizing:border-box;padding-bottom:88px}
+    /* slide: the message moves over the list, which stays visible underneath */
+    .inbox.entering .mail-list,.inbox.leaving .mail-list{display:block}
+    .inbox.entering .reader,.inbox.leaving .reader{display:flex;position:fixed;top:56px;left:0;right:0;bottom:0;z-index:20;overflow:hidden;box-shadow:-10px 0 30px rgba(0,0,0,.18)}
+    .inbox.entering .reader-tools,.inbox.leaving .reader-tools{top:0}
+    .inbox.entering .reader{animation:mail-in .3s cubic-bezier(.2,.7,.2,1)}
+    .inbox.entering .mail-list{animation:list-away .3s cubic-bezier(.2,.7,.2,1) forwards}
+    .inbox.leaving .reader{animation:mail-out .26s cubic-bezier(.4,0,.6,1) forwards}
+    .inbox.leaving .mail-list{animation:list-back .26s cubic-bezier(.4,0,.6,1)}
+    @keyframes mail-in{from{transform:translateX(100%)}to{transform:none}}
+    @keyframes mail-out{from{transform:none}to{transform:translateX(100%)}}
+    @keyframes list-away{from{transform:none}to{transform:translateX(-20%);opacity:.7}}
+    @keyframes list-back{from{transform:translateX(-20%);opacity:.7}to{transform:none;opacity:1}}
     .inbox.reading .mail-list{display:none}
     #mail-back{display:grid!important;margin-left:-8px}
     .reader,html .content.inbox-mode{overflow:visible}
@@ -1500,17 +1515,31 @@
       else if(window.matchMedia('(max-width:860px)').matches && focusReader) document.querySelector('.reader').scrollIntoView({behavior:'smooth'});
     }
     // phones: the list first, a message full-screen once picked, Back returns to the list
-    const phone=window.matchMedia('(max-width:640px)'), box=document.querySelector('.inbox');
+    const phone=window.matchMedia('(max-width:640px)'), box=document.querySelector('.inbox'), calm=window.matchMedia('(prefers-reduced-motion: reduce)');
     let pushed=false;
     function read(on){
       if(on===box.classList.contains('reading')) { if(on) scrollTo(0,0); return; }
-      box.classList.toggle('reading',on);
-      if(on){ if(!pushed){ history.pushState({reading:1},''); pushed=true; } scrollTo(0,0); }
-      else { requestAnimationFrame(()=>{ const m=list.querySelector('.mail.on'); if(m) m.scrollIntoView({block:'center'}); }); }
+      const rd=document.querySelector('.reader');
+      if(on){
+        if(!pushed){ history.pushState({reading:1},''); pushed=true; }
+        box.classList.add('reading');
+        if(calm.matches){ scrollTo(0,0); return; }
+        box.classList.add('entering'); rd.scrollTop=0;
+        setTimeout(()=>{ box.classList.remove('entering'); scrollTo(0,0); },300);
+        return;
+      }
+      // keep the message where it is on screen, show the list underneath, then slide the message away
+      const top=rd.getBoundingClientRect().top, off=Math.max(0,56-top);
+      box.classList.remove('reading');
+      const m=list.querySelector('.mail.on');
+      if(calm.matches){ if(m) m.scrollIntoView({block:'center'}); return; }
+      box.classList.add('leaving'); rd.style.top=Math.max(56,top)+'px'; rd.scrollTop=off;
+      if(m) m.scrollIntoView({block:'center'});
+      setTimeout(()=>{ box.classList.remove('leaving'); rd.style.top=''; rd.scrollTop=0; },260);
     }
     document.getElementById('mail-back').addEventListener('click',()=>{ if(pushed) history.back(); else read(false); });
     window.addEventListener('popstate',()=>{ if(pushed){ pushed=false; read(false); } });
-    window.addEventListener('hashchange',()=>{ pushed=false; box.classList.remove('reading'); });
+    window.addEventListener('hashchange',()=>{ pushed=false; box.classList.remove('reading','entering','leaving'); });
     phone.addEventListener('change',()=>{ if(!phone.matches) box.classList.remove('reading'); });
     list.addEventListener('click',e=>{
       const cb=e.target.closest('[data-cb]');
