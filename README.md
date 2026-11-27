@@ -1,6 +1,6 @@
 # joesancode.github.io
 
-Personal CV site for Joe San, live at **https://joesancode.github.io**. It is styled as a fictional recruiting app, *virtus*, where the visitor keeps finding Joe at the center of everything.
+Personal CV site for Joe San, live at **https://joesancode.github.io**. It is styled as a fictional recruiting app, *Punctum* (Talent Intelligence), where the visitor keeps finding Joe at the center of everything.
 
 ## Files
 - `index.html`: the whole site, with styles and script inline. Three views switched by URL hash: `#profile` (default), `#references`, `#inbox`.

@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Joe San · Product Management & Brand Design</title>
+<title>Joe San · Product Management & Brand Design | Punctum</title>
 <meta name="description" content="Joe San — Passionate Product Manager skilled in shaping ideas into user-centric solutions. Munich, Germany.">
-<meta property="og:title" content="Joe San · Product Management & Brand Design">
+<meta property="og:title" content="Joe San · Product Management & Brand Design | Punctum">
+<meta property="og:site_name" content="Punctum">
 <meta property="og:description" content="Passionate Product Manager skilled in shaping ideas into user-centric solutions.">
 <meta property="og:image" content="assets/joe.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Ccircle cx='10' cy='12' r='7' fill='%23d9d9e3'/%3E%3Ccircle cx='18' cy='12' r='9' fill='%233eb3ff'/%3E%3Ccircle cx='28' cy='12' r='11' fill='%235050f8'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 65.5 76.0'%3E%3Cstyle%3E%40media (prefers-color-scheme:dark)%7B.s%7Bstroke:%23f2f2f7%7D.d%7Bfill:%236c6cff%7D%7D%3C/style%3E%3Cpath d='M8 68L20.75 8 M20.75 8L40 8 M40 8A17.5 17.5 0 0 1 57.5 25.5A17.5 17.5 0 0 1 40 43 M40 43L13.31 43' fill='none' class='s' stroke='%2316161d' stroke-width='13' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='46.5' cy='65.5' r='9.38' class='d' fill='%235050f8'/%3E%3C/svg%3E">
 <script>
   (function(){ var t='auto'; try{ t=localStorage.getItem('theme')||'auto'; }catch(e){}
     var dark=t==='dark'||(t==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
@@ -71,12 +72,11 @@
   .app.panel-hidden .panel{display:none}
 
   .sidebar{border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:28px 0 24px;background:var(--surface);z-index:2}
-  .logo{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;font-size:14px;letter-spacing:-.01em}
-  .logo-dots{position:relative;width:46px;height:24px}
-  .logo-dots span{position:absolute;top:50%;border-radius:50%;transform:translateY(-50%)}
-  .logo-dots span:nth-child(1){left:0;width:14px;height:14px;background:#d9d9e3}
-  .logo-dots span:nth-child(2){left:9px;width:18px;height:18px;background:var(--accent-2)}
-  .logo-dots span:nth-child(3){left:21px;width:24px;height:24px;background:var(--accent)}
+  .logo{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink)}
+  .logo svg{display:block;overflow:visible}
+  .logo .lg-mark{height:24px;width:auto}
+  .logo .lg-word{width:60px;height:auto}
+  .logo .dot{fill:var(--accent)}
   .nav{margin:auto 0;display:flex;flex-direction:column;gap:22px;align-items:center}
   .nav-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--ink-2);transition:background .2s,color .2s,transform .2s}
   .nav-btn .ico{width:22px;height:22px}
@@ -609,7 +609,6 @@
     --il-soft:#22223a; --il-paper:#2b2b3a; --il-line:#3d3d52; --il-ink:#d8d8ea; --il-track:#3a3a66;
   }
   html[data-theme="dark"] body{background:var(--surface)}
-  html[data-theme="dark"] .logo-dots span:nth-child(1){background:#4a4a5c}
   html[data-theme="dark"] .match-tag{background:#2c2c38}
   html[data-theme="dark"] .stat strong .up{color:#4ade80}
   html[data-theme="dark"] .radars .lg,html[data-theme="dark"] .radar-pop .lg{background:#f3f3f8}
@@ -676,9 +675,9 @@
 
   <!-- ===== Sidebar ===== -->
   <aside class="sidebar">
-    <div class="logo" aria-label="virtus">
-      <div class="logo-dots"><span></span><span></span><span></span></div>
-      virtus
+    <div class="logo" role="img" aria-label="Punctum">
+      <svg class="lg-mark" viewBox="0 0 62.5 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="64" r="7.5" class="dot"/></svg>
+      <svg class="lg-word" viewBox="0 0 378.3 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5 M73.58 26.5L68.93 48.38 M68.93 48.38A15 15 0 0 0 80.48 66.17A15 15 0 0 0 98.27 54.62 M104.25 26.5L95.75 66.5 M117.92 66.5L123.89 38.38 M123.89 38.38A15 15 0 0 1 141.68 26.83A15 15 0 0 1 153.24 44.62 M153.24 44.62L148.59 66.5 M199.68 33.55A15 15 0 0 0 184.35 26.73A15 15 0 0 0 172.29 38.38 M172.29 38.38L170.16 48.38 M170.16 48.38A15 15 0 0 0 178.49 65.09A15 15 0 0 0 196.65 60.73 M218.96 66.5L231.07 9.5 M214.46 26.5L243.46 26.5 M261.18 26.5L256.53 48.38 M256.53 48.38A15 15 0 0 0 268.08 66.17A15 15 0 0 0 285.87 54.62 M291.85 26.5L283.35 66.5 M305.52 66.5L311.49 38.38 M311.49 38.38A15 15 0 0 1 329.28 26.83A15 15 0 0 1 340.84 44.62 M340.84 44.62L336.19 66.5 M342.16 38.38A15 15 0 0 1 359.95 26.83A15 15 0 0 1 371.51 44.62 M371.51 44.62L366.86 66.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <nav class="nav" aria-label="Sections">
       <a class="nav-btn" href="#inbox" data-view="inbox" data-tip="Cover letter"><svg class="ico"><use href="#i-inbox"/></svg><span class="sr-only">Inbox: cover letter</span></a>
@@ -928,7 +927,7 @@
                 <blockquote>“I valued working with Joe during a crucial period at CKSoul. His competence, composure, and collaborative approach were commendable. With strong organizational skills and sound judgment, he demonstrated excellent capabilities on all fronts. I would gladly work with Joe again and wholeheartedly recommend him.”</blockquote>
               </article>
             </div>
-            <p class="ref-note">Ratings and rankings are illustrative, part of the virtus concept. Recommendations are real, from LinkedIn.</p>
+            <p class="ref-note">Ratings and rankings are illustrative, part of the Punctum concept. Recommendations are real, from LinkedIn.</p>
           </div>
         </div>
       </section>
