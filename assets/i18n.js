@@ -69,7 +69,7 @@
   ["Education · ","Formación · ","Formazione · ","Ausbildung · "],
   ["Rating ","Valoración ","Valutazione ","Bewertung "],
   ["Scouting radar · ","Radar de captación · ","Radar di ricerca · ","Talentradar · "],
-  ["Latest certification · Ironhack · ","Última certificación · Ironhack · ","Ultima certificazione · Ironhack · ","Neueste Zertifizierung · Ironhack · "],
+  ["Certification · Ironhack · ","Certificación · Ironhack · ","Certificazione · Ironhack · ","Zertifizierung · Ironhack · "],
 
   // ---- Profile header
   ["Profile actions","Acciones del perfil","Azioni del profilo","Profilaktionen"],
@@ -89,7 +89,7 @@
   ["Passionate Product Manager skilled in shaping ideas into user-centric solutions.","Gerente de producto apasionado, experto en convertir ideas en soluciones centradas en el usuario.","Responsabile di prodotto appassionato, abile nel trasformare le idee in soluzioni incentrate sull’utente.","Leidenschaftlicher Produktmanager, der Ideen in nutzerorientierte Lösungen verwandelt."],
   ["Call","Llamar","Chiama","Anrufen"],
   ["Short list","Preselección","Rosa ristretta","Auswahlliste"],
-  ["Latest certification","Última certificación","Ultima certificazione","Neueste Zertifizierung"],
+  ["Certified","Certificado","Certificato","Zertifiziert"],
   ["AI Product Management","Gestión de productos de IA","Gestione di prodotti di IA","KI-Produkt\u00admanagement"],
   ["View certificate","Ver certificado","Vedi il certificato","Zertifikat ansehen"],
   ["Languages","Idiomas","Lingue","Sprachen"],

@@ -198,11 +198,12 @@
   .headline h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
   .headline p{color:var(--ink-2);font-size:14.5px}
   .headline .actions{display:flex;gap:10px;margin-top:18px}
-  .cert{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff;padding:18px 14px}
-  .cert .k{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:6px}
-  .cert strong{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-bottom:4px;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:anywhere;max-width:100%}
-  .cert .s{font-size:12.5px;opacity:.85}
-  .cert-btn{margin-top:12px;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;transition:background .15s}
+  .cert{display:flex;flex-direction:column;justify-content:space-between;gap:14px;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff;padding:20px 18px}
+  .cert-logo{width:30px;height:auto;display:block;opacity:.95}
+  .cert .k{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;opacity:.75;margin-bottom:4px}
+  .cert strong{display:block;font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:anywhere}
+  .cert .y{font-size:13px;opacity:.75;margin-top:6px;font-variant-numeric:tabular-nums}
+  .cert-btn{align-self:flex-start;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;transition:background .15s}
   .cert-btn:hover{background:rgba(255,255,255,.3)}
   .cert-btn[hidden]{display:none}
   .span-2{grid-column:2 / span 2}
@@ -794,10 +795,12 @@
           </div>
 
           <div class="card cert">
-            <div class="k">Latest certification</div>
-            <strong>AI Product Management</strong>
-            <div class="s">Ironhack</div>
-            <div class="s">20 November, 2026</div>
+            <img class="cert-logo" src="assets/logo-ironhack.png" alt="Ironhack" width="200" height="213">
+            <div class="cert-txt">
+              <div class="k">Certified</div>
+              <strong>AI Product Management</strong>
+              <div class="y">2026</div>
+            </div>
             <a class="cert-btn" id="cert-btn" href="" target="_blank" rel="noopener" hidden>View certificate</a>
           </div>
 
@@ -1546,7 +1549,7 @@
   // ----- Personal interests: click for a short note -----
   window.interests={
     reading:{eyebrow:'Currently reading',title:'Thanosis',
-      cover:['assets/cover-thanosis.jpg','https://covers.openlibrary.org/b/isbn/9781917646888-M.jpg?default=false','https://books.google.com/books/content?id=uQnF0QEACAAJ&printsec=frontcover&img=1&zoom=1'],by:'Jason Reza Jorjani · 2025',
+      cover:['assets/cover-thanosis.jpg'],by:'Jason Reza Jorjani · 2025',
       text:'A philosophical investigation of life after death. Drawing on a century of parapsychological research, Jorjani argues that individuality and creative agency survive death.',
       link:['View at Arktos','https://arktos.com/product/thanosis/']},
     fitness:{eyebrow:'Fitness',text:'Not crazy stuff: push-ups, pull-ups, squats and the like. Pretty vanilla but consistent.'},
@@ -1554,7 +1557,7 @@
     blockchain:{eyebrow:'Blockchain I follow',title:'Midnight',
       text:'A data-protection blockchain, built as a partner chain to Cardano. It uses zero-knowledge proofs, so you can prove something is true without revealing the data behind it.',
       link:['midnight.network','https://midnight.network']},
-    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',image:'assets/drawing-marley.jpg',embed:'https://www.instagram.com/p/Be3WgfXlVh7/embed/',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
+    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',image:'assets/drawing-marley.jpg',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
   };
   i18n.data(window.interests);
   (function(){
@@ -1693,7 +1696,7 @@
       const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),i18n.t('Headline'),T(hl.querySelector('p')));
       $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),i18n.t('Contact')));
       $(P+' .job').forEach(j=>add('Experience','profile',j,T(j.querySelector('h3')),T(j.querySelector('.meta')),T(j.querySelector('p'))));
-      const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,i18n.t('AI Product Management'),i18n.t('Latest certification · Ironhack · ')+T(ce.querySelectorAll('.s')[1]));
+      const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,i18n.t('AI Product Management'),i18n.t('Certification · Ironhack · ')+T(ce.querySelector('.y')));
       $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),i18n.t('Language · ')+T(li.querySelector('em'))));
       const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),i18n.t('Education · ')+T(ed.querySelector('.label')));
       $(P+' .interest').forEach(i=>{ const d=interests[i.dataset.int]; add('Profile','profile',i,T(i),i18n.t('Personal interest'),[d.title,d.by,d.text,d.quote].filter(Boolean).join(' ')).open=()=>openInterest(i.dataset.int); });
