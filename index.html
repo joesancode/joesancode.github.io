@@ -42,6 +42,7 @@
     --il-a:#5050f8; --il-a2:#6c6cfb; --il-b:#3eb3ff; --il-c:#c9c9fd;
     --il-soft:#eeeefe; --il-paper:#ffffff; --il-line:#e3e3f0; --il-ink:#2a2a40; --il-track:#e0e0fd;
     --accent:#5050f8;
+    --rk-1:#4f4ff0; --rk-2:#6262f6; --rk-3:#8686f9; --rk-4:#a6a6fb; --rk-5:#c3c3fd;
     --accent-soft:#ececfe;
     --accent-2:#3eb3ff;
     --ink:#1b1b22;
@@ -171,7 +172,7 @@
   .profile-grid{display:grid;grid-template-columns:270px 1fr 150px;gap:16px;padding:16px 32px 40px;align-items:start}
   .col-left{display:flex;flex-direction:column;gap:16px;grid-row:span 4}
   .id-card{text-align:center}
-  .id-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
+  .id-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px var(--card),0 0 0 6px var(--line)}
   .id-card h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
   .contacts a[data-copy]{position:relative}
   .contacts a[data-copy] .cp{margin-left:auto;width:15px;height:15px;color:var(--muted);opacity:0;transition:opacity .15s}
@@ -252,10 +253,10 @@
   /* ---------- References view ---------- */
   .ref-grid{display:grid;grid-template-columns:270px 1fr;gap:16px;padding:16px 32px 40px;align-items:start}
   .score-card{text-align:center}
-  .score-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px #fff,0 0 0 6px var(--line)}
+  .score-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px var(--card),0 0 0 6px var(--line)}
   .score-card h2{font-size:22px;font-weight:600}
   .score-card .tag{font-size:13.5px;color:var(--ink-2);margin-top:4px}
-  .big-score{margin:22px auto 4px;font-size:44px;font-weight:700;letter-spacing:-.03em;color:var(--accent);line-height:1}
+  .big-score{margin:22px auto 4px;font-size:44px;font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1}
   .stars{display:flex;justify-content:center;gap:3px;color:#ffb648;margin:8px 0 4px}
   .stars svg{width:16px;height:16px;fill:currentColor}
   .bars{list-style:none;text-align:left;margin-top:22px;display:flex;flex-direction:column;gap:16px}
@@ -266,10 +267,29 @@
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .stat .label{font-size:13px}
   .stat strong{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;margin:4px 0 0}
-  .stat strong.up{color:#22a861}
+  .stat strong .up{color:#22a861}
   .stat small{font-size:12.5px;color:var(--muted)}
   .recs{display:flex;flex-direction:column;gap:16px;margin-top:16px}
-  .recs > h2{font-size:16px;font-weight:600;margin:8px 0 -4px}
+  .ref-grid > *{min-width:0}
+  .rec-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0 -4px}
+  .rec-bar h2{font-size:16px;font-weight:600}
+  .rec-tools{display:flex;align-items:center;gap:10px;min-width:0;max-width:100%}
+  .rec-chips{display:flex;gap:6px;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .rec-chips::-webkit-scrollbar{display:none}
+  .rec-chips button{white-space:nowrap;flex:none}
+  .rec-sort{white-space:nowrap;flex:none}
+  .rec-chips button,.rec-sort{font-family:inherit;font-size:12.5px;padding:5px 12px;border-radius:999px;background:var(--chip);color:var(--ink-2);transition:background .15s,color .15s}
+  .rec-chips button:hover,.rec-sort:hover{color:var(--ink)}
+  .rec-chips button small{font-size:11.5px;color:var(--muted);margin-left:5px}
+  .rec-chips button[aria-pressed="true"]{background:var(--invert-bg);color:var(--invert-ink)}
+  .rec-chips button[aria-pressed="true"] small{color:inherit;opacity:.7}
+  .sort-wrap{position:relative}
+  .rec-sort{display:flex;align-items:center;gap:4px;background:none;padding-right:6px}
+  .rec-sort .ico{width:15px;height:15px}
+  .sort-wrap .menu{top:34px;min-width:180px}
+  .menu [aria-checked="true"]{font-weight:600}
+  .menu [aria-checked="true"]::after{content:"";margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--ink)}
+  .recs article.in{animation:fade .25s ease}
   .rec-head{display:flex;gap:14px;align-items:flex-start}
   .rec-head .avatar{width:52px;height:52px}
   .rec-head h3{font-size:16px;font-weight:600}
@@ -279,14 +299,14 @@
   .rec-meta{display:flex;align-items:center;gap:14px;margin:14px 0 10px}
   .rec-meta .score{display:flex;align-items:center;gap:6px;font-weight:600}
   .rec-meta .score svg{width:15px;height:15px;fill:#ffb648}
-  .rec-meta .rel{font-size:12px;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-weight:500}
+  .rec-meta .rel{font-size:12px;background:var(--chip);color:var(--ink-2);padding:3px 10px;border-radius:999px;font-weight:500}
   blockquote{font-size:14.5px;color:var(--ink-2);line-height:1.6}
 
   .ranking{display:flex;align-items:stretch;justify-content:center;gap:28px}
   .stack{position:relative;width:36px;display:flex;flex-direction:column;border-radius:3px;overflow:visible;margin-top:22px}
   .stack i{display:block}
-  .stack .top{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--accent);font-weight:600;white-space:nowrap}
-  .stack .marker{position:absolute;left:-5px;right:-5px;height:2px;background:var(--accent);top:9px}
+  .stack .top{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink);font-weight:600;white-space:nowrap}
+  .stack .marker{position:absolute;left:-5px;right:-5px;height:2px;background:var(--ink);top:9px}
   .legend{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:22px}
   .legend li{display:grid;grid-template-columns:14px auto;column-gap:10px;align-items:center}
   .legend li span{width:13px;height:13px;border-radius:50%}
@@ -294,7 +314,27 @@
   .legend small{grid-column:2;font-size:11.5px;color:var(--muted);line-height:1.1}
   .total{text-align:center;font-size:12.5px;color:var(--muted);margin-top:14px}
   .radars{list-style:none;display:flex;flex-direction:column;gap:18px}
-  .radars li{display:flex;gap:12px;align-items:flex-start}
+  .radar-wrap{position:relative}
+  .radars .radar{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;font-family:inherit;color:inherit;padding:8px;margin:-8px;width:calc(100% + 16px);border-radius:12px;transition:background .15s}
+  .radars .radar:hover,.radars .radar[aria-expanded="true"]{background:var(--bg)}
+  .radar-pop{position:absolute;left:-8px;right:-8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--pop-shadow);padding:16px;z-index:20;animation:fade .15s ease}
+  .radar-pop[hidden]{display:none}
+  .radar-pop .rp-head{display:flex;gap:12px;align-items:center}
+  .radar-pop .lg{width:36px;height:36px;border-radius:9px;overflow:hidden;display:grid;place-items:center;background:var(--chip);flex:none}
+  .radar-pop .lg img{width:100%;height:100%;object-fit:cover}
+  .radar-pop h4{font-size:15px;font-weight:600}
+  .radar-pop .rp-head small{display:block;font-size:12.5px;color:var(--muted)}
+  .radar-pop .eyebrow{margin:14px 0 8px}
+  .steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+  .steps li{height:4px;border-radius:4px;background:var(--line)}
+  .steps li.done{background:var(--ink-2)}
+  .steps li.now{background:var(--ink)}
+  .radar-pop .stage{font-size:13px;margin-top:8px}
+  .radar-pop .stage b{font-weight:600}
+  .radar-pop .stage span{color:var(--muted)}
+  .radar-pop .rp-actions{display:flex;gap:8px;margin-top:14px}
+  .radar-pop .rp-actions button{flex:1;white-space:nowrap;font-family:inherit;font-size:13px;font-weight:500;padding:7px 12px;border-radius:10px;background:var(--chip);color:var(--ink)}
+  .radar-pop .rp-actions button.primary{background:var(--invert-bg);color:var(--invert-ink)}
   .radars .lg{width:30px;height:30px;border-radius:7px;overflow:hidden;display:grid;place-items:center;background:var(--chip);flex:none}
   .radars .lg img{width:100%;height:100%;object-fit:cover}
   .radars b{display:block;font-size:14px;font-weight:600}
@@ -529,6 +569,7 @@
   html[data-theme="dark"]{
     color-scheme:dark;
     --accent:#6c6cff;
+    --rk-1:#7a7aff; --rk-2:#6060e8; --rk-3:#4b4bc4; --rk-4:#3c3c96; --rk-5:#31316c;
     --accent-soft:#26264a;
     --ink:#ececf3;
     --ink-2:#babac8;
@@ -560,8 +601,8 @@
   html[data-theme="dark"] body{background:var(--surface)}
   html[data-theme="dark"] .logo-dots span:nth-child(1){background:#4a4a5c}
   html[data-theme="dark"] .match-tag{background:#2c2c38}
-  html[data-theme="dark"] .stat strong.up{color:#4ade80}
-  html[data-theme="dark"] .radars .lg{background:#f3f3f8}
+  html[data-theme="dark"] .stat strong .up{color:#4ade80}
+  html[data-theme="dark"] .radars .lg,html[data-theme="dark"] .radar-pop .lg{background:#f3f3f8}
 </style>
 </head>
 <body>
@@ -816,14 +857,27 @@
           <div>
             <div class="stats">
               <div class="card stat"><div class="label">Recommended by</div><strong>95%</strong><small>of previous employers</small></div>
-              <div class="card stat"><div class="label">Review Rate</div><strong class="up">+ 4.67%</strong><small>year-on-year</small></div>
+              <div class="card stat"><div class="label">Review Rate</div><strong><span class="up">+</span> 4.67%</strong><small>year-on-year</small></div>
               <div class="card stat"><div class="label">In the top</div><strong>4%</strong><small>of 381 applicants</small></div>
             </div>
 
             <div class="recs">
-              <h2>Recommendations</h2>
+              <div class="rec-bar">
+                <h2>Recommendations</h2>
+                <div class="rec-tools">
+                  <div class="rec-chips" role="group" aria-label="Filter by relationship"></div>
+                  <div class="sort-wrap">
+                    <button class="rec-sort" id="rec-sort" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="rec-sort-menu">Newest<svg class="ico" aria-hidden="true"><use href="#i-down"/></svg></button>
+                    <div class="menu" id="rec-sort-menu" role="menu" aria-label="Sort recommendations" hidden>
+                      <button type="button" role="menuitemradio" aria-checked="true" data-sort="new">Newest first</button>
+                      <button type="button" role="menuitemradio" aria-checked="false" data-sort="old">Oldest first</button>
+                      <button type="button" role="menuitemradio" aria-checked="false" data-sort="rating">Highest rated</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-              <article class="card">
+              <article class="card" data-rel="Colleague" data-date="2023-10-30" data-rating="4.9">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-koziol.png" alt="" width="52" height="52">
                   <div><h3>Maksymilian Koziol</h3><div class="role">Senior Full-Stack Software Developer</div><div class="co">Innosabi · Innovation Management Software</div></div>
@@ -832,29 +886,42 @@
                 <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Colleague</span></div>
                 <blockquote>“Joe's exceptional commitment to organizational excellence was demonstrated through his meticulous adherence to company processes and his clear communication of complex procedures. His unwavering professionalism, even in challenging situations, was instrumental to our team's success, making him a valuable asset to any organization.”</blockquote>
               </article>
-
-              <article class="card">
+              <article class="card" data-rel="Direct Manager" data-date="2022-11-15" data-rating="4.8">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-scheliga.png" alt="" width="52" height="52">
-                  <div><h3>Mario Scheliga</h3><div class="role">Chief Technology Officer & Director of Product</div><div class="co">Cansativa · Medical Cannabis Distribution</div></div>
+                  <div><h3>Mario Scheliga</h3><div class="role">Chief Technology Officer &amp; Director of Product</div><div class="co">Cansativa · Medical Cannabis Distribution</div></div>
                   <time datetime="2022-11-15">November 15, 2022</time>
                 </div>
                 <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.8</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“Fast, creative, thoughtful, on-point delivery was always the norm. Joe was a pleasure to work with. His passion for new fields and engagement in these tasks was my favorite part.”</blockquote>
               </article>
-
-              <article class="card">
+              <article class="card" data-rel="Direct Manager" data-date="2022-02-19" data-rating="">
+                <div class="rec-head">
+                  <img class="avatar" src="assets/ref-carter.png" alt="" width="52" height="52">
+                  <div><h3>Melissa Carter</h3><div class="role">Life Coach, Inspirational Speaker, Reiki II Master, Energy Healer, Herbalist</div></div>
+                  <time datetime="2022-02-19">February 19, 2022</time>
+                </div>
+                <div class="rec-meta"><span class="rel">Direct Manager</span></div>
+                <blockquote>“I had the honor of working closely with Joe. He was an honor to work with. He is a team player and is always thinking of ways to improve not only himself but his team and the company. His design skills are incredible and he is very easy to work with. He provided many good ideas on how to improve our workflows and made the company stronger. Joe's relationship skills and professionalism also impressed me as I witnessed him working with outside vendors and other company contacts. Joe is also always there to jump in and help wherever it was needed. There was never a task he was not willing to take head-on. I wish I could duplicate him. He is an asset to any team he joins. He is a great leader and I would HIGHLY recommend him to any company.”</blockquote>
+              </article>
+              <article class="card" data-rel="Partner" data-date="2022-01-28" data-rating="">
+                <div class="rec-head">
+                  <img class="avatar" src="assets/ref-macaraeg.png" alt="" width="52" height="52">
+                  <div><h3>Angie Macaraeg</h3><div class="role">VP of Sales &amp; Marketing</div><div class="co">Encore Labs · Hemp Industry</div></div>
+                  <time datetime="2022-01-28">January 28, 2022</time>
+                </div>
+                <div class="rec-meta"><span class="rel">Partner</span></div>
+                <blockquote>“Joe was phenomenal to work with in the tumultuous hemp industry. His high level of professionalism and dedication to service has always made all of our projects go smoothly. Whether everything in the project was going right, or whether we would run into continuous roadblocks, he's always led with his heart and stepped forward with kindness and forward-based thinking. This has always made him a pleasure to work with. I recommend Joe to any company who values quality work. Joe will put his heart and soul into it.”</blockquote>
+              </article>
+              <article class="card" data-rel="Direct Manager" data-date="2021-12-11" data-rating="4.9">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-berklee.png" alt="" width="52" height="52">
-                  <div><h3>Ken Berklee</h3><div class="role">Chief Executive Officer & Strategic Business Advisor</div><div class="co">Tuatara Capital & CKSoul · Venture Capital, Private Equity & Medical Cannabis</div></div>
+                  <div><h3>Ken Berklee</h3><div class="role">Chief Executive Officer &amp; Strategic Business Advisor</div><div class="co">Tuatara Capital &amp; CKSoul · Venture Capital, Private Equity &amp; Medical Cannabis</div></div>
                   <time datetime="2021-12-11">December 11, 2021</time>
                 </div>
                 <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“I valued working with Joe during a crucial period at CKSoul. His competence, composure, and collaborative approach were commendable. With strong organizational skills and sound judgment, he demonstrated excellent capabilities on all fronts. I would gladly work with Joe again and wholeheartedly recommend him.”</blockquote>
               </article>
-
-              <!-- TODO: Angie Macaraeg (Sales Manager, December 07, 2021) — her quote is cut off in the PDF.
-                   Add her card here (avatar: assets/ref-macaraeg.png) once the full text is available. -->
             </div>
           </div>
         </div>
@@ -1024,29 +1091,30 @@
         <div class="ranking">
           <div class="stack" style="height:190px">
             <span class="top">Top 4%</span><span class="marker"></span>
-            <i style="flex:9;background:#4f4ff0;border-radius:3px 3px 0 0"></i>
-            <i style="flex:25;background:#6262f6"></i>
-            <i style="flex:32;background:#8686f9"></i>
-            <i style="flex:18;background:#a6a6fb"></i>
-            <i style="flex:15;background:#c3c3fd;border-radius:0 0 3px 3px"></i>
+            <i style="flex:9;background:var(--rk-1);border-radius:3px 3px 0 0"></i>
+            <i style="flex:25;background:var(--rk-2)"></i>
+            <i style="flex:32;background:var(--rk-3)"></i>
+            <i style="flex:18;background:var(--rk-4)"></i>
+            <i style="flex:15;background:var(--rk-5);border-radius:0 0 3px 3px"></i>
           </div>
           <ul class="legend">
-            <li><span style="background:#4f4ff0"></span><b>9%</b><small>5.0 – 4.5</small></li>
-            <li><span style="background:#6262f6"></span><b>25%</b><small>4.5 – 4.0</small></li>
-            <li><span style="background:#8686f9"></span><b>32%</b><small>4.0 – 3.5</small></li>
-            <li><span style="background:#a6a6fb"></span><b>18%</b><small>3.5 – 3.0</small></li>
-            <li><span style="background:#c3c3fd"></span><b>15%</b><small>3.0 – 0.0</small></li>
+            <li><span style="background:var(--rk-1)"></span><b>9%</b><small>5.0 – 4.5</small></li>
+            <li><span style="background:var(--rk-2)"></span><b>25%</b><small>4.5 – 4.0</small></li>
+            <li><span style="background:var(--rk-3)"></span><b>32%</b><small>4.0 – 3.5</small></li>
+            <li><span style="background:var(--rk-4)"></span><b>18%</b><small>3.5 – 3.0</small></li>
+            <li><span style="background:var(--rk-5)"></span><b>15%</b><small>3.0 – 0.0</small></li>
           </ul>
         </div>
         <p class="total">Total of 381 applicants</p>
       </div>
-      <div>
+      <div class="radar-wrap">
         <h3>Scouting Radars</h3>
         <ul class="radars">
-          <li><span class="lg"><img src="assets/logo-waveform.png" alt=""></span><div><b>Waveform</b><span>Scouting Management Software</span><small>Interviewed candidate 1 week ago</small></div></li>
-          <li><span class="lg" style="color:#3b7ddd"><svg class="ico" style="width:18px;height:18px"><use href="#i-chart"/></svg></span><div><b>Asirium</b><span>Blockchain Identification Services</span><small>Scheduled candidate 1 day ago</small></div></li>
-          <li><span class="lg"><img src="assets/logo-innosync.png" alt=""></span><div><b>Innosync</b><span>Innovation Management Software</span><small>Viewed candidate 2 weeks ago</small></div></li>
+          <li><button type="button" class="radar" data-co="waveform" aria-expanded="false" aria-controls="radar-pop"><span class="lg"><img src="assets/logo-waveform.png" alt=""></span><span class="rd"><b>Waveform</b><span>Scouting Management Software</span><small>Interviewed candidate 1 week ago</small></span></button></li>
+          <li><button type="button" class="radar" data-co="asirium" aria-expanded="false" aria-controls="radar-pop"><span class="lg" style="color:#3b7ddd"><svg class="ico" style="width:18px;height:18px"><use href="#i-chart"/></svg></span><span class="rd"><b>Asirium</b><span>Blockchain Identification Services</span><small>Scheduled candidate 1 day ago</small></span></button></li>
+          <li><button type="button" class="radar" data-co="innosync" aria-expanded="false" aria-controls="radar-pop"><span class="lg"><img src="assets/logo-innosync.png" alt=""></span><span class="rd"><b>Innosync</b><span>Innovation Management Software</span><small>Viewed candidate 2 weeks ago</small></span></button></li>
         </ul>
+        <div class="radar-pop" id="radar-pop" role="dialog" hidden></div>
       </div>
     </div>
 
@@ -1515,6 +1583,82 @@
     window.openInterest=key=>{ const b=wrap.querySelector(`[data-int="${key}"]`); if(b&&openBtn!==b) show(b); };
   })();
 
+  // ----- References: filter + sort recommendations -----
+  (function(){
+    const box=document.querySelector('#view-references .recs'), chips=box.querySelector('.rec-chips');
+    const btn=document.getElementById('rec-sort'), menu=document.getElementById('rec-sort-menu');
+    const cards=()=>[...box.querySelectorAll('article')];
+    const labels={new:'Newest',old:'Oldest',rating:'Highest rated'};
+    let rel='All', sort='new';
+    const counts={All:cards().length}; cards().forEach(c=>counts[c.dataset.rel]=(counts[c.dataset.rel]||0)+1);
+    chips.innerHTML=Object.keys(counts).map(k=>`<button type="button" data-rel="${k}" aria-pressed="${k==='All'}">${k}<small>${counts[k]}</small></button>`).join('');
+    function apply(){
+      const list=cards().sort((a,b)=>{
+        if(sort==='rating'){ const d=(+b.dataset.rating||0)-(+a.dataset.rating||0); if(d) return d; }
+        return sort==='old'? a.dataset.date.localeCompare(b.dataset.date) : b.dataset.date.localeCompare(a.dataset.date);
+      });
+      list.forEach(c=>{ const show=rel==='All'||c.dataset.rel===rel; if(show&&c.hidden){ c.classList.remove('in'); void c.offsetWidth; c.classList.add('in'); } c.hidden=!show; box.appendChild(c); });
+      chips.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.rel===rel)));
+      menu.querySelectorAll('[data-sort]').forEach(b=>b.setAttribute('aria-checked',String(b.dataset.sort===sort)));
+      btn.firstChild.textContent=labels[sort];
+    }
+    chips.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ rel=b.dataset.rel; apply(); } });
+    const items=()=>[...menu.querySelectorAll('[role=menuitemradio]')];
+    function setMenu(open){ menu.hidden=!open; btn.setAttribute('aria-expanded',String(open)); if(open) (menu.querySelector('[aria-checked=true]')||items()[0]).focus(); }
+    btn.addEventListener('click',e=>{ e.stopPropagation(); setMenu(menu.hidden); });
+    document.addEventListener('click',e=>{ if(!menu.hidden&&!menu.contains(e.target)) setMenu(false); });
+    menu.addEventListener('keydown',e=>{
+      const list=items(), i=list.indexOf(document.activeElement);
+      if(e.key==='Escape'){ setMenu(false); btn.focus(); }
+      else if(e.key==='ArrowDown'){ e.preventDefault(); list[(i+1)%list.length].focus(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); list[(i-1+list.length)%list.length].focus(); }
+    });
+    menu.addEventListener('click',e=>{ const b=e.target.closest('[data-sort]'); if(!b) return; sort=b.dataset.sort; setMenu(false); apply(); btn.focus(); });
+    // let search reveal a card hidden by the filter
+    window.recs={reveal(card){ if(card&&card.hidden){ rel='All'; apply(); } }};
+    apply();
+  })();
+
+  // ----- References: Scouting Radars company cards -----
+  window.radars={
+    waveform:{name:'Waveform',what:'Scouting Management Software',stage:2,ago:'1 week ago'},
+    asirium:{name:'Asirium',what:'Blockchain Identification Services',stage:1,ago:'1 day ago'},
+    innosync:{name:'Innosync',what:'Innovation Management Software',stage:0,ago:'2 weeks ago'}
+  };
+  (function(){
+    const list=document.querySelector('.radars'), pop=document.getElementById('radar-pop');
+    const steps=['Viewed','Scheduled','Interviewed','Offer'];
+    let openBtn=null;
+    function close(){ if(!openBtn) return; openBtn.setAttribute('aria-expanded','false'); pop.hidden=true; openBtn=null; }
+    function show(b){
+      if(openBtn===b) return close();
+      close();
+      const d=radars[b.dataset.co];
+      pop.innerHTML=`<div class="rp-head">${b.querySelector('.lg').outerHTML}<div><h4>${d.name}</h4><small>${d.what}</small></div></div>`
+        +`<div class="eyebrow">Their pipeline</div><ol class="steps" aria-hidden="true">${steps.map((t,i)=>`<li class="${i<d.stage?'done':i===d.stage?'now':''}"></li>`).join('')}</ol>`
+        +`<p class="stage"><b>${steps[d.stage]}</b> ${d.ago} <span>· Next: ${steps[d.stage+1]}</span></p>`
+        +`<div class="rp-actions"><button type="button" class="primary" data-act="beat">Beat them to it</button><button type="button" data-act="hide">Hide</button></div>`;
+      pop.setAttribute('aria-label',d.name);
+      pop.style.top=(b.parentElement.offsetTop+b.parentElement.offsetHeight+10)+'px';
+      pop.hidden=false; b.setAttribute('aria-expanded','true'); openBtn=b;
+      requestAnimationFrame(()=>pop.scrollIntoView({block:'nearest',behavior:'smooth'}));
+    }
+    list.addEventListener('click',e=>{ const b=e.target.closest('button.radar'); if(b){ e.stopPropagation(); show(b); } });
+    pop.addEventListener('click',async e=>{
+      const a=e.target.closest('[data-act]'); if(!a||!openBtn) return;
+      const d=radars[openBtn.dataset.co];
+      if(a.dataset.act==='beat'){
+        try{ await navigator.clipboard.writeText('contact.joesan@proton.me'); showToast(`Beat ${d.name} to it. Joe’s email is copied.`,'Email him',()=>{ location.href='mailto:contact.joesan@proton.me'; }); }
+        catch(err){ showToast(`Beat ${d.name} to it: contact.joesan@proton.me`); }
+      } else showToast(`Hiding ${d.name} won’t make them stop scouting Joe.`);
+      close();
+    });
+    document.addEventListener('click',e=>{ if(openBtn&&!pop.contains(e.target)) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&openBtn){ const b=openBtn; close(); b.focus(); } });
+    window.addEventListener('hashchange',close);
+    window.openRadar=key=>{ const b=list.querySelector(`[data-co="${key}"]`); if(b&&openBtn!==b) show(b); };
+  })();
+
   // ----- Search across the whole CV -----
   (function(){
     const q=document.getElementById('q'), pop=document.getElementById('q-pop'), box=document.getElementById('q-results');
@@ -1539,7 +1683,8 @@
       $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),'Culture compatibility trait'));
       $(R+' .bars li').forEach(li=>add('References','references',li,T(li.querySelector('div')).replace(/[\d.]+$/,''),'Rating '+T(li.querySelector('b'))));
       $(R+' .stat').forEach(st=>add('References','references',st,T(st.querySelector('.label'))+' '+T(st.querySelector('strong')),T(st.querySelector('small'))));
-      $(R+' .recs article').forEach(a=>add('References','references',a,T(a.querySelector('h3')),T(a.querySelector('.role'))+' · '+T(a.querySelector('.co')),T(a.querySelector('blockquote'))));
+      $(R+' .recs article').forEach(a=>add('References','references',a,T(a.querySelector('h3')),[T(a.querySelector('.role')),T(a.querySelector('.co')),a.dataset.rel].filter(Boolean).join(' · '),T(a.querySelector('blockquote'))).before=()=>recs.reveal(a));
+      $('.radars .radar').forEach(b=>{ const d=radars[b.dataset.co]; add('References','references',b,d.name,'Scouting radar · '+d.what).open=()=>openRadar(b.dataset.co); });
       const joe=inbox.mails.find(m=>m.id==='joe');
       if(joe) $('#letter-joe p').forEach(p=>add('Cover letter','inbox',p,'Joe San · Cover letter','',T(p)).mail=joe);
       inbox.mails.filter(m=>m.id!=='joe').forEach(m=>{ const e=out[out.push({group:'Inbox',view:'inbox',title:m.subject,sub:m.from,text:inbox.text(m)})-1]; e.mail=m; });
@@ -1592,7 +1737,7 @@
       if(document.getElementById('app').classList.contains('panel-hidden') && e.el && e.el.closest('.panel')) document.getElementById('toggle-panel').click();
       const after=()=>{
         if(e.mail){ inbox.open(e.mail); if(e.el) setTimeout(()=>flash(e.el),60); else setTimeout(()=>flash(document.querySelector('.mail.on')),60); }
-        else { flash(e.el); if(e.open) setTimeout(e.open,350); }
+        else { if(e.before) e.before(); flash(e.el); if(e.open) setTimeout(e.open,350); }
       };
       if(location.hash!=='#'+e.view){ location.hash=e.view; setTimeout(after,80); } else after();
     }
