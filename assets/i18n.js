@@ -26,6 +26,7 @@
   ["Menu","Menú","Menu","Menü"],
   ["Menu, new notifications","Menú, notificaciones nuevas","Menu, nuove notifiche","Menü, neue Benachrichtigungen"],
   ["Close menu","Cerrar el menú","Chiudi il menu","Menü schließen"],
+  ["Back to inbox","Volver a la bandeja de entrada","Torna alla posta in arrivo","Zurück zum Posteingang"],
   ["Insights","Análisis","Approfondimenti","Einblicke"],
   ["Close insights","Cerrar el análisis","Chiudi gli approfondimenti","Einblicke schließen"],
   ["Theme","Tema","Tema","Design"],

@@ -511,8 +511,6 @@
     .m-logo .dot{fill:var(--accent)}
     .m-dot{position:absolute;top:9px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
     .m-dot[hidden]{display:none}
-    .m-badge{font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:2px 7px;white-space:nowrap}
-    .m-badge[hidden]{display:none}
 
     /* Left drawer: the sidebar, with search and notifications moved in */
     .scrim{position:fixed;inset:0;background:rgba(12,12,28,.45);z-index:45;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -578,8 +576,16 @@
     .toast{bottom:calc(92px + env(safe-area-inset-bottom))}
 
     .section-head{padding:16px 16px 0}
+    /* Inbox: list first, message on tap */
+    .mail-list,.content.inbox-mode .mail-list{max-height:none;border-bottom:0}
+    .inbox:not(.reading) .reader{display:none}
+    .inbox.reading .mail-list{display:none}
+    #mail-back{display:grid!important;margin-left:-8px}
+    .reader,html .content.inbox-mode{overflow:visible}
+    .reader-tools{top:56px}
+    .letter{margin:12px 12px 24px}
     .stats{grid-template-columns:1fr;gap:12px}
-    .reader-tools{padding:10px 16px;overflow-x:auto}
+    .reader-tools{padding:0 12px 0 16px;overflow-x:auto}
     .reader-tools .hide-sm{display:none}
     .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
     .rec-head time{grid-column:2;margin:4px 0 0}
@@ -822,7 +828,7 @@
         </div>
       </div>
       <button class="icon-btn" id="toggle-panel" aria-label="Toggle side panel" aria-pressed="true" type="button"><svg class="ico"><use href="#i-panel"/></svg></button>
-      <button class="icon-btn m-only" id="m-ctx" type="button" aria-label="Insights" aria-expanded="false" aria-controls="panel"><span class="m-badge" id="m-badge"></span><svg class="ico"><use href="#i-panel"/></svg></button>
+      <button class="icon-btn m-only" id="m-ctx" type="button" aria-label="Insights" aria-expanded="false" aria-controls="panel"><svg class="ico"><use href="#i-panel"/></svg></button>
     </header>
 
     <div class="content">
@@ -1041,6 +1047,7 @@
 
           <div class="reader">
             <div class="reader-tools">
+              <button class="icon-btn m-only" id="mail-back" aria-label="Back to inbox" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
               <span id="mail-pos">1 of 1</span>
               <button class="icon-btn" id="mail-prev" aria-label="Previous message" type="button"><svg class="ico"><use href="#i-left"/></svg></button>
               <button class="icon-btn" id="mail-next" aria-label="Next message" type="button"><svg class="ico"><use href="#i-right"/></svg></button>
@@ -1489,8 +1496,22 @@
       prevB.disabled=cur===0; nextB.disabled=cur===mails.length-1;
       renderList();
       document.querySelector('.reader').scrollTop=0;
-      if(window.matchMedia('(max-width:860px)').matches && focusReader) document.querySelector('.reader').scrollIntoView({behavior:'smooth'});
+      if(phone.matches){ if(focusReader) read(true); }
+      else if(window.matchMedia('(max-width:860px)').matches && focusReader) document.querySelector('.reader').scrollIntoView({behavior:'smooth'});
     }
+    // phones: the list first, a message full-screen once picked, Back returns to the list
+    const phone=window.matchMedia('(max-width:640px)'), box=document.querySelector('.inbox');
+    let pushed=false;
+    function read(on){
+      if(on===box.classList.contains('reading')) { if(on) scrollTo(0,0); return; }
+      box.classList.toggle('reading',on);
+      if(on){ if(!pushed){ history.pushState({reading:1},''); pushed=true; } scrollTo(0,0); }
+      else { requestAnimationFrame(()=>{ const m=list.querySelector('.mail.on'); if(m) m.scrollIntoView({block:'center'}); }); }
+    }
+    document.getElementById('mail-back').addEventListener('click',()=>{ if(pushed) history.back(); else read(false); });
+    window.addEventListener('popstate',()=>{ if(pushed){ pushed=false; read(false); } });
+    window.addEventListener('hashchange',()=>{ pushed=false; box.classList.remove('reading'); });
+    phone.addEventListener('change',()=>{ if(!phone.matches) box.classList.remove('reading'); });
     list.addEventListener('click',e=>{
       const cb=e.target.closest('[data-cb]');
       if(cb){ e.stopPropagation(); const x=mails[+cb.dataset.cb]; x.sel=!x.sel; cb.setAttribute('aria-checked',String(x.sel)); syncAll(); return; }
@@ -1592,7 +1613,7 @@
       const it=e.target.closest('[role=menuitem]'); if(!it) return;
       setMenu(false);
       switch(it.dataset.act){
-        case 'share': document.querySelector('#view-profile .icon-btn.share').click(); break;
+        case 'share': (async()=>{ const data={title:'Joe San · Product Management & Brand Design', url:location.href.split('#')[0]}; try{ if(navigator.share){ await navigator.share(data); return; } await navigator.clipboard.writeText(data.url); showToast('Link copied'); }catch(err){} })(); break;
         case 'email': copy('contact.joesan@proton.me','Email copied: contact.joesan@proton.me'); break;
         case 'phone': copy('+49 173 992 7926','Phone number copied: +49 173 992 7926'); break;
         case 'hide': showToast('Hiding Joe San would leave this app with nothing to show.'); break;
@@ -1969,7 +1990,7 @@
     const done=()=>{ set(null); setTimeout(()=>{ $('q').value=''; if(window.inbox) inbox.filter(''); },0); };
     $('q-results').addEventListener('click',e=>{ if(mq.matches&&e.target.closest('.q-opt,[data-go]')) done(); },true);
     $('q').addEventListener('keydown',e=>{ if(mq.matches&&e.key==='Enter'&&$('q-results').querySelector('.q-opt')) done(); },true);
-    window.addEventListener('hashchange',()=>{ if(!root.classList.contains('m-notes')) set(null); badge(); });
+    window.addEventListener('hashchange',()=>{ if(!root.classList.contains('m-notes')) set(null); });
     // a search hit inside the panel opens Insights
     new MutationObserver(r=>{ if(mq.matches&&!root.classList.contains('m-ctx')&&r.some(x=>x.target.classList&&x.target.classList.contains('flash'))) set('m-ctx'); })
       .observe(panel,{subtree:true,attributes:true,attributeFilter:['class']});
@@ -1977,10 +1998,6 @@
     const bb=$('bell-badge'), dot=$('m-dot');
     const sync=()=>{ dot.hidden=bb.hidden; menuBtn.setAttribute('aria-label',T(bb.hidden?'Menu':'Menu, new notifications')); };
     new MutationObserver(sync).observe(bb,{attributes:true,attributeFilter:['hidden']}); sync();
-    // the Insights icon previews each page's headline figure
-    const B={profile:'93%',references:'Top 4%',inbox:''};
-    function badge(){ const v=(location.hash.slice(1)in B)?location.hash.slice(1):'profile', b=$('m-badge'); b.textContent=T(B[v]); b.hidden=!B[v]; }
-    badge();
   })();
 
   // ----- Share / forward -----
