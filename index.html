@@ -89,6 +89,8 @@
   .nav-btn[data-tip]{position:relative}
   .nav-btn[data-open]::after{display:none}
   .nav-btn[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:56px;top:50%;transform:translateY(-50%);background:var(--ink);color:var(--surface);font-size:12px;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}
+  .m-only{display:none!important}
+  .nav-lbl{display:none}
 
   .main{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--surface)}
   .topbar{height:88px;flex:none;display:flex;align-items:center;gap:24px;padding:0 32px;border-bottom:1px solid var(--line)}
@@ -371,7 +373,7 @@
   .notifs[hidden]{display:none}
   .notifs-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 10px}
   .notifs-head button{font-size:12.5px;color:var(--accent);font-weight:500}
-  .notif{display:flex;gap:12px;padding:10px;border-radius:12px;font-size:13.5px;line-height:1.4;color:var(--ink-2);position:relative}
+  .notif{display:flex;gap:12px;padding:10px 26px 10px 10px;border-radius:12px;font-size:13.5px;line-height:1.4;color:var(--ink-2);position:relative}
   .notif:hover{background:var(--hover)}
   .notif b{color:var(--ink);font-weight:600}
   .notif small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
@@ -472,27 +474,83 @@
   }
   @media (max-width:640px){
     :root{--sidebar:0px}
-    body{padding-bottom:76px}
     .app,.app.panel-hidden{display:block}
-    .sidebar{position:fixed;bottom:0;left:0;right:0;top:auto;height:68px;flex-direction:row;justify-content:center;border-right:0;border-top:1px solid var(--line);padding:0 12px;z-index:10;box-shadow:0 -4px 20px rgba(0,0,0,.05)}
-    .sidebar .logo,.nav .static{display:none}
-    .sidebar{gap:16px}
-    .nav{flex-direction:row;margin:0;gap:16px}
-    .sidebar .settings{position:fixed;left:auto;right:12px;bottom:80px}
+    .content{padding-bottom:88px}
+    .nav .static{display:none}
+
+    /* Phone frame: top bar = menu · P. · insights */
+    .topbar{position:sticky;top:0;z-index:30;height:56px;padding:0 6px;gap:4px;justify-content:space-between;background:var(--surface)}
+    .topbar h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+    .topbar .search-btn,.topbar .bell-wrap,#toggle-panel{display:none!important}
+    #m-menu,#m-ctx{display:flex!important;align-items:center;justify-content:center;width:auto;min-width:44px;height:44px;gap:6px;padding:0 8px;position:relative}
+    .m-logo{display:block!important;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--ink);padding:8px;line-height:0}
+    .m-logo svg{height:22px;width:auto;overflow:visible}
+    .m-logo .dot{fill:var(--accent)}
+    .m-dot{position:absolute;top:9px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+    .m-dot[hidden]{display:none}
+    .m-badge{font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:2px 7px;white-space:nowrap}
+    .m-badge[hidden]{display:none}
+
+    /* Left drawer: the sidebar, with search and notifications moved in */
+    .scrim{position:fixed;inset:0;background:rgba(12,12,28,.45);z-index:45;opacity:0;pointer-events:none;transition:opacity .2s}
+    html.m-menu .scrim,html.m-ctx .scrim{opacity:1;pointer-events:auto}
+    html.m-menu,html.m-ctx{overflow:hidden}
+    .sidebar{position:fixed;top:0;bottom:0;left:0;height:auto;width:min(320px,86vw);flex-direction:column;align-items:stretch;justify-content:flex-start;gap:14px;padding:6px 14px 24px;border-right:0;z-index:50;overflow-y:auto;box-shadow:var(--pop-shadow);transform:translateX(-105%);visibility:hidden;transition:transform .25s ease,visibility 0s .25s}
+    html.m-menu .sidebar{transform:none;visibility:visible;transition:transform .25s ease}
+    .sidebar .logo{flex-direction:row;align-self:flex-start;height:44px;margin:0 0 0 6px}
+    .sidebar .logo .lg-word{display:none}
+    .sidebar .logo .lg-mark{height:22px}
+    .logo[data-tip]:hover::after,.logo[data-tip]:focus-visible::after{display:none}
+    #m-close{display:grid!important;position:absolute;top:6px;right:8px}
+    .sidebar .search-wrap{width:100%}
+    .sidebar .search{display:flex;width:100%;height:44px;border-radius:22px}
+    .sidebar .q-key{display:none}
+    .sidebar .search-pop{position:absolute;top:50px;left:0;right:0;width:auto;max-height:60vh}
+    .nav{flex-direction:column;align-items:stretch;margin:0;gap:2px}
+    .nav-btn,.sidebar .settings-btn{width:100%;height:48px;display:flex;align-items:center;justify-content:flex-start;gap:14px;padding:0 12px;font-size:15px;color:var(--ink)}
+    .nav-btn[aria-current="page"]{background:var(--accent-soft);color:var(--accent);box-shadow:none;font-weight:600}
     .nav-btn[data-tip]:hover::after{display:none}
-    .topbar{height:64px;padding:0 16px;gap:8px}
-    .topbar h1{font-size:18px}
-    .search{display:none}
-    .icon-btn.search-btn{display:grid}
-    .topbar{position:relative}
-    .topbar.q-open .search-wrap{position:absolute;left:12px;right:12px;top:50%;transform:translateY(-50%);z-index:46}
-    .topbar.q-open .search{display:flex;width:100%;background:var(--surface);box-shadow:var(--pop-shadow)}
-    .topbar.q-open .search-pop{position:fixed;left:12px;right:12px;top:64px;width:auto}
+    .nav-lbl{display:inline}
+    .nav a[href$=".pdf"]{margin-top:12px;position:relative}
+    .nav a[href$=".pdf"]::before{content:"";position:absolute;left:12px;right:12px;top:-7px;height:1px;background:var(--line)}
+    .settings-wrap{width:100%;margin-top:-12px}
+    .sidebar .notifs-head{flex-wrap:wrap;gap:4px 12px}
+    .sidebar .settings{position:static;width:auto;border:0;box-shadow:none;background:none;padding:0 6px 6px;animation:none}
+    .sidebar .set-title{display:none}
+    .sidebar .notifs,.sidebar .notifs[hidden]{display:block;position:static;width:auto;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;background:none;padding:10px 0 0;animation:none}
+
+    /* Right drawer: the panel, as Insights */
+    .panel,.app.panel-hidden .panel{display:block;position:fixed;top:0;bottom:0;right:0;width:min(360px,90vw);z-index:50;overflow-y:auto;border:0;padding:6px 20px 32px;box-shadow:var(--pop-shadow);transform:translateX(105%);visibility:hidden;transition:transform .25s ease,visibility 0s .25s}
+    html.m-ctx .panel{transform:none;visibility:visible;transition:transform .25s ease}
+    .panel-inner{grid-template-columns:1fr}
+    .m-head{display:flex!important;align-items:center;justify-content:space-between;height:44px;margin-right:-12px}
+    .m-head h2{font-size:17px;font-weight:600}
+    .panel .panel-inner > div:first-child > h3:first-of-type,.panel .radar-wrap h3{margin-top:22px}
+
+    /* Fit Score line on Profile */
+    .m-fit{display:flex!important;align-items:center;gap:12px;margin:14px 16px 0;width:calc(100% - 32px);padding:12px 14px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);text-align:left;color:var(--ink)}
+    .m-ring{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:radial-gradient(closest-side,var(--card) 74%,transparent 76%),conic-gradient(var(--accent) 0 93%,var(--track) 0)}
+    .m-fit-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+    .m-fit-t b{font-size:15px;font-weight:600}
+    .m-fit-t small{font-size:13px;color:var(--muted)}
+    .m-fit-go{font-size:13px;font-weight:500;color:var(--accent)}
+
+    /* Notes bubble */
+    .m-fab{display:grid!important;place-items:center;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(80,80,248,.38);z-index:56;transition:background .2s}
+    .m-fab .ico{width:22px;height:22px}
+    .m-fab .i-off,html.m-notes .m-fab .i-on{display:none}
+    html.m-notes .m-fab .i-off{display:block}
+    html.m-notes .m-fab{background:var(--invert-bg);color:var(--invert-ink);box-shadow:var(--pop-shadow)}
+    html.m-menu .m-fab,html.m-ctx .m-fab{display:none!important}
+    .panel-notes.m-pop{display:none;position:fixed;left:16px;right:16px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:55;max-width:none;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--pop-shadow);padding:16px;animation:fade .18s ease}
+    html.m-notes .panel-notes.m-pop{display:block}
+    .panel-notes.m-pop h3{font-size:16px;font-weight:600;margin:0 0 10px}
+    .toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+
     .section-head{padding:16px 16px 0}
     .stats{grid-template-columns:1fr;gap:12px}
     .reader-tools{padding:10px 16px;overflow-x:auto}
     .reader-tools .hide-sm{display:none}
-    .panel{padding:24px 20px 32px}
     .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
     .rec-head time{grid-column:2;margin:4px 0 0}
   }
@@ -637,6 +695,8 @@
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
     <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
     <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
@@ -676,20 +736,21 @@
 <div class="app" id="app">
 
   <!-- ===== Sidebar ===== -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <a class="logo" href="#profile" aria-label="Punctum" data-tip="One candidate. Full stop.">
       <svg class="lg-mark" viewBox="0 0 62.5 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="64" r="7.5" class="dot"/></svg>
       <svg class="lg-word" viewBox="0 0 378.3 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5 M73.58 26.5L68.93 48.38 M68.93 48.38A15 15 0 0 0 80.48 66.17A15 15 0 0 0 98.27 54.62 M104.25 26.5L95.75 66.5 M117.92 66.5L123.89 38.38 M123.89 38.38A15 15 0 0 1 141.68 26.83A15 15 0 0 1 153.24 44.62 M153.24 44.62L148.59 66.5 M199.68 33.55A15 15 0 0 0 184.35 26.73A15 15 0 0 0 172.29 38.38 M172.29 38.38L170.16 48.38 M170.16 48.38A15 15 0 0 0 178.49 65.09A15 15 0 0 0 196.65 60.73 M218.96 66.5L231.07 9.5 M214.46 26.5L243.46 26.5 M261.18 26.5L256.53 48.38 M256.53 48.38A15 15 0 0 0 268.08 66.17A15 15 0 0 0 285.87 54.62 M291.85 26.5L283.35 66.5 M305.52 66.5L311.49 38.38 M311.49 38.38A15 15 0 0 1 329.28 26.83A15 15 0 0 1 340.84 44.62 M340.84 44.62L336.19 66.5 M342.16 38.38A15 15 0 0 1 359.95 26.83A15 15 0 0 1 371.51 44.62 M371.51 44.62L366.86 66.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+    <button class="icon-btn m-only" id="m-close" type="button" aria-label="Close menu"><svg class="ico"><use href="#i-x"/></svg></button>
     <nav class="nav" aria-label="Sections">
-      <a class="nav-btn" href="#inbox" data-view="inbox" data-tip="Cover letter"><svg class="ico"><use href="#i-inbox"/></svg><span class="sr-only">Inbox: cover letter</span></a>
-      <a class="nav-btn" href="#profile" data-view="profile" data-tip="Profile"><svg class="ico"><use href="#i-user"/></svg><span class="sr-only">Candidate profile</span></a>
-      <a class="nav-btn" href="#references" data-view="references" data-tip="References"><svg class="ico"><use href="#i-chat"/></svg><span class="sr-only">References</span></a>
-      <a class="nav-btn" href="assets/Joe_San_CV.pdf" target="_blank" rel="noopener" data-tip="CV as PDF"><svg class="ico"><use href="#i-board"/></svg><span class="sr-only">Open the CV as a PDF</span></a>
-      <a class="nav-btn" href="https://github.com/joesancode" target="_blank" rel="noopener" data-tip="Projects on GitHub"><svg class="ico"><use href="#i-case"/></svg><span class="sr-only">Projects on GitHub</span></a>
+      <a class="nav-btn" href="#inbox" data-view="inbox" data-tip="Cover letter"><svg class="ico"><use href="#i-inbox"/></svg><span class="nav-lbl" aria-hidden="true">Inbox</span><span class="sr-only">Inbox: cover letter</span></a>
+      <a class="nav-btn" href="#profile" data-view="profile" data-tip="Profile"><svg class="ico"><use href="#i-user"/></svg><span class="nav-lbl" aria-hidden="true">Profile</span><span class="sr-only">Candidate profile</span></a>
+      <a class="nav-btn" href="#references" data-view="references" data-tip="References"><svg class="ico"><use href="#i-chat"/></svg><span class="nav-lbl" aria-hidden="true">References</span><span class="sr-only">References</span></a>
+      <a class="nav-btn" href="assets/Joe_San_CV.pdf" target="_blank" rel="noopener" data-tip="CV as PDF"><svg class="ico"><use href="#i-board"/></svg><span class="nav-lbl" aria-hidden="true">CV as PDF</span><span class="sr-only">Open the CV as a PDF</span></a>
+      <a class="nav-btn" href="https://github.com/joesancode" target="_blank" rel="noopener" data-tip="Projects on GitHub"><svg class="ico"><use href="#i-case"/></svg><span class="nav-lbl" aria-hidden="true">Projects on GitHub</span><span class="sr-only">Projects on GitHub</span></a>
     </nav>
     <div class="settings-wrap">
-      <button class="nav-btn settings-btn" id="settings-btn" type="button" data-tip="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settings"><svg class="ico"><use href="#i-gear"/></svg><span class="sr-only">Settings</span></button>
+      <button class="nav-btn settings-btn" id="settings-btn" type="button" data-tip="Settings" aria-haspopup="dialog" aria-expanded="false" aria-controls="settings"><svg class="ico"><use href="#i-gear"/></svg><span class="nav-lbl" aria-hidden="true">Settings</span><span class="sr-only">Settings</span></button>
       <div class="settings" id="settings" role="dialog" aria-label="Settings" hidden>
         <div class="set-title">Settings</div>
         <div class="set-label" id="theme-label">Theme</div>
@@ -713,6 +774,8 @@
   <!-- ===== Main ===== -->
   <main class="main">
     <header class="topbar">
+      <button class="icon-btn m-only" id="m-menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="sidebar"><svg class="ico"><use href="#i-menu"/></svg><span class="m-dot" id="m-dot"></span></button>
+      <a class="m-logo m-only" href="#profile" aria-label="Punctum"><svg viewBox="0 0 62.5 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="64" r="7.5" class="dot"/></svg></a>
       <h1 id="view-title">Candidate Scouting</h1>
       <div class="search-wrap" id="search-wrap">
         <label class="search"><svg class="ico" style="width:18px;height:18px"><use href="#i-search"/></svg><input type="search" id="q" placeholder="Search" autocomplete="off" spellcheck="false" role="combobox" aria-label="Search Joe San’s CV" aria-expanded="false" aria-controls="q-results" aria-autocomplete="list"><kbd class="q-key" aria-hidden="true">/</kbd></label>
@@ -729,6 +792,7 @@
         </div>
       </div>
       <button class="icon-btn" id="toggle-panel" aria-label="Toggle side panel" aria-pressed="true" type="button"><svg class="ico"><use href="#i-panel"/></svg></button>
+      <button class="icon-btn m-only" id="m-ctx" type="button" aria-label="Insights" aria-expanded="false" aria-controls="panel"><span class="m-badge" id="m-badge"></span><svg class="ico"><use href="#i-panel"/></svg></button>
     </header>
 
     <div class="content">
@@ -753,6 +817,8 @@
             </div>
           </div>
         </div>
+
+        <button type="button" class="m-fit m-only" id="m-fit"><span class="m-ring" aria-hidden="true">93%</span><span class="m-fit-t"><b>Fit Score</b><small>This applicant is a great match!</small></span><span class="m-fit-go">Details</span></button>
 
         <div class="profile-grid">
           <div class="col-left">
@@ -1009,7 +1075,8 @@
   </main>
 
   <!-- ===== Right panel ===== -->
-  <aside class="panel" aria-label="Details">
+  <aside class="panel" id="panel" aria-label="Details">
+    <div class="m-head m-only"><h2>Insights</h2><button class="icon-btn" id="ctx-close" type="button" aria-label="Close insights"><svg class="ico"><use href="#i-x"/></svg></button></div>
 
     <div class="panel-inner" data-for="profile">
       <div>
@@ -1182,6 +1249,8 @@
 
   </aside>
 </div>
+<div class="scrim" id="scrim"></div>
+<button class="m-fab m-only" id="m-notes" type="button" aria-label="Your Notes" aria-expanded="false"><svg class="ico i-on"><use href="#i-feather"/></svg><svg class="ico i-off"><use href="#i-x"/></svg></button>
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-msg"></span><button type="button" id="toast-act" hidden></button></div>
 
 <script src="assets/i18n.js"></script>
@@ -1820,6 +1889,59 @@
     const hidden=app.classList.toggle('panel-hidden');
     tog.setAttribute('aria-pressed', String(!hidden));
   });
+
+  // ----- Phone frame (<640px): menu drawer, Insights drawer, notes bubble -----
+  (function(){
+    const mq=matchMedia('(max-width:640px)'), root=document.documentElement, $=id=>document.getElementById(id);
+    const side=$('sidebar'), panel=$('panel'), menuBtn=$('m-menu'), ctxBtn=$('m-ctx'), fab=$('m-notes');
+    const sw=$('search-wrap'), np=$('notifs'), notes=document.querySelector('.panel-notes');
+    const T=s=>window.i18n&&i18n.t?i18n.t(s):s;
+    // remember where the moved parts live on desktop
+    const homes=[sw,np,notes].map(el=>{ const m=document.createComment('home'); el.before(m); return [el,m]; });
+    const btnFor={'m-menu':menuBtn,'m-ctx':ctxBtn,'m-notes':fab};
+    let last=null;
+    function set(state){
+      ['m-menu','m-ctx','m-notes'].forEach(c=>{ root.classList.toggle(c,c===state); btnFor[c].setAttribute('aria-expanded',String(c===state)); });
+      if(state){ last=btnFor[state]; const f={'m-menu':$('m-close'),'m-ctx':$('ctx-close'),'m-notes':$('rec-notes')}[state]; setTimeout(()=>f.focus({preventScroll:true}),50); }
+    }
+    function close(){ const was=root.classList.contains('m-menu')||root.classList.contains('m-ctx')||root.classList.contains('m-notes'); set(null); if(was&&last&&mq.matches) last.focus({preventScroll:true}); }
+    function place(){
+      if(mq.matches){
+        $('m-close').after(sw); side.append(np); document.body.insertBefore(notes,fab); notes.classList.add('m-pop');
+        notes.setAttribute('role','dialog'); notes.setAttribute('aria-label',T('Your Notes'));
+      } else {
+        set(null); homes.forEach(([el,m])=>m.after(el)); notes.classList.remove('m-pop'); notes.removeAttribute('role'); notes.removeAttribute('aria-label');
+      }
+    }
+    mq.addEventListener('change',place); place();
+
+    menuBtn.addEventListener('click',()=>set('m-menu'));
+    ctxBtn.addEventListener('click',()=>set('m-ctx'));
+    $('m-fit').addEventListener('click',()=>{ last=ctxBtn; set('m-ctx'); });
+    fab.addEventListener('click',()=>root.classList.contains('m-notes')?close():set('m-notes'));
+    $('m-close').addEventListener('click',close); $('ctx-close').addEventListener('click',close);
+    $('scrim').addEventListener('click',close);
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&mq.matches&&root.matches('.m-menu,.m-ctx,.m-notes')&&!e.defaultPrevented) close(); });
+    document.addEventListener('click',e=>{ if(root.classList.contains('m-notes')&&!notes.contains(e.target)&&!fab.contains(e.target)) close(); });
+    // leaving the drawer: any link, a search result, or a new page
+    side.addEventListener('click',e=>{ if(e.target.closest('a[href]')) set(null); });
+    // (the field is hidden once the drawer closes, so it shouldn't keep filtering the inbox)
+    const done=()=>{ set(null); setTimeout(()=>{ $('q').value=''; if(window.inbox) inbox.filter(''); },0); };
+    $('q-results').addEventListener('click',e=>{ if(mq.matches&&e.target.closest('.q-opt,[data-go]')) done(); },true);
+    $('q').addEventListener('keydown',e=>{ if(mq.matches&&e.key==='Enter'&&$('q-results').querySelector('.q-opt')) done(); },true);
+    window.addEventListener('hashchange',()=>{ if(!root.classList.contains('m-notes')) set(null); badge(); });
+    // a search hit inside the panel opens Insights
+    new MutationObserver(r=>{ if(mq.matches&&!root.classList.contains('m-ctx')&&r.some(x=>x.target.classList&&x.target.classList.contains('flash'))) set('m-ctx'); })
+      .observe(panel,{subtree:true,attributes:true,attributeFilter:['class']});
+    // the menu icon carries the unread-notifications dot
+    const bb=$('bell-badge'), dot=$('m-dot');
+    const sync=()=>{ dot.hidden=bb.hidden; menuBtn.setAttribute('aria-label',T(bb.hidden?'Menu':'Menu, new notifications')); };
+    new MutationObserver(sync).observe(bb,{attributes:true,attributeFilter:['hidden']}); sync();
+    // the Insights icon previews each page's headline figure
+    const B={profile:'93%',references:'Top 4%',inbox:''};
+    function badge(){ const v=(location.hash.slice(1)in B)?location.hash.slice(1):'profile', b=$('m-badge'); b.textContent=T(B[v]); b.hidden=!B[v]; }
+    badge();
+  })();
 
   // ----- Share / forward -----
   document.querySelectorAll('.share').forEach(b=>b.addEventListener('click', async ()=>{
