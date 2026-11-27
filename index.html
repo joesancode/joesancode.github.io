@@ -198,10 +198,13 @@
   .headline h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
   .headline p{color:var(--ink-2);font-size:14.5px}
   .headline .actions{display:flex;gap:10px;margin-top:18px}
-  .csat{text-align:center;display:flex;flex-direction:column;justify-content:center;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff}
-  .csat strong{font-size:36px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-  .csat .t{font-weight:600;font-size:14px;margin-top:4px}
-  .csat .s{font-size:12px;opacity:.85}
+  .cert{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff;padding:18px 14px}
+  .cert .k{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:6px}
+  .cert strong{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-bottom:4px}
+  .cert .s{font-size:12.5px;opacity:.85}
+  .cert-btn{margin-top:12px;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;transition:background .15s}
+  .cert-btn:hover{background:rgba(255,255,255,.3)}
+  .cert-btn[hidden]{display:none}
   .span-2{grid-column:2 / span 2}
   .job{padding:18px 0;border-bottom:1px solid var(--line)}
   .job:first-of-type{padding-top:4px}
@@ -229,6 +232,7 @@
   .int-pop .sig{margin-top:8px;font-size:13px;color:var(--muted);text-align:right}
   .int-pop .embed{margin-top:10px;border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--line)}
   .int-pop .embed iframe{display:block;width:100%;height:440px;border:0}
+  .int-pop .embed img.art{display:block;width:100%;height:auto}
   .int-pop .eyebrow{margin-bottom:6px}
   .int-pop h4{font-size:15px;font-weight:600}
   .int-pop .by{font-size:12.5px;color:var(--muted);margin-bottom:8px}
@@ -253,7 +257,6 @@
   /* ---------- References view ---------- */
   .ref-grid{display:grid;grid-template-columns:270px 1fr;gap:16px;padding:16px 32px 40px;align-items:start}
   .score-card{text-align:center}
-  .req-ref{width:100%;justify-content:center;margin-top:26px;font-family:inherit}
   .score-card .avatar{width:112px;height:112px;margin:6px auto 14px;box-shadow:0 0 0 5px var(--card),0 0 0 6px var(--line)}
   .score-card h2{font-size:22px;font-weight:600}
   .score-card .tag{font-size:13.5px;color:var(--ink-2);margin-top:4px}
@@ -272,6 +275,7 @@
   .stat small{font-size:12.5px;color:var(--muted)}
   .recs{display:flex;flex-direction:column;gap:16px;margin-top:16px}
   .ref-grid > *{min-width:0}
+  .ref-note{font-size:12.5px;color:var(--muted);margin-top:16px}
   .rec-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0 -4px}
   .rec-bar h2{font-size:16px;font-weight:600}
   .rec-tools{display:flex;align-items:center;gap:10px;min-width:0;max-width:100%}
@@ -410,6 +414,8 @@
   .letter .txt p{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:12px}
   .icon-btn:disabled{opacity:.35;cursor:default}
   .icon-btn:disabled:hover{background:none}
+  .sig-img{display:block;width:130px;height:auto;margin-top:10px}
+  html[data-theme="dark"] .sig-img{filter:invert(1)}
   .sig{display:flex;align-items:center;gap:14px;margin-top:22px}
   .sig .avatar{width:48px;height:48px}
   .sig b{display:block;font-weight:600}
@@ -434,7 +440,7 @@
   @media (max-width:1280px){
     :root{--panel:280px}
     .profile-grid{grid-template-columns:250px 1fr}
-    .csat{grid-column:2}
+    .cert{grid-column:2}
     .span-2{grid-column:2}
     .profile-grid > .headline{grid-column:2}
   }
@@ -455,7 +461,7 @@
   @media (max-width:860px){
     .profile-grid,.ref-grid{grid-template-columns:1fr;padding:12px 16px 32px}
     .col-left{grid-row:auto}
-    .profile-grid > *,.span-2,.csat{grid-column:1 !important}
+    .profile-grid > *,.span-2,.cert{grid-column:1 !important}
     .inbox{grid-template-columns:1fr}
     .content.inbox-mode .inbox{height:auto}
     .mail-list{max-height:330px;border-right:0;border-bottom:1px solid var(--line)}
@@ -785,11 +791,12 @@
             </div>
           </div>
 
-          <div class="card csat">
-            <strong>4.92</strong>
-            <div class="t">CSAT Score</div>
-            <div class="s">of 217 B2B clients</div>
-            <div class="s">Max score of 5.0</div>
+          <div class="card cert">
+            <div class="k">Latest certification</div>
+            <strong>AI Product Management</strong>
+            <div class="s">Ironhack</div>
+            <div class="s">20 November, 2026</div>
+            <a class="cert-btn" id="cert-btn" href="" target="_blank" rel="noopener" hidden>View certificate</a>
           </div>
 
           <div class="card span-2">
@@ -809,14 +816,6 @@
               <div class="meta">CKSoul · Wellness & Lifestyle · eCommerce & Retail · Los Angeles, U.S. (Remote) · 2017 – 2020</div>
               <p>Led the production department, ensuring the timely delivery of medical-grade, customer-centric products via an e-commerce platform. <b>Main tasks:</b> product research and ideation, academic research collaboration with UCLA, scalability tactics, sales support, partnership negotiation support and company-wide briefings.</p>
             </article>
-          </div>
-
-          <div class="card span-2">
-            <div class="eyebrow">Latest Certification</div>
-            <div class="initiative">
-              <h4>AI Product Management Certification Program · Ironhack</h4>
-              <span class="badge">Completed · 20 November, 2026</span>
-            </div>
           </div>
 
           <div class="card span-2">
@@ -845,7 +844,7 @@
             <div class="stars" aria-label="4.8 out of 5 stars">
               <svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>
             </div>
-            <div class="label">Based on 24 reviews</div>
+            <div class="label">Based on 5 reviews</div>
             <ul class="bars">
               <li><div>Quality of Work<b>5.0</b></div><span class="bar"><i style="width:100%"></i></span></li>
               <li><div>Productivity & Efficiency<b>4.9</b></div><span class="bar"><i style="width:98%"></i></span></li>
@@ -853,7 +852,6 @@
               <li><div>Job Knowledge & Skills<b>4.6</b></div><span class="bar"><i style="width:92%"></i></span></li>
               <li><div>Initiative & Innovation<b>4.6</b></div><span class="bar"><i style="width:92%"></i></span></li>
             </ul>
-            <button class="pill ghost req-ref" id="req-ref" type="button"><svg class="ico" style="width:16px;height:16px"><use href="#i-mail"/></svg>Request a reference</button>
           </div>
 
           <div>
@@ -879,22 +877,22 @@
                 </div>
               </div>
 
-              <article class="card" data-rel="Colleague" data-date="2023-10-30" data-rating="4.9">
+              <article class="card" data-rel="Colleague" data-date="2023-10-30" data-rating="4.8">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-koziol.png" alt="" width="52" height="52">
                   <div><h3>Maksymilian Koziol</h3><div class="role">Senior Full-Stack Software Developer</div><div class="co">Innosabi · Innovation Management Software</div></div>
                   <time datetime="2023-10-30">30 October, 2023</time>
                 </div>
-                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Colleague</span></div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.8</span><span class="rel">Colleague</span></div>
                 <blockquote>“Joe's exceptional commitment to organizational excellence was demonstrated through his meticulous adherence to company processes and his clear communication of complex procedures. His unwavering professionalism, even in challenging situations, was instrumental to our team's success, making him a valuable asset to any organization.”</blockquote>
               </article>
-              <article class="card" data-rel="Direct Manager" data-date="2022-11-15" data-rating="4.8">
+              <article class="card" data-rel="Direct Manager" data-date="2022-11-15" data-rating="4.6">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-scheliga.png" alt="" width="52" height="52">
                   <div><h3>Mario Scheliga</h3><div class="role">Chief Technology Officer &amp; Director of Product</div><div class="co">Cansativa · Medical Cannabis Distribution</div></div>
                   <time datetime="2022-11-15">15 November, 2022</time>
                 </div>
-                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.8</span><span class="rel">Direct Manager</span></div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.6</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“Fast, creative, thoughtful, on-point delivery was always the norm. Joe was a pleasure to work with. His passion for new fields and engagement in these tasks was my favorite part.”</blockquote>
               </article>
               <article class="card" data-rel="Direct Manager" data-date="2022-02-19" data-rating="5.0">
@@ -906,13 +904,13 @@
                 <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>5.0</span><span class="rel">Direct Manager</span></div>
                 <blockquote>“I had the honor of working closely with Joe. He was an honor to work with. He is a team player and is always thinking of ways to improve not only himself but his team and the company. His design skills are incredible and he is very easy to work with. He provided many good ideas on how to improve our workflows and made the company stronger. Joe's relationship skills and professionalism also impressed me as I witnessed him working with outside vendors and other company contacts. Joe is also always there to jump in and help wherever it was needed. There was never a task he was not willing to take head-on. I wish I could duplicate him. He is an asset to any team he joins. He is a great leader and I would HIGHLY recommend him to any company.”</blockquote>
               </article>
-              <article class="card" data-rel="Partner" data-date="2022-01-28" data-rating="4.9">
+              <article class="card" data-rel="Partner" data-date="2022-01-28" data-rating="4.7">
                 <div class="rec-head">
                   <img class="avatar" src="assets/ref-macaraeg.png" alt="" width="52" height="52">
                   <div><h3>Angie Macaraeg</h3><div class="role">VP of Sales &amp; Marketing</div><div class="co">Encore Labs · Hemp Industry</div></div>
                   <time datetime="2022-01-28">28 January, 2022</time>
                 </div>
-                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.9</span><span class="rel">Partner</span></div>
+                <div class="rec-meta"><span class="score"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg>4.7</span><span class="rel">Partner</span></div>
                 <blockquote>“Joe was phenomenal to work with in the tumultuous hemp industry. His high level of professionalism and dedication to service has always made all of our projects go smoothly. Whether everything in the project was going right, or whether we would run into continuous roadblocks, he's always led with his heart and stepped forward with kindness and forward-based thinking. This has always made him a pleasure to work with. I recommend Joe to any company who values quality work. Joe will put his heart and soul into it.”</blockquote>
               </article>
               <article class="card" data-rel="Direct Manager" data-date="2021-12-11" data-rating="4.9">
@@ -925,6 +923,7 @@
                 <blockquote>“I valued working with Joe during a crucial period at CKSoul. His competence, composure, and collaborative approach were commendable. With strong organizational skills and sound judgment, he demonstrated excellent capabilities on all fronts. I would gladly work with Joe again and wholeheartedly recommend him.”</blockquote>
               </article>
             </div>
+            <p class="ref-note">Ratings and rankings are illustrative, part of the virtus concept. Recommendations are real, from LinkedIn.</p>
           </div>
         </div>
       </section>
@@ -972,6 +971,7 @@
                 <p>I am confident I could be of great contribution to your mission. I’m eager to learn more about your mission and look forward to your reply.</p>
                 <p>Sincerely,</p>
               </div>
+              <img class="sig-img" src="assets/signature.png" alt="Joe San's signature" width="152" height="50">
               <div class="sig">
                 <img class="avatar" src="assets/joe.png" alt="" width="48" height="48">
                 <div><b>Joe San</b><span>Product Management & Brand Design</span></div>
@@ -1542,7 +1542,7 @@
   // ----- Personal interests: click for a short note -----
   window.interests={
     reading:{eyebrow:'Currently reading',title:'Thanosis',
-      cover:['https://covers.openlibrary.org/b/isbn/9781917646888-M.jpg?default=false','https://books.google.com/books/content?id=uQnF0QEACAAJ&printsec=frontcover&img=1&zoom=1'],by:'Jason Reza Jorjani · 2025',
+      cover:['assets/cover-thanosis.jpg','https://covers.openlibrary.org/b/isbn/9781917646888-M.jpg?default=false','https://books.google.com/books/content?id=uQnF0QEACAAJ&printsec=frontcover&img=1&zoom=1'],by:'Jason Reza Jorjani · 2025',
       text:'A philosophical investigation of life after death. Drawing on a century of parapsychological research, Jorjani argues that individuality and creative agency survive death.',
       link:['View at Arktos','https://arktos.com/product/thanosis/']},
     fitness:{eyebrow:'Fitness',text:'Not crazy stuff: push-ups, pull-ups, squats and the like. Pretty vanilla but consistent.'},
@@ -1550,7 +1550,7 @@
     blockchain:{eyebrow:'Blockchain I follow',title:'Midnight',
       text:'A data-protection blockchain, built as a partner chain to Cardano. It uses zero-knowledge proofs, so you can prove something is true without revealing the data behind it.',
       link:['midnight.network','https://midnight.network']},
-    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',embed:'https://www.instagram.com/p/Be3WgfXlVh7/embed/',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
+    drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',image:'assets/drawing-marley.jpg',embed:'https://www.instagram.com/p/Be3WgfXlVh7/embed/',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
   };
   (function(){
     const wrap=document.querySelector('.interests'), pop=document.getElementById('int-pop');
@@ -1566,8 +1566,10 @@
         +(d.title?`<h4>${esc(d.title)}</h4>`:'')+(d.by?`<div class="by">${esc(d.by)}</div>`:'')
         +(d.cover?`</div></div>`:'')
         +(d.quote?`<blockquote>“${esc(d.quote)}”</blockquote>`:'')+(d.sig?`<div class="sig">— ${esc(d.sig)}</div>`:'')+(d.text?`<p>${esc(d.text)}</p>`:'')
-        +(d.embed?`<div class="embed"><iframe src="${d.embed}" title="${esc(d.text)} (Instagram)" loading="lazy" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'')
+        +(d.image?`<div class="embed"><img class="art" src="${d.image}" alt="${esc(d.text)}"></div>`:d.embed?`<div class="embed"><iframe src="${d.embed}" title="${esc(d.text)} (Instagram)" loading="lazy" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'')
         +(d.link?`<a href="${d.link[1]}" target="_blank" rel="noopener">${esc(d.link[0])} ↗</a>`:'');
+      const art=pop.querySelector('img.art');
+      if(art&&d.embed) art.addEventListener('error',()=>{ art.parentElement.innerHTML=`<iframe src="${d.embed}" title="${esc(d.text)} (Instagram)" loading="lazy" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe>`; });
       const cv=pop.querySelector('img.cover');
       if(cv) cv.addEventListener('error',()=>{ const n=+cv.dataset.i+1; if(d.cover[n]){ cv.dataset.i=n; cv.src=d.cover[n]; } else cv.remove(); });
       pop.setAttribute('aria-label',btn.textContent.trim());
@@ -1661,12 +1663,8 @@
     window.openRadar=key=>{ const b=list.querySelector(`[data-co="${key}"]`); if(b&&openBtn!==b) show(b); };
   })();
 
-  // ----- References: request a reference (joke, then a real email) -----
-  document.getElementById('req-ref').addEventListener('click',()=>{
-    const cards=[...document.querySelectorAll('#view-references .recs article')], first=cards.find(c=>!c.hidden);
-    if(first){ first.classList.remove('flash'); void first.offsetWidth; first.classList.add('flash'); first.scrollIntoView({block:'nearest',behavior:'smooth'}); }
-    showToast(`Joe already has ${cards.length} on file. Start there.`,'Email Joe anyway',()=>{ location.href='mailto:contact.joesan@proton.me?subject=Reference%20request'; });
-  });
+  // ----- Certificate link: paste the URL (or assets/ path) here to show the button -----
+  (function(){ const CERT_URL=''; const b=document.getElementById('cert-btn'); if(CERT_URL){ b.href=CERT_URL; b.hidden=false; } })();
 
   // ----- Search across the whole CV -----
   (function(){
@@ -1683,10 +1681,9 @@
       const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),'Headline',T(hl.querySelector('p')));
       $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),'Contact'));
       $(P+' .job').forEach(j=>add('Experience','profile',j,T(j.querySelector('h3')),T(j.querySelector('.meta')),T(j.querySelector('p'))));
-      const cs=document.querySelector(P+' .csat'); add('Profile','profile',cs,'CSAT Score 4.92','of 217 B2B clients · max 5.0');
+      const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,'AI Product Management','Latest certification · Ironhack · '+T(ce.querySelectorAll('.s')[1]));
       $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),'Language · '+T(li.querySelector('em'))));
       const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),'Education · '+T(ed.querySelector('.label')));
-      const ini=document.querySelector(P+' .initiative'); add('Profile','profile',ini.closest('.card'),T(ini.querySelector('h4')),'Certification · '+T(ini.querySelector('.badge')));
       $(P+' .interest').forEach(i=>{ const d=interests[i.dataset.int]; add('Profile','profile',i,T(i),'Personal interest',[d.title,d.by,d.text,d.quote].filter(Boolean).join(' ')).open=()=>openInterest(i.dataset.int); });
       $(PP+' .skills li').forEach(li=>add('Skills','profile',li,T(li.querySelector('b')),T(li.querySelector('.ring'))+' · '+T(li.querySelector('small'))));
       $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),'Culture compatibility trait'));
