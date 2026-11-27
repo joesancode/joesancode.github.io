@@ -19,7 +19,7 @@ PRINT_CSS = """
   .app,.main,.content,.panel,.content.inbox-mode,#view-inbox.active,.inbox,
   .content.inbox-mode .inbox,.mail-list,.reader{height:auto!important;max-height:none!important;overflow:visible!important}
   .app{min-height:0!important}
-  .toast,.search-pop,.menu,.notifs,.settings,.panel-notes,.q-key,#search-btn,.rec-tools,.radar-pop{display:none!important}
+  .toast,.search-pop,.menu,.notifs,.settings,.panel-notes,.q-key,#search-btn,.rec-tools,.radar-pop,.req-ref{display:none!important}
   *{animation:none!important;transition:none!important}
 """
 
