@@ -458,10 +458,13 @@
   /* Profile header: label becomes Joe's photo + name once the ID card scrolls away */
   #view-profile .section-head{position:sticky;top:0;z-index:6;background:var(--bg);min-height:56px;box-sizing:border-box;padding-top:12px;padding-bottom:8px;transition:box-shadow .2s}
   #view-profile .section-head.stuck{box-shadow:0 1px 0 var(--line)}
-  .section-head .sh-id{display:none;align-items:center;gap:10px;font-size:16px;font-weight:600;margin-right:auto;animation:fade .18s ease}
-  .section-head .sh-id img{width:32px;height:32px;border-radius:50%;object-fit:cover}
-  .section-head.stuck h2{display:none}
-  .section-head.stuck .sh-id{display:flex}
+  #view-profile .section-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+  #view-profile .section-head > h2,#view-profile .sh-id{grid-area:1/1;transition:opacity .22s ease,transform .22s ease}
+  #view-profile .section-head .tools{grid-area:1/2}
+  .sh-id{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;opacity:0;transform:translateY(10px);pointer-events:none}
+  .sh-id img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+  .section-head.stuck > h2{opacity:0;transform:translateY(-10px)}
+  .section-head.stuck .sh-id{opacity:1;transform:none}
 
   /* ---------- Responsive ---------- */
   @media (max-width:1280px){
@@ -490,6 +493,11 @@
     .profile-grid,.ref-grid{grid-template-columns:1fr;padding:12px 16px 32px}
     .col-left{grid-row:auto}
     .profile-grid > *,.span-2,.cert{grid-column:1 !important}
+    /* wide certification card: text left, Ironhack logo right */
+    .cert{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:20px;row-gap:12px}
+    .cert-txt{grid-area:1/1}
+    .cert-logo{grid-area:1/2;width:46px}
+    .cert-btn{grid-area:2/1}
     .inbox{grid-template-columns:1fr}
     .content.inbox-mode .inbox{height:auto}
     .mail-list{max-height:330px;border-right:0;border-bottom:1px solid var(--line)}
