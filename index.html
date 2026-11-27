@@ -200,7 +200,7 @@
   .headline .actions{display:flex;gap:10px;margin-top:18px}
   .cert{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;background:linear-gradient(165deg,#4646e6,#6262fb 70%,#9a9aff);color:#fff;padding:18px 14px}
   .cert .k{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:6px}
-  .cert strong{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-bottom:4px}
+  .cert strong{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin-bottom:4px;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:anywhere;max-width:100%}
   .cert .s{font-size:12.5px;opacity:.85}
   .cert-btn{margin-top:12px;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;transition:background .15s}
   .cert-btn:hover{background:rgba(255,255,255,.3)}
@@ -512,7 +512,9 @@
   .langs b{font-size:10.5px;width:28px;height:20px;border-radius:5px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
   .langs button:disabled b{background:var(--chip);color:var(--muted)}
   .langs em{margin-left:auto;font-style:normal;font-size:11px;background:var(--chip);padding:1px 7px;border-radius:999px}
-  .langs .tick{margin-left:auto;width:16px;height:16px;color:var(--accent);stroke-width:2.4}
+  .langs .tick{margin-left:auto;width:16px;height:16px;color:var(--accent);stroke-width:2.4;visibility:hidden}
+  .langs [aria-checked="true"] .tick{visibility:visible}
+  .langs [aria-checked="true"]{font-weight:600}
   .set-dl{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border-radius:11px;background:var(--accent);color:#fff;font-weight:500;font-size:14px}
   .set-dl:hover{filter:brightness(1.08)}
   .set-dl small{margin-left:auto;font-size:11px;opacity:.8}
@@ -695,11 +697,11 @@
           <button type="button" role="radio" data-theme-opt="auto"><svg class="ico"><use href="#i-monitor"/></svg>Auto</button>
         </div>
         <div class="set-label" id="lang-label">Language</div>
-        <div class="langs" role="radiogroup" aria-labelledby="lang-label">
-          <button type="button" role="radio" aria-checked="true" class="on"><b>EN</b>English<svg class="ico tick"><use href="#i-check"/></svg></button>
-          <button type="button" role="radio" aria-checked="false" disabled><b>ES</b>Español<em>Soon</em></button>
-          <button type="button" role="radio" aria-checked="false" disabled><b>IT</b>Italiano<em>Soon</em></button>
-          <button type="button" role="radio" aria-checked="false" disabled><b>DE</b>Deutsch<em>Soon</em></button>
+        <div class="langs no-i18n" role="radiogroup" aria-labelledby="lang-label">
+          <button type="button" role="radio" data-lang="en"><b>EN</b>English<svg class="ico tick"><use href="#i-check"/></svg></button>
+          <button type="button" role="radio" data-lang="es"><b>ES</b>Español<svg class="ico tick"><use href="#i-check"/></svg></button>
+          <button type="button" role="radio" data-lang="it"><b>IT</b>Italiano<svg class="ico tick"><use href="#i-check"/></svg></button>
+          <button type="button" role="radio" data-lang="de"><b>DE</b>Deutsch<svg class="ico tick"><use href="#i-check"/></svg></button>
         </div>
         <a class="set-dl" href="assets/Joe_San_CV.pdf" download><svg class="ico"><use href="#i-download"/></svg>Download CV <small>PDF</small></a>
       </div>
@@ -1178,6 +1180,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-msg"></span><button type="button" id="toast-act" hidden></button></div>
 
+<script src="assets/i18n.js"></script>
 <script>
   // ----- Calendar + hiring pipeline (dates always relative to today) -----
   (function(){
@@ -1205,9 +1208,9 @@
     const dayLabel=d=>{
       const diff=Math.round((d-today)/864e5);
       if(diff===0) return 'Today'; if(diff===1) return 'Tomorrow'; if(diff===-1) return 'Yesterday';
-      return d.toLocaleDateString('en-US',{weekday:'short'})+', '+d.getDate()+' '+d.toLocaleDateString('en-US',{month:'short'});
+      return i18n.fmt.short(d);
     };
-    const longDay=d=>d.toLocaleDateString('en-US',{weekday:'long'})+', '+d.getDate()+' '+d.toLocaleDateString('en-US',{month:'long'});
+    const longDay=d=>i18n.fmt.long(d);
 
     // calendar
     const cal=document.getElementById('cal'), title=document.getElementById('cal-title');
@@ -1215,8 +1218,8 @@
     function draw(){
       const first=new Date(y,m,1), days=new Date(y,m+1,0).getDate();
       const lead=(first.getDay()+6)%7, prevDays=new Date(y,m,0).getDate();
-      title.textContent=first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-      let html=['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="dow">${d}</div>`).join('');
+      title.textContent=i18n.fmt.month(first);
+      let html=i18n.fmt.dow.map(d=>`<div class="dow">${d}</div>`).join('');
       for(let i=lead; i>0; i--) html+=`<span class="out">${prevDays-i+1}</span>`;
       for(let d=1; d<=days; d++){
         const dt=new Date(y,m,d), ev=appts.some(a=>same(a.date,dt));
@@ -1340,10 +1343,11 @@
     const now=Date.now(); let cur=0;
     const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const rel=m=>m<60?`${m} mins`:m<1440?`${Math.round(m/60)} hrs`:`${Math.round(m/1440)} day${Math.round(m/1440)>1?'s':''}`;
-    const full=m=>{ const d=new Date(now-m*60000); return d.getDate()+' '+d.toLocaleDateString('en-US',{month:'long'})+', '+d.getFullYear()+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); };
+    const full=m=>i18n.fmt.full(new Date(now-m*60000));
     const name=f=>f.includes('@')?f.split('@')[0]:f;
     const sinceMidnight=(new Date()-new Date().setHours(0,0,0,0))/60000;
     // only messages that arrived today start unread
+    i18n.data(mails);
     mails.forEach(x=>{ if(!x.preview) x.preview=x.body.join(' '); if(x.read===undefined) x.read=x.ago>sinceMidnight; });
     document.querySelectorAll('.mail-date').forEach(t=>t.textContent=full(+t.dataset.ago));
 
@@ -1552,6 +1556,7 @@
       link:['midnight.network','https://midnight.network']},
     drawing:{eyebrow:'Drawing',text:'My drawing of Bob Marley.',image:'assets/drawing-marley.jpg',embed:'https://www.instagram.com/p/Be3WgfXlVh7/embed/',link:['View on Instagram','https://www.instagram.com/joesanart/p/Be3WgfXlVh7/']}
   };
+  i18n.data(window.interests);
   (function(){
     const wrap=document.querySelector('.interests'), pop=document.getElementById('int-pop');
     const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1629,6 +1634,7 @@
     asirium:{name:'Asirium',what:'Blockchain Identification Services',stage:1,ago:'1 day ago'},
     innosync:{name:'Innosync',what:'Innovation Management Software',stage:0,ago:'2 weeks ago'}
   };
+  i18n.data(window.radars);
   (function(){
     const list=document.querySelector('.radars'), pop=document.getElementById('radar-pop');
     const steps=['Viewed','Scheduled','Interviewed','Offer'];
@@ -1666,6 +1672,12 @@
   // ----- Certificate link: paste the URL (or assets/ path) here to show the button -----
   (function(){ const CERT_URL=''; const b=document.getElementById('cert-btn'); if(CERT_URL){ b.href=CERT_URL; b.hidden=false; } })();
 
+  // ----- Language picker -----
+  document.querySelectorAll('.langs [data-lang]').forEach(b=>{
+    b.setAttribute('aria-checked',String(b.dataset.lang===i18n.lang));
+    b.addEventListener('click',()=>{ if(b.dataset.lang!==i18n.lang) i18n.set(b.dataset.lang); });
+  });
+
   // ----- Search across the whole CV -----
   (function(){
     const q=document.getElementById('q'), pop=document.getElementById('q-pop'), box=document.getElementById('q-results');
@@ -1678,21 +1690,21 @@
     // Build the index fresh each time (the inbox can change)
     function index(){
       const out=[], add=(group,view,el,title,sub,text)=>{ const e={group,view,el,title,sub,text:text||''}; out.push(e); return e; };
-      const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),'Headline',T(hl.querySelector('p')));
-      $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),'Contact'));
+      const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),i18n.t('Headline'),T(hl.querySelector('p')));
+      $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),i18n.t('Contact')));
       $(P+' .job').forEach(j=>add('Experience','profile',j,T(j.querySelector('h3')),T(j.querySelector('.meta')),T(j.querySelector('p'))));
-      const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,'AI Product Management','Latest certification · Ironhack · '+T(ce.querySelectorAll('.s')[1]));
-      $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),'Language · '+T(li.querySelector('em'))));
-      const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),'Education · '+T(ed.querySelector('.label')));
-      $(P+' .interest').forEach(i=>{ const d=interests[i.dataset.int]; add('Profile','profile',i,T(i),'Personal interest',[d.title,d.by,d.text,d.quote].filter(Boolean).join(' ')).open=()=>openInterest(i.dataset.int); });
+      const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,i18n.t('AI Product Management'),i18n.t('Latest certification · Ironhack · ')+T(ce.querySelectorAll('.s')[1]));
+      $(P+' .lang li').forEach(li=>add('Profile','profile',li,T(li.firstChild),i18n.t('Language · ')+T(li.querySelector('em'))));
+      const ed=document.querySelector(P+' .edu'); add('Profile','profile',ed,T(ed.querySelector('h4')),i18n.t('Education · ')+T(ed.querySelector('.label')));
+      $(P+' .interest').forEach(i=>{ const d=interests[i.dataset.int]; add('Profile','profile',i,T(i),i18n.t('Personal interest'),[d.title,d.by,d.text,d.quote].filter(Boolean).join(' ')).open=()=>openInterest(i.dataset.int); });
       $(PP+' .skills li').forEach(li=>add('Skills','profile',li,T(li.querySelector('b')),T(li.querySelector('.ring'))+' · '+T(li.querySelector('small'))));
-      $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),'Culture compatibility trait'));
-      $(R+' .bars li').forEach(li=>add('References','references',li,T(li.querySelector('div')).replace(/[\d.]+$/,''),'Rating '+T(li.querySelector('b'))));
+      $(PP+' .traits li').forEach(li=>add('Skills','profile',li,T(li),i18n.t('Culture compatibility trait')));
+      $(R+' .bars li').forEach(li=>add('References','references',li,T(li.querySelector('div')).replace(/[\d.,]+$/,''),i18n.t('Rating ')+T(li.querySelector('b'))));
       $(R+' .stat').forEach(st=>add('References','references',st,T(st.querySelector('.label'))+' '+T(st.querySelector('strong')),T(st.querySelector('small'))));
       $(R+' .recs article').forEach(a=>add('References','references',a,T(a.querySelector('h3')),[T(a.querySelector('.role')),T(a.querySelector('.co')),a.dataset.rel].filter(Boolean).join(' · '),T(a.querySelector('blockquote'))).before=()=>recs.reveal(a));
-      $('.radars .radar').forEach(b=>{ const d=radars[b.dataset.co]; add('References','references',b,d.name,'Scouting radar · '+d.what).open=()=>openRadar(b.dataset.co); });
+      $('.radars .radar').forEach(b=>{ const d=radars[b.dataset.co]; add('References','references',b,d.name,i18n.t('Scouting radar · ')+d.what).open=()=>openRadar(b.dataset.co); });
       const joe=inbox.mails.find(m=>m.id==='joe');
-      if(joe) $('#letter-joe p').forEach(p=>add('Cover letter','inbox',p,'Joe San · Cover letter','',T(p)).mail=joe);
+      if(joe) $('#letter-joe p').forEach(p=>add('Cover letter','inbox',p,i18n.t('Joe San · Cover letter'),'',T(p)).mail=joe);
       inbox.mails.filter(m=>m.id!=='joe').forEach(m=>{ const e=out[out.push({group:'Inbox',view:'inbox',title:m.subject,sub:m.from,text:inbox.text(m)})-1]; e.mail=m; });
       return out;
     }
@@ -1705,7 +1717,7 @@
       const a=Math.max(0,i-28), b=Math.min(text.length,i+term.length+60);
       return (a?'…':'')+mark(text.slice(a,b),term)+(b<text.length?'…':'');
     }
-    const suggestions=['roadmap','UX','research','Munich','communication','Ken Berklee'];
+    const suggestions=i18n.sugg;
     let results=[], active=-1;
     function render(){
       const term=q.value.trim().toLowerCase();
