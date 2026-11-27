@@ -77,6 +77,8 @@
   .logo .lg-mark{height:24px;width:auto}
   .logo .lg-word{width:60px;height:auto}
   .logo .dot{fill:var(--accent)}
+  .logo[data-tip]{position:relative;border-radius:8px;z-index:20}
+  .logo[data-tip]:hover::after,.logo[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:12px;transform:translateY(-50%);background:var(--ink);color:var(--surface);font-size:12px;font-weight:500;padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}
   .nav{margin:auto 0;display:flex;flex-direction:column;gap:22px;align-items:center}
   .nav-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--ink-2);transition:background .2s,color .2s,transform .2s}
   .nav-btn .ico{width:22px;height:22px}
@@ -675,10 +677,10 @@
 
   <!-- ===== Sidebar ===== -->
   <aside class="sidebar">
-    <div class="logo" role="img" aria-label="Punctum">
+    <a class="logo" href="#profile" aria-label="Punctum" data-tip="One candidate. Full stop.">
       <svg class="lg-mark" viewBox="0 0 62.5 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="64" r="7.5" class="dot"/></svg>
       <svg class="lg-word" viewBox="0 0 378.3 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5 M73.58 26.5L68.93 48.38 M68.93 48.38A15 15 0 0 0 80.48 66.17A15 15 0 0 0 98.27 54.62 M104.25 26.5L95.75 66.5 M117.92 66.5L123.89 38.38 M123.89 38.38A15 15 0 0 1 141.68 26.83A15 15 0 0 1 153.24 44.62 M153.24 44.62L148.59 66.5 M199.68 33.55A15 15 0 0 0 184.35 26.73A15 15 0 0 0 172.29 38.38 M172.29 38.38L170.16 48.38 M170.16 48.38A15 15 0 0 0 178.49 65.09A15 15 0 0 0 196.65 60.73 M218.96 66.5L231.07 9.5 M214.46 26.5L243.46 26.5 M261.18 26.5L256.53 48.38 M256.53 48.38A15 15 0 0 0 268.08 66.17A15 15 0 0 0 285.87 54.62 M291.85 26.5L283.35 66.5 M305.52 66.5L311.49 38.38 M311.49 38.38A15 15 0 0 1 329.28 26.83A15 15 0 0 1 340.84 44.62 M340.84 44.62L336.19 66.5 M342.16 38.38A15 15 0 0 1 359.95 26.83A15 15 0 0 1 371.51 44.62 M371.51 44.62L366.86 66.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+    </a>
     <nav class="nav" aria-label="Sections">
       <a class="nav-btn" href="#inbox" data-view="inbox" data-tip="Cover letter"><svg class="ico"><use href="#i-inbox"/></svg><span class="sr-only">Inbox: cover letter</span></a>
       <a class="nav-btn" href="#profile" data-view="profile" data-tip="Profile"><svg class="ico"><use href="#i-user"/></svg><span class="sr-only">Candidate profile</span></a>
@@ -1672,6 +1674,12 @@
   })();
 
   // ----- Certificate link: paste the URL (or assets/ path) here to show the button -----
+  // Logo easter egg: each hover shows the next line.
+  (function(){ const logo=document.querySelector('.logo'); if(!logo) return;
+    const lines=['One candidate. Full stop.','Search complete. 1 result.','Shortlist of one.']; let i=0;
+    const set=()=>logo.setAttribute('data-tip',window.i18n?i18n.t(lines[i]):lines[i]);
+    const next=()=>{ i=(i+1)%lines.length; setTimeout(set,150); };
+    set(); logo.addEventListener('mouseleave',next); logo.addEventListener('blur',next); })();
   (function(){ const CERT_URL=''; const b=document.getElementById('cert-btn'); if(CERT_URL){ b.href=CERT_URL; b.hidden=false; } })();
 
   // ----- Language picker -----
