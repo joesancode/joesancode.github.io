@@ -573,7 +573,9 @@
     .panel-notes.m-pop,body:has(.app.panel-hidden) .panel-notes.m-pop{left:16px;right:16px;width:auto;bottom:calc(88px + env(safe-area-inset-bottom))}
     html.m-menu .m-fab,html.m-ctx .m-fab{display:none}
     #view-profile .section-head{top:56px;padding:8px 16px}
-    .toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+    .toast{left:16px;right:16px;max-width:none;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateY(20px);line-height:1.4;padding:13px 16px}
+    .toast.show{transform:none}
+    #toast-msg{flex:1;min-width:0}
 
     .section-head{padding:16px 16px 0}
     /* Inbox: list first, message on tap */
