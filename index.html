@@ -513,13 +513,14 @@
     /* Phone frame: top bar = menu · P. · insights */
     .topbar{position:sticky;top:0;z-index:30;height:56px;padding:0 6px;gap:4px;justify-content:space-between;background:var(--surface)}
     .topbar h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
-    .topbar .search-btn,.topbar .bell-wrap,#toggle-panel{display:none!important}
+    .topbar .search-btn,#toggle-panel{display:none!important}
+    .topbar .bell-wrap{margin-left:auto}
+    #bell{width:44px;height:44px}
+    #bell .badge{top:5px;right:4px}
     #m-menu,#m-ctx{display:flex!important;align-items:center;justify-content:center;width:auto;min-width:44px;height:44px;gap:6px;padding:0 8px;position:relative}
     .m-logo{display:block!important;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--ink);padding:8px;line-height:0}
     .m-logo svg{height:22px;width:auto;overflow:visible}
     .m-logo .dot{fill:var(--accent)}
-    .m-dot{position:absolute;top:9px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
-    .m-dot[hidden]{display:none}
 
     /* Left drawer: the sidebar, with search and notifications moved in */
     .scrim{position:fixed;inset:0;background:rgba(12,12,28,.45);z-index:45;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -543,7 +544,7 @@
     .nav-lbl{display:inline}
     .nav a[href$=".pdf"]{margin-top:12px;position:relative}
     .nav a[href$=".pdf"]::before{content:"";position:absolute;left:12px;right:12px;top:-7px;height:1px;background:var(--line)}
-    .settings-wrap{width:100%;margin-top:-12px}
+    .settings-wrap{width:100%;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}
     .sidebar .notifs-head{flex-wrap:wrap;gap:4px 12px}
     .sidebar .settings{position:static;width:auto;border:0;box-shadow:none;background:none;padding:0 6px 6px;animation:none}
     .sidebar .settings-btn .ico{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
@@ -648,6 +649,13 @@
     .rec-head .co{grid-column:1/-1;order:9;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px}
     .rec-head .t-long{display:none}
     .rec-head .t-short{display:inline}
+  }
+  /* Frosted glass: sticky bars keep their own color but let what scrolls under them show through, blurred */
+  @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+    #view-profile .section-head,#view-references .section-head{background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:saturate(1.5) blur(20px);backdrop-filter:saturate(1.5) blur(20px)}
+    @media (max-width:640px){
+      .topbar{background:color-mix(in srgb,var(--surface) 80%,transparent);-webkit-backdrop-filter:saturate(1.5) blur(20px);backdrop-filter:saturate(1.5) blur(20px)}
+    }
   }
   .panel-inner[hidden]{display:none!important}
 
@@ -869,7 +877,7 @@
   <!-- ===== Main ===== -->
   <main class="main">
     <header class="topbar">
-      <button class="icon-btn m-only" id="m-menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="sidebar"><svg class="ico"><use href="#i-menu"/></svg><span class="m-dot" id="m-dot"></span></button>
+      <button class="icon-btn m-only" id="m-menu" type="button" aria-label="Menu" aria-expanded="false" aria-controls="sidebar"><svg class="ico"><use href="#i-menu"/></svg></button>
       <a class="m-logo m-only" href="#profile" aria-label="Punctum"><svg viewBox="0 0 62.5 73.0" aria-hidden="true" focusable="false"><path d="M6.5 66.5L19.25 6.5 M19.25 6.5L38.5 6.5 M38.5 6.5A17.5 17.5 0 0 1 56 24A17.5 17.5 0 0 1 38.5 41.5 M38.5 41.5L11.81 41.5" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="64" r="7.5" class="dot"/></svg></a>
       <h1 id="view-title">Candidate Scouting</h1>
       <div class="search-wrap" id="search-wrap">
@@ -1727,6 +1735,36 @@
     };
   })();
 
+  // ----- References: rating bars grow and numbers count up, each group once it's in view -----
+  (function(){
+    const calm=window.matchMedia('(prefers-reduced-motion: reduce)'), R='#view-references';
+    // the number is the last text node with a digit (keeps "+" spans and translated decimal commas)
+    const counters=[...document.querySelectorAll(R+' .big-score,'+R+' .stat strong')].map(el=>{
+      const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT); let n=null; while(w.nextNode()) if(/\d/.test(w.currentNode.data)) n=w.currentNode;
+      return n&&{el,n};
+    }).filter(Boolean);
+    function count(c){
+      const orig=c.n.data, m=orig.match(/(\d+)(?:([.,])(\d+))?/); if(!m) return;
+      const val=parseFloat(m[1]+(m[3]?'.'+m[3]:'')), dec=m[3]?m[3].length:0, sep=m[2]||'.';
+      const t0=performance.now(), D=1200;
+      (function tick(t){
+        const k=Math.min(1,(t-t0)/D), e=1-Math.pow(1-k,3);
+        c.n.data=k<1? orig.replace(m[0],(val*e).toFixed(dec).replace('.',sep)) : orig;
+        if(k<1) requestAnimationFrame(tick);
+      })(t0);
+    }
+    function bars(card){
+      card.querySelectorAll('.bar i').forEach((b,i)=>b.animate([{width:'0%'},{width:b.style.width}],{duration:900,delay:120+i*70,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'}));
+    }
+    const groups=[document.querySelector(R+' .score-card'),document.querySelector(R+' .stats')];
+    const io=('IntersectionObserver' in window)&&new IntersectionObserver(es=>es.forEach(e=>{
+      if(!e.isIntersecting) return; io.unobserve(e.target);
+      if(e.target.matches('.score-card')) bars(e.target);
+      counters.filter(c=>e.target.contains(c.el)).forEach(count);
+    }),{threshold:.35});
+    window.animateRefs=function(){ if(calm.matches||!io) return; groups.forEach(g=>{ io.unobserve(g); io.observe(g); }); };
+  })();
+
   // ----- Profile: click-to-copy contacts (desktop), recruiter notes -----
   (function(){
     const canHover=window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -2025,6 +2063,7 @@
     content.classList.toggle('inbox-mode', v==='inbox');
     content.scrollTop=0;
     if(v==='profile') animateRings();
+    if(v==='references') animateRefs();
   }
   window.addEventListener('hashchange', ()=>{ show(); window.scrollTo(0,0); });
   show();
@@ -2040,12 +2079,12 @@
   (function(){
     const mq=matchMedia('(max-width:640px)'), root=document.documentElement, $=id=>document.getElementById(id);
     const side=$('sidebar'), panel=$('panel'), menuBtn=$('m-menu'), ctxBtn=$('m-ctx'), fab=$('m-notes');
-    const sw=$('search-wrap'), np=$('notifs'), notes=document.querySelector('.panel-notes');
+    const sw=$('search-wrap'), notes=document.querySelector('.panel-notes');
     const T=s=>window.i18n&&i18n.t?i18n.t(s):s;
     // remember where the moved parts live on desktop
     // notes live in the bubble at every size
     document.body.insertBefore(notes,fab); notes.classList.add('m-pop'); notes.setAttribute('role','dialog'); notes.setAttribute('aria-label',T('Your Notes'));
-    const homes=[sw,np].map(el=>{ const m=document.createComment('home'); el.before(m); return [el,m]; });
+    const homes=[sw].map(el=>{ const m=document.createComment('home'); el.before(m); return [el,m]; });
     const btnFor={'m-menu':menuBtn,'m-ctx':ctxBtn,'m-notes':fab};
     let last=null;
     function set(state){
@@ -2054,7 +2093,7 @@
     }
     function close(){ const was=root.matches('.m-menu,.m-ctx,.m-notes'); set(null); if(was&&last&&last.offsetParent) last.focus({preventScroll:true}); }
     function place(){
-      if(mq.matches){ $('m-close').after(sw); side.append(np); }
+      if(mq.matches){ $('m-close').after(sw); }
       else { if(!root.classList.contains('m-notes')) set(null); else ['m-menu','m-ctx'].forEach(c=>root.classList.remove(c)); homes.forEach(([el,m])=>m.after(el)); }
     }
     mq.addEventListener('change',place); place();
@@ -2092,10 +2131,6 @@
     // a search hit inside the panel opens Insights
     new MutationObserver(r=>{ if(mq.matches&&!root.classList.contains('m-ctx')&&r.some(x=>x.target.classList&&x.target.classList.contains('flash'))) set('m-ctx'); })
       .observe(panel,{subtree:true,attributes:true,attributeFilter:['class']});
-    // the menu icon carries the unread-notifications dot
-    const bb=$('bell-badge'), dot=$('m-dot');
-    const sync=()=>{ dot.hidden=bb.hidden; menuBtn.setAttribute('aria-label',T(bb.hidden?'Menu':'Menu, new notifications')); };
-    new MutationObserver(sync).observe(bb,{attributes:true,attributeFilter:['hidden']}); sync();
   })();
 
   // ----- Share / forward -----

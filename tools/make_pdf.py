@@ -16,6 +16,8 @@ VIEWS = ["profile", "references", "inbox"]
 # Let every scroll area grow to full height and hide anything interactive or visitor-specific.
 PRINT_CSS = """
   html,body{height:auto!important;overflow:visible!important}
+  .topbar,.section-head{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  .section-head{background:var(--bg)!important}
   .app,.main,.content,.panel,.content.inbox-mode,#view-inbox.active,.inbox,
   .content.inbox-mode .inbox,.mail-list,.reader{height:auto!important;max-height:none!important;overflow:visible!important}
   .app{min-height:0!important}
