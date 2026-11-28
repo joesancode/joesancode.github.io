@@ -306,6 +306,7 @@
   .rec-head .role{font-size:13.5px;color:var(--ink-2)}
   .rec-head .co{font-size:13px;color:var(--muted)}
   .rec-head time{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+  .rec-head .t-short{display:none}
   .rec-meta{display:flex;align-items:center;gap:14px;margin:14px 0 10px}
   .rec-meta .score{display:flex;align-items:center;gap:6px;font-weight:600}
   .rec-meta .score svg{width:15px;height:15px;fill:#ffb648}
@@ -456,10 +457,10 @@
   #view-profile,#view-references{padding-bottom:56px}
 
   /* Profile header: label becomes Joe's photo + name once the ID card scrolls away */
-  #view-profile .section-head{position:sticky;top:0;z-index:6;background:var(--bg);min-height:56px;box-sizing:border-box;padding-top:12px;padding-bottom:8px;transition:box-shadow .2s}
-  #view-profile .section-head.stuck{box-shadow:0 1px 0 var(--line)}
-  #view-profile .section-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
-  #view-profile .section-head > h2,#view-profile .sh-id{grid-area:1/1;transition:opacity .22s ease,transform .22s ease}
+  #view-profile .section-head,#view-references .section-head{position:sticky;top:0;z-index:6;background:var(--bg);min-height:56px;box-sizing:border-box;padding-top:12px;padding-bottom:8px;transition:box-shadow .2s}
+  #view-profile .section-head.stuck,#view-references .section-head.stuck{box-shadow:0 1px 0 var(--line)}
+  #view-profile .section-head,#view-references .section-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+  .view > .section-head > h2,.view .sh-id{grid-area:1/1;transition:opacity .22s ease,transform .22s ease}
   #view-profile .section-head .tools{grid-area:1/2}
   .sh-id{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;opacity:0;transform:translateY(10px);pointer-events:none}
   .sh-id img{width:32px;height:32px;border-radius:50%;object-fit:cover}
@@ -580,7 +581,7 @@
     .m-fab{right:16px;bottom:calc(20px + env(safe-area-inset-bottom))}
     .panel-notes.m-pop,body:has(.app.panel-hidden) .panel-notes.m-pop{left:16px;right:16px;width:auto;bottom:calc(88px + env(safe-area-inset-bottom))}
     html.m-menu .m-fab,html.m-ctx .m-fab{display:none}
-    #view-profile .section-head{top:56px;padding:8px 16px}
+    #view-profile .section-head,#view-references .section-head{top:56px;padding:8px 16px}
     .toast{left:16px;right:16px;max-width:none;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateY(20px);line-height:1.4;padding:13px 16px}
     .toast.show{transform:none}
     #toast-msg{flex:1;min-width:0}
@@ -609,11 +610,31 @@
     .reader,html .content.inbox-mode{overflow:visible}
     .reader-tools{top:56px}
     .letter{margin:12px 12px 24px}
-    .stats{grid-template-columns:1fr;gap:12px}
     .reader-tools{padding:0 12px 0 16px;overflow-x:auto}
     .reader-tools .hide-sm{display:none}
-    .rec-head{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
-    .rec-head time{grid-column:2;margin:4px 0 0}
+    /* References: three compact stat cards in one row */
+    .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .stat{padding:12px;border-radius:14px;display:flex;flex-direction:column}
+    .stat .label{font-size:11.5px;color:var(--ink-2);line-height:1.25;min-height:2.5em}
+    .stat strong{font-size:21px;margin:4px 0 2px;white-space:nowrap}
+    .stat small{font-size:11px;line-height:1.3}
+    /* filter chips scroll sideways under the title; sort stays visible */
+    .rec-bar{margin-bottom:-2px}
+    .rec-tools{width:100%;gap:6px}
+    .rec-chips{flex:1;margin-left:-16px;padding-left:16px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 calc(100% - 28px),transparent)}
+    .rec-chips.at-start{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+    .rec-chips.at-end{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px);mask-image:linear-gradient(90deg,transparent 0,#000 16px)}
+    .rec-chips.at-start.at-end{-webkit-mask-image:none;mask-image:none}
+    .rec-chips::after{content:"";flex:none;width:12px}
+    /* recommendation cards: date on the name's line */
+    .rec-head{display:grid;grid-template-columns:52px minmax(0,1fr) auto;column-gap:14px;row-gap:0;align-items:baseline}
+    .rec-head .avatar{grid-row:1/span 3;align-self:start}
+    .rec-head > div{display:contents}
+    .rec-head h3{grid-column:2;min-width:0}
+    .rec-head time{grid-column:3;grid-row:1;margin:0 0 0 8px;font-size:12px}
+    .rec-head .role,.rec-head .co{grid-column:2/4}
+    .rec-head .t-long{display:none}
+    .rec-head .t-short{display:inline}
   }
   .panel-inner[hidden]{display:none!important}
 
@@ -968,7 +989,10 @@
 
       <!-- ========== REFERENCES ========== -->
       <section class="view" id="view-references" data-title="References" aria-label="References">
-        <div class="section-head"><h2>Performance</h2></div>
+        <div class="section-head">
+          <h2>Performance</h2>
+          <div class="sh-id" aria-hidden="true"><img src="assets/joe.png" alt="" width="32" height="32"><b>Joe San</b></div>
+        </div>
         <div class="ref-grid">
           <div class="card score-card">
             <img class="avatar" src="assets/joe.png" alt="Portrait of Joe San" width="112" height="112">
@@ -1764,6 +1788,8 @@
     const labels={new:'Newest',old:'Oldest',rating:'Highest rated'};
     let rel='All', sort='new';
     const counts={All:cards().length}; cards().forEach(c=>counts[c.dataset.rel]=(counts[c.dataset.rel]||0)+1);
+    // phones show a short month + year next to the name
+    box.querySelectorAll('.rec-head time').forEach(t=>{ const sh=document.createElement('span'); sh.className='t-short'; sh.textContent=i18n.fmt.monthShort(new Date(t.dateTime+'T12:00')); const lg=document.createElement('span'); lg.className='t-long'; lg.append(...t.childNodes); t.append(lg,sh); });
     chips.innerHTML=Object.keys(counts).map(k=>`<button type="button" data-rel="${k}" aria-pressed="${k==='All'}">${k}<small>${counts[k]}</small></button>`).join('');
     function apply(){
       const list=cards().sort((a,b)=>{
@@ -1775,7 +1801,10 @@
       menu.querySelectorAll('[data-sort]').forEach(b=>b.setAttribute('aria-checked',String(b.dataset.sort===sort)));
       btn.firstChild.textContent=labels[sort];
     }
-    chips.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ rel=b.dataset.rel; apply(); } });
+    chips.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ rel=b.dataset.rel; apply(); if(chips.scrollWidth>chips.clientWidth) b.scrollIntoView({inline:'nearest',block:'nearest',behavior:'smooth'}); } });
+    // fade edges only where there's more to scroll
+    const edges=()=>{ const x=Math.abs(chips.scrollLeft); chips.classList.toggle('at-start',x<2); chips.classList.toggle('at-end',x+chips.clientWidth>=chips.scrollWidth-2); };
+    chips.addEventListener('scroll',edges,{passive:true}); addEventListener('resize',edges); window.addEventListener('hashchange',()=>setTimeout(edges,50)); setTimeout(edges);
     const items=()=>[...menu.querySelectorAll('[role=menuitemradio]')];
     function setMenu(open){ menu.hidden=!open; btn.setAttribute('aria-expanded',String(open)); if(open) (menu.querySelector('[aria-checked=true]')||items()[0]).focus(); }
     btn.addEventListener('click',e=>{ e.stopPropagation(); setMenu(menu.hidden); });
@@ -2003,10 +2032,10 @@
       else { if(!root.classList.contains('m-notes')) set(null); else ['m-menu','m-ctx'].forEach(c=>root.classList.remove(c)); homes.forEach(([el,m])=>m.after(el)); }
     }
     mq.addEventListener('change',place); place();
-    // Profile header: once Joe's name scrolls under it, it shows his photo + name
-    const sh=document.querySelector('#view-profile .section-head'), nm=document.querySelector('.id-card h2');
+    // Profile and References headers: once Joe's name scrolls under them, they show his photo + name
+    const heads=[['#view-profile','.id-card h2'],['#view-references','.score-card h2']].map(([v,n])=>[document.querySelector(v+' .section-head'),document.querySelector(v+' '+n)]);
     let raf=0;
-    const stick=()=>{ raf=0; if(!sh.offsetParent) return; sh.classList.toggle('stuck', nm.getBoundingClientRect().bottom < sh.getBoundingClientRect().bottom); };
+    const stick=()=>{ raf=0; heads.forEach(([sh,nm])=>{ if(sh.offsetParent) sh.classList.toggle('stuck', nm.getBoundingClientRect().bottom < sh.getBoundingClientRect().bottom); }); };
     document.addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(stick); },{capture:true,passive:true});
     window.addEventListener('hashchange',()=>setTimeout(stick,50)); addEventListener('resize',stick);
     // Profile: the contact list closes the page on phones

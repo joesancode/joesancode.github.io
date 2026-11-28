@@ -423,6 +423,7 @@
     time:function(d){ return lang==='en'? fmt(d,{hour:'numeric',minute:'2-digit'}) : fmt(d,{hour:'2-digit',minute:'2-digit',hour12:false}); },
     full:function(d){ return F.date(d)+' · '+F.time(d); },
     month:function(d){ return cap(fmt(d,{month:'long',year:'numeric'})); },
+    monthShort:function(d){ return cap(fmt(d,{month:'short',year:'numeric'})); },
     dow:{en:['Mo','Tu','We','Th','Fr','Sa','Su'],es:['Lu','Ma','Mi','Ju','Vi','Sá','Do'],it:['Lu','Ma','Me','Gi','Ve','Sa','Do'],de:['Mo','Di','Mi','Do','Fr','Sa','So']}[lang]
   };
   var SUGG={en:['roadmap','UX','research','Munich','communication','Ken Berklee'],
