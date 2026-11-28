@@ -569,6 +569,14 @@
     .profile-grid .col-left{display:contents}
     .id-card{order:1}
     .profile-grid > .headline{order:2}
+    /* photo + name and the pitch read as one card */
+    .id-card{display:none}
+    .headline{text-align:center}
+    .headline .avatar{width:88px;height:88px;margin:6px auto 12px;box-shadow:0 0 0 5px var(--card),0 0 0 6px var(--line)}
+    .headline .m-name{font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin-bottom:12px}
+    .headline h2{font-size:16px;font-weight:500;color:var(--ink-2)}
+    .headline .actions{justify-content:center}
+    .headline .actions .pill{flex:1;justify-content:center}
     .profile-grid > .m-fit{order:3}
     .profile-grid > .cert{order:4}
     .exp-card{order:5}
@@ -626,13 +634,16 @@
     .rec-chips.at-end{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px);mask-image:linear-gradient(90deg,transparent 0,#000 16px)}
     .rec-chips.at-start.at-end{-webkit-mask-image:none;mask-image:none}
     .rec-chips::after{content:"";flex:none;width:12px}
-    /* recommendation cards: date on the name's line */
-    .rec-head{display:grid;grid-template-columns:52px minmax(0,1fr) auto;column-gap:14px;row-gap:0;align-items:baseline}
-    .rec-head .avatar{grid-row:1/span 3;align-self:start}
-    .rec-head > div{display:contents}
-    .rec-head h3{grid-column:2;min-width:0}
+    /* recommendation cards: photo, name + date, role on top; the company closes the card as a credit line */
+    .recs article{display:grid;grid-template-columns:44px minmax(0,1fr) auto;column-gap:12px;align-items:baseline}
+    .recs article[hidden]{display:none}
+    .rec-head,.rec-head > div{display:contents}
+    .rec-head .avatar{width:44px;height:44px;grid-row:1/span 2;align-self:center}
+    .rec-head h3{grid-column:2;grid-row:1;min-width:0}
     .rec-head time{grid-column:3;grid-row:1;margin:0 0 0 8px;font-size:12px}
-    .rec-head .role,.rec-head .co{grid-column:2/4}
+    .rec-head .role{grid-column:2/4;grid-row:2;line-height:1.35}
+    .recs article .rec-meta,.recs article blockquote{grid-column:1/-1}
+    .rec-head .co{grid-column:1/-1;order:9;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px}
     .rec-head .t-long{display:none}
     .rec-head .t-short{display:inline}
   }
@@ -1889,7 +1900,7 @@
     // Build the index fresh each time (the inbox can change)
     function index(){
       const out=[], add=(group,view,el,title,sub,text)=>{ const e={group,view,el,title,sub,text:text||''}; out.push(e); return e; };
-      const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2')),i18n.t('Headline'),T(hl.querySelector('p')));
+      const hl=document.querySelector(P+' .headline'); add('Profile','profile',hl,T(hl.querySelector('h2:not(.m-name)')),i18n.t('Headline'),T(hl.querySelector('p')));
       $(P+' .contacts li').forEach(li=>add('Profile','profile',li,T(li),i18n.t('Contact')));
       $(P+' .job').forEach(j=>add('Experience','profile',j,T(j.querySelector('h3')),T(j.querySelector('.meta')),T(j.querySelector('p'))));
       const ce=document.querySelector(P+' .cert'); add('Profile','profile',ce,i18n.t('AI Product Management'),i18n.t('Certification · Ironhack · ')+T(ce.querySelector('.y')));
@@ -2042,6 +2053,10 @@
     const cl=document.querySelector('.id-card .contacts'), clHome=document.createComment('home'); cl.before(clHome);
     const placeContacts=()=>{ if(mq.matches) $('m-contacts').append(cl); else clHome.after(cl); };
     mq.addEventListener('change',placeContacts); placeContacts();
+    // Profile: photo + name open the pitch card on phones
+    const idc=document.querySelector('.id-card'), idPic=idc.querySelector('.avatar'), idName=idc.querySelector('h2'), hlc=document.querySelector('#view-profile .headline');
+    const placeId=()=>{ if(mq.matches){ idName.classList.add('m-name'); hlc.prepend(idPic,idName); } else { idName.classList.remove('m-name'); idc.prepend(idPic,idName); } };
+    mq.addEventListener('change',placeId); placeId();
 
 
     menuBtn.addEventListener('click',()=>set('m-menu'));
